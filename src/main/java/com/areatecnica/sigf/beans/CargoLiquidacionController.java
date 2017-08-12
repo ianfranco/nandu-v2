@@ -63,7 +63,7 @@ public class CargoLiquidacionController extends AbstractController<CargoLiquidac
      */
     public void prepareCargoLiquidacionIdLiquidacionEmpresa(ActionEvent event) {
         if (this.getSelected() != null && cargoLiquidacionIdLiquidacionEmpresaController.getSelected() == null) {
-            cargoLiquidacionIdLiquidacionEmpresaController.setSelected(this.getSelected().getCargoLiquidacionIdLiquidacionEmpresa());
+            cargoLiquidacionIdLiquidacionEmpresaController.setSelected(this.getSelected().getCargoLiquidacionIdLiquidacion());
         }
     }
 }

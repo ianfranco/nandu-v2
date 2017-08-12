@@ -33,7 +33,7 @@
                     <f:selectItems value="#{recaudacionGuiaController.cajaRecaudacionList}"
                                    var="cajaId"
                                    itemValue="#{cajaId}"
-                                   itemLabel="#{cajaId.cajaRecaudacionNombreCaja}"
+                                   itemLabel="#{cajaId.cajaRecaudacionNombre}"
                                    />
                     <p:ajax event="valueChange" listener="#{recaudacionGuiaController.handleCajaRecaudacionChange(event)}" update="procesoRecaudacion"/>
                 </p:selectOneMenu>

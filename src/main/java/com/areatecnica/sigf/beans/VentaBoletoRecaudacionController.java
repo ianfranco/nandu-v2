@@ -19,7 +19,6 @@ import com.areatecnica.sigf.entities.CajaRecaudacion;
 import com.areatecnica.sigf.entities.Guia;
 import com.areatecnica.sigf.entities.InventarioCaja;
 import com.areatecnica.sigf.entities.ProcesoRecaudacion;
-import com.areatecnica.sigf.entities.SerieBoletoGuia;
 import com.areatecnica.sigf.models.VentaBoletoRecaudacionDataModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -335,17 +334,6 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
         ventaBoletoIdInventarioCajaController.setSelected(null);
     }
 
-    /**
-     * Sets the "selected" attribute of the Guia controller in order to display
-     * its data in its View dialog.
-     *
-     * @param event Event object for the widget that triggered an action
-     */
-    public void prepareVentaBoletoIdGuia(ActionEvent event) {
-        if (this.getSelected() != null && ventaBoletoIdGuiaController.getSelected() == null) {
-            ventaBoletoIdGuiaController.setSelected(this.getSelected().getVentaBoletoIdGuia());
-        }
-    }
 
     /**
      * Sets the "selected" attribute of the InventarioCaja controller in order
@@ -378,12 +366,12 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
                     VentaBoleto ventaBoleto = new VentaBoleto();
                     ventaBoleto.setVentaBoletoFecha(fechaVentaBoleto);
                     ventaBoleto.setVentaBoletoFechaIngreso(new Date());
-                    ventaBoleto.setVentaBoletoIdGuia(busGuiaItem);
+                    ventaBoleto.setVentaBoletoIdBus(new Bus());
                     ventaBoleto.setVentaBoletoIdInventarioCaja(v.inventarioCaja);
                     ventaBoleto.setVentaBoletoNumeroBoleta(this.getSelected().getVentaBoletoNumeroBoleta());
                     ventaBoleto.setVentaBoletoRecaudado(Boolean.TRUE);
                     ventaBoleto.setVentaBoletoUtilizado(Boolean.FALSE);
-                    ventaBoleto.setVentaBoletoValorVentaBoleto(v.valor);
+                    ventaBoleto.setVentaBoletoValor(v.valor);
                     v.inventarioCaja.setInventarioCajaEstado(Boolean.TRUE);
 
                     this.ejbFacade.create(ventaBoleto);
@@ -401,7 +389,7 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
     public void handleBusChange(ActionEvent event) {
         this.setVentaBoletosList(new ArrayList<>());
         int i = 0;
-        for (SerieBoletoGuia sbg : busGuiaItem.getSerieBoletoGuiaList()) {
+        /*for (SerieBoletoGuia sbg : busGuiaItem.getSerieBoletoGuiaList()) {
 
             int cantidad = 1000 - sbg.getSerieBoletoGuiaTermino();
             VentaBoletoHelper ventaBoleto = new VentaBoletoHelper();
@@ -432,7 +420,7 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
                 ventaBoleto.setError(Boolean.FALSE);
             }
             this.ventaBoletosList.add(ventaBoleto);
-        }
+        }*/
     }
 
     public void handleBoletoChange(ActionEvent event) {

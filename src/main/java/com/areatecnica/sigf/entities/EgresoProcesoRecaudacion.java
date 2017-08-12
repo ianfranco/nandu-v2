@@ -25,12 +25,11 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * findByEgresoProcesoRecaudacionIdProceso
  *
  * @author ianfr
  */
 @Entity
-@Table(name = "egreso_proceso_recaudacion", catalog = "sigf_v2", schema = "")
+@Table(name = "egreso_proceso_recaudacion", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EgresoProcesoRecaudacion.findAll", query = "SELECT e FROM EgresoProcesoRecaudacion e")
@@ -54,6 +53,7 @@ public class EgresoProcesoRecaudacion implements Serializable {
     @NotNull
     @Column(name = "egreso_proceso_recaudacion_valor_defecto")
     private int egresoProcesoRecaudacionValorDefecto;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Column(name = "egreso_proceso_recaudacion_porcentaje")

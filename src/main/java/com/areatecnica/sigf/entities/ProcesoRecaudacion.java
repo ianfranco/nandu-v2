@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "proceso_recaudacion", catalog = "sigf_v2", schema = "")
+@Table(name = "proceso_recaudacion", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ProcesoRecaudacion.findAll", query = "SELECT p FROM ProcesoRecaudacion p")
@@ -42,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "ProcesoRecaudacion.findByProcesoRecaudacionIdCuenta", query = "SELECT p FROM ProcesoRecaudacion p WHERE p.procesoRecaudacionIdCuenta = :procesoRecaudacionIdCuenta")
     , @NamedQuery(name = "ProcesoRecaudacion.findByProcesoRecaudacionNombre", query = "SELECT p FROM ProcesoRecaudacion p WHERE p.procesoRecaudacionNombre = :procesoRecaudacionNombre")
     , @NamedQuery(name = "ProcesoRecaudacion.findByProcesoRecaudacionTieneCuenta", query = "SELECT p FROM ProcesoRecaudacion p WHERE p.procesoRecaudacionTieneCuenta = :procesoRecaudacionTieneCuenta")
+    , @NamedQuery(name = "ProcesoRecaudacion.findByProcesoRecaudacionTieneEgresos", query = "SELECT p FROM ProcesoRecaudacion p WHERE p.procesoRecaudacionTieneEgresos = :procesoRecaudacionTieneEgresos")
     , @NamedQuery(name = "ProcesoRecaudacion.findByProcesoRecaudacionActivo", query = "SELECT p FROM ProcesoRecaudacion p WHERE p.procesoRecaudacionActivo = :procesoRecaudacionActivo")
     , @NamedQuery(name = "ProcesoRecaudacion.findByProcesoRecaudacionFechaIngreso", query = "SELECT p FROM ProcesoRecaudacion p WHERE p.procesoRecaudacionFechaIngreso = :procesoRecaudacionFechaIngreso")})
 public class ProcesoRecaudacion implements Serializable {
@@ -59,6 +59,8 @@ public class ProcesoRecaudacion implements Serializable {
     private String procesoRecaudacionNombre;
     @Column(name = "proceso_recaudacion_tiene_cuenta")
     private Short procesoRecaudacionTieneCuenta;
+    @Column(name = "proceso_recaudacion_tiene_egresos")
+    private Boolean procesoRecaudacionTieneEgresos;
     @Basic(optional = false)
     @NotNull
     @Column(name = "proceso_recaudacion_activo")
@@ -73,7 +75,6 @@ public class ProcesoRecaudacion implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "busIdProcesoRecaudacion")
     private List<Bus> busList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "egresoProcesoRecaudacionIdProceso")
-    @OrderBy("egresoProcesoRecaudacionNumeroOrden ASC")
     private List<EgresoProcesoRecaudacion> egresoProcesoRecaudacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cajaProcesoIdProceso")
     private List<CajaProceso> cajaProcesoList;
@@ -121,6 +122,14 @@ public class ProcesoRecaudacion implements Serializable {
         this.procesoRecaudacionTieneCuenta = procesoRecaudacionTieneCuenta;
     }
 
+    public Boolean getProcesoRecaudacionTieneEgresos() {
+        return procesoRecaudacionTieneEgresos;
+    }
+
+    public void setProcesoRecaudacionTieneEgresos(Boolean procesoRecaudacionTieneEgresos) {
+        this.procesoRecaudacionTieneEgresos = procesoRecaudacionTieneEgresos;
+    }
+
     public boolean getProcesoRecaudacionActivo() {
         return procesoRecaudacionActivo;
     }
@@ -163,7 +172,7 @@ public class ProcesoRecaudacion implements Serializable {
     public void setEgresoProcesoRecaudacionList(List<EgresoProcesoRecaudacion> egresoProcesoRecaudacionList) {
         this.egresoProcesoRecaudacionList = egresoProcesoRecaudacionList;
     }
-    
+
     @XmlTransient
     public List<CajaProceso> getCajaProcesoList() {
         return cajaProcesoList;
@@ -214,5 +223,5 @@ public class ProcesoRecaudacion implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.ProcesoRecaudacion[ procesoRecaudacionId=" + procesoRecaudacionId + " ]";
     }
-    
+
 }

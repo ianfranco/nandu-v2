@@ -6,7 +6,6 @@
 package com.areatecnica.sigf.dao.impl;
 
 import com.areatecnica.sigf.dao.IUsuarioSessionDao;
-import com.areatecnica.sigf.entities.EstadoGuia;
 import com.areatecnica.sigf.entities.Usuario;
 import com.areatecnica.sigf.entities.UsuarioSession;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 public class IUsuarioSessionDaoImpl extends GenericDAOImpl<UsuarioSession> implements IUsuarioSessionDao<UsuarioSession> {
 
     @Override
-    public List<EstadoGuia> findAllByUsuario(Usuario usuario) {
+    public List<UsuarioSession> findAllByUsuario(Usuario usuario) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

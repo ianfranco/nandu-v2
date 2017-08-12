@@ -19,7 +19,7 @@
                     <f:selectItems value="#{cajaTerminalController.items}"
                                    var="busIdFlotaItem"
                                    itemValue="#{busIdFlotaItem}"
-                                   itemLabel="#{busIdFlotaItem.cajaRecaudacionNombreCaja}"
+                                   itemLabel="#{busIdFlotaItem.cajaRecaudacionNombre}"
 
                                    />
                 </p:selectOneMenu>
@@ -41,7 +41,7 @@
                 <p:ajax event="rowUnselect" update="deleteButton" listener="#{egresoCajaRecaudacionController.resetParents}" global="false"/>  
 
                 <f:facet name="header">
-                    Detalle x Caja #{egresoCajaRecaudacionController.cajaRecaudacion.cajaRecaudacionNombreCaja}
+                    Detalle x Caja #{egresoCajaRecaudacionController.cajaRecaudacion.cajaRecaudacionNombre}
                 </f:facet>
 
                 <p:column style="text-align: center;">

@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,37 +33,39 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Cacheable(true)
-@Table(name = "trabajador", catalog = "sigf_v2", schema = "")
+@Table(name = "trabajador", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Trabajador.findAll", query = "SELECT t FROM Trabajador t"),
-    @NamedQuery(name = "Trabajador.findAllByCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdCuenta =:idCuenta"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorId", query = "SELECT t FROM Trabajador t WHERE t.trabajadorId = :trabajadorId"),
-    @NamedQuery(name = "Trabajador.findMaxCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdCuenta = :trabajadorIdCuenta ORDER BY t.trabajadorCodigo DESC"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorIdTerminal", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdTerminal = :trabajadorIdTerminal"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorCodigo", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCodigo = :trabajadorCodigo"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorRut", query = "SELECT t FROM Trabajador t WHERE t.trabajadorRut = :trabajadorRut"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorRutAndCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorRut = :trabajadorRut AND t.trabajadorIdCuenta =:trabajadorIdCuenta"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorNombres", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNombres = :trabajadorNombres"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorApellidoPaterno", query = "SELECT t FROM Trabajador t WHERE t.trabajadorApellidoPaterno = :trabajadorApellidoPaterno"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorApellidoMaterno", query = "SELECT t FROM Trabajador t WHERE t.trabajadorApellidoMaterno = :trabajadorApellidoMaterno"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorFechaNacimiento", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFechaNacimiento = :trabajadorFechaNacimiento"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorNacionalidad", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNacionalidad = :trabajadorNacionalidad"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorSexo", query = "SELECT t FROM Trabajador t WHERE t.trabajadorSexo = :trabajadorSexo"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorCalle", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCalle = :trabajadorCalle"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorNumeroDireccion", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNumeroDireccion = :trabajadorNumeroDireccion"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorTelefonoFijo", query = "SELECT t FROM Trabajador t WHERE t.trabajadorTelefonoFijo = :trabajadorTelefonoFijo"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorCelular", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCelular = :trabajadorCelular"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorEmail", query = "SELECT t FROM Trabajador t WHERE t.trabajadorEmail = :trabajadorEmail"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorNumeroCargas", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNumeroCargas = :trabajadorNumeroCargas"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorMontoSalud", query = "SELECT t FROM Trabajador t WHERE t.trabajadorMontoSalud = :trabajadorMontoSalud"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorFormaPagoApv", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFormaPagoApv = :trabajadorFormaPagoApv"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorMontoApv", query = "SELECT t FROM Trabajador t WHERE t.trabajadorMontoApv = :trabajadorMontoApv"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorSubsidioJoven", query = "SELECT t FROM Trabajador t WHERE t.trabajadorSubsidioJoven = :trabajadorSubsidioJoven"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorCesantia", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCesantia = :trabajadorCesantia"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorContratado", query = "SELECT t FROM Trabajador t WHERE t.trabajadorContratado = :trabajadorContratado"),
-    @NamedQuery(name = "Trabajador.findByTrabajadorFechaIngreso", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFechaIngreso = :trabajadorFechaIngreso")})
+    @NamedQuery(name = "Trabajador.findAll", query = "SELECT t FROM Trabajador t")
+    , @NamedQuery(name = "Trabajador.findAllByCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdCuenta =:idCuenta")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorId", query = "SELECT t FROM Trabajador t WHERE t.trabajadorId = :trabajadorId")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorFonasa", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFonasa = :trabajadorFonasa")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorJubilado", query = "SELECT t FROM Trabajador t WHERE t.trabajadorJubilado = :trabajadorJubilado")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorIps", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIps = :trabajadorIps")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorCodigo", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCodigo = :trabajadorCodigo")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorRut", query = "SELECT t FROM Trabajador t WHERE t.trabajadorRut = :trabajadorRut")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorNombres", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNombres = :trabajadorNombres")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorApellidoPaterno", query = "SELECT t FROM Trabajador t WHERE t.trabajadorApellidoPaterno = :trabajadorApellidoPaterno")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorApellidoMaterno", query = "SELECT t FROM Trabajador t WHERE t.trabajadorApellidoMaterno = :trabajadorApellidoMaterno")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorFechaNacimiento", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFechaNacimiento = :trabajadorFechaNacimiento")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorNacionalidad", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNacionalidad = :trabajadorNacionalidad")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorSexo", query = "SELECT t FROM Trabajador t WHERE t.trabajadorSexo = :trabajadorSexo")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorCalle", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCalle = :trabajadorCalle")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorNumeroDireccion", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNumeroDireccion = :trabajadorNumeroDireccion")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorTelefonoFijo", query = "SELECT t FROM Trabajador t WHERE t.trabajadorTelefonoFijo = :trabajadorTelefonoFijo")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorCelular", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCelular = :trabajadorCelular")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorEmail", query = "SELECT t FROM Trabajador t WHERE t.trabajadorEmail = :trabajadorEmail")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorPoseeCargas", query = "SELECT t FROM Trabajador t WHERE t.trabajadorPoseeCargas = :trabajadorPoseeCargas")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorNumeroCargas", query = "SELECT t FROM Trabajador t WHERE t.trabajadorNumeroCargas = :trabajadorNumeroCargas")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorMontoSalud", query = "SELECT t FROM Trabajador t WHERE t.trabajadorMontoSalud = :trabajadorMontoSalud")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorPoseeApv", query = "SELECT t FROM Trabajador t WHERE t.trabajadorPoseeApv = :trabajadorPoseeApv")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorFormaPagoApv", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFormaPagoApv = :trabajadorFormaPagoApv")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorMontoApv", query = "SELECT t FROM Trabajador t WHERE t.trabajadorMontoApv = :trabajadorMontoApv")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorSubsidioJoven", query = "SELECT t FROM Trabajador t WHERE t.trabajadorSubsidioJoven = :trabajadorSubsidioJoven")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorCesantia", query = "SELECT t FROM Trabajador t WHERE t.trabajadorCesantia = :trabajadorCesantia")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorContratado", query = "SELECT t FROM Trabajador t WHERE t.trabajadorContratado = :trabajadorContratado")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorPoseeCuentaBanco", query = "SELECT t FROM Trabajador t WHERE t.trabajadorPoseeCuentaBanco = :trabajadorPoseeCuentaBanco")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorFechaIngreso", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFechaIngreso = :trabajadorFechaIngreso")})
 public class Trabajador implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -74,6 +74,18 @@ public class Trabajador implements Serializable {
     @Basic(optional = false)
     @Column(name = "trabajador_id")
     private Integer trabajadorId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "trabajador_fonasa")
+    private boolean trabajadorFonasa;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "trabajador_jubilado")
+    private boolean trabajadorJubilado;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "trabajador_ips")
+    private boolean trabajadorIps;
     @Basic(optional = false)
     @NotNull
     @Column(name = "trabajador_codigo")
@@ -122,11 +134,19 @@ public class Trabajador implements Serializable {
     private String trabajadorEmail;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "trabajador_posee_cargas")
+    private boolean trabajadorPoseeCargas;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "trabajador_numero_cargas")
     private int trabajadorNumeroCargas;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "trabajador_monto_salud")
     private Float trabajadorMontoSalud;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "trabajador_posee_apv")
+    private boolean trabajadorPoseeApv;
     @Column(name = "trabajador_forma_pago_apv")
     private Boolean trabajadorFormaPagoApv;
     @Column(name = "trabajador_monto_apv")
@@ -139,33 +159,13 @@ public class Trabajador implements Serializable {
     private Boolean trabajadorContratado;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "trabajador_fecha_ingreso")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date trabajadorFechaIngreso;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "trabajador_fonasa")
-    private boolean trabajadorFonasa;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "trabajador_jubilado")
-    private boolean trabajadorJubilado;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "trabajador_posee_cargas")
-    private boolean trabajadorPoseeCargas;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "trabajador_posee_apv")
-    private boolean trabajadorPoseeApv;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "trabajador_posee_cuenta_banco")
     private boolean trabajadorPoseeCuentaBanco;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "trabajador_ips")
-    private boolean trabajadorIps;
+    @Column(name = "trabajador_fecha_ingreso")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date trabajadorFechaIngreso;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "haberTrabajadorIdTrabajador")
     private List<HaberTrabajador> haberTrabajadorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cargaTrabajadorIdTrabajador")
@@ -174,6 +174,8 @@ public class Trabajador implements Serializable {
     private List<TrabajadorAdicionalSalud> trabajadorAdicionalSaludList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "despachoIdTrabajador")
     private List<Despacho> despachoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ventaBoletoIdTrabajador")
+    private List<VentaBoleto> ventaBoletoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "liquidacionSueldoIdTrabajador")
     private List<LiquidacionSueldo> liquidacionSueldoList;
     @JoinColumn(name = "trabajador_id_institucion_prevision", referencedColumnName = "institucion_prevision_id")
@@ -184,7 +186,6 @@ public class Trabajador implements Serializable {
     private InstitucionApv trabajadorIdInstitucionApv;
     @JoinColumn(name = "trabajador_id_asignacion_familiar", referencedColumnName = "asignacion_familiar_id")
     @ManyToOne(optional = false)
-    @OrderBy("asignacionFamiliarId DESC")
     private AsignacionFamiliar trabajadorIdAsignacionFamiliar;
     @JoinColumn(name = "trabajador_id_centro_costo", referencedColumnName = "centro_costo_id")
     @ManyToOne(optional = false)
@@ -192,12 +193,12 @@ public class Trabajador implements Serializable {
     @JoinColumn(name = "trabajador_id_comuna", referencedColumnName = "comuna_id")
     @ManyToOne(optional = false)
     private Comuna trabajadorIdComuna;
-    @JoinColumn(name = "trabajador_id_cuenta", referencedColumnName = "cuenta_id")
-    @ManyToOne(optional = false)
-    private Cuenta trabajadorIdCuenta;
     @JoinColumn(name = "trabajador_id_tipo_cotizacion_trabajador", referencedColumnName = "tipo_cotizacion_trabajador_id")
     @ManyToOne(optional = false)
     private TipoCotizacionTrabajador trabajadorIdTipoCotizacionTrabajador;
+    @JoinColumn(name = "trabajador_id_cuenta", referencedColumnName = "cuenta_id")
+    @ManyToOne(optional = false)
+    private Cuenta trabajadorIdCuenta;
     @JoinColumn(name = "trabajador_id_estado_civil", referencedColumnName = "estado_civil_id")
     @ManyToOne(optional = false)
     private EstadoCivil trabajadorIdEstadoCivil;
@@ -207,14 +208,16 @@ public class Trabajador implements Serializable {
     @JoinColumn(name = "trabajador_id_institucion_salud", referencedColumnName = "institucion_salud_id")
     @ManyToOne(optional = false)
     private InstitucionSalud trabajadorIdInstitucionSalud;
-    @JoinColumn(name = "trabajador_id_sindicato", referencedColumnName = "sindicato_id")
-    @ManyToOne(optional = false)
-    private Sindicato trabajadorIdSindicato;
     @JoinColumn(name = "trabajador_id_terminal", referencedColumnName = "terminal_id")
     @ManyToOne(optional = false)
     private Terminal trabajadorIdTerminal;
+    @JoinColumn(name = "trabajador_id_sindicato", referencedColumnName = "sindicato_id")
+    @ManyToOne(optional = false)
+    private Sindicato trabajadorIdSindicato;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reconocimientoDeudaIdTrabajador")
     private List<ReconocimientoDeuda> reconocimientoDeudaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recaudacionIdTrabajador")
+    private List<Recaudacion> recaudacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "relacionLaboralIdTrabajador")
     private List<RelacionLaboral> relacionLaboralList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cargaRetroactivaIdTrabajador")
@@ -245,14 +248,20 @@ public class Trabajador implements Serializable {
         this.trabajadorId = trabajadorId;
     }
 
-    public Trabajador(Integer trabajadorId, int trabajadorCodigo, String trabajadorRut, String trabajadorNombres, String trabajadorApellidoPaterno, String trabajadorApellidoMaterno, int trabajadorNumeroCargas, Date trabajadorFechaIngreso) {
+    public Trabajador(Integer trabajadorId, boolean trabajadorFonasa, boolean trabajadorJubilado, boolean trabajadorIps, int trabajadorCodigo, String trabajadorRut, String trabajadorNombres, String trabajadorApellidoPaterno, String trabajadorApellidoMaterno, boolean trabajadorPoseeCargas, int trabajadorNumeroCargas, boolean trabajadorPoseeApv, boolean trabajadorPoseeCuentaBanco, Date trabajadorFechaIngreso) {
         this.trabajadorId = trabajadorId;
+        this.trabajadorFonasa = trabajadorFonasa;
+        this.trabajadorJubilado = trabajadorJubilado;
+        this.trabajadorIps = trabajadorIps;
         this.trabajadorCodigo = trabajadorCodigo;
         this.trabajadorRut = trabajadorRut;
         this.trabajadorNombres = trabajadorNombres;
         this.trabajadorApellidoPaterno = trabajadorApellidoPaterno;
         this.trabajadorApellidoMaterno = trabajadorApellidoMaterno;
+        this.trabajadorPoseeCargas = trabajadorPoseeCargas;
         this.trabajadorNumeroCargas = trabajadorNumeroCargas;
+        this.trabajadorPoseeApv = trabajadorPoseeApv;
+        this.trabajadorPoseeCuentaBanco = trabajadorPoseeCuentaBanco;
         this.trabajadorFechaIngreso = trabajadorFechaIngreso;
     }
 
@@ -262,6 +271,30 @@ public class Trabajador implements Serializable {
 
     public void setTrabajadorId(Integer trabajadorId) {
         this.trabajadorId = trabajadorId;
+    }
+
+    public boolean getTrabajadorFonasa() {
+        return trabajadorFonasa;
+    }
+
+    public void setTrabajadorFonasa(boolean trabajadorFonasa) {
+        this.trabajadorFonasa = trabajadorFonasa;
+    }
+
+    public boolean getTrabajadorJubilado() {
+        return trabajadorJubilado;
+    }
+
+    public void setTrabajadorJubilado(boolean trabajadorJubilado) {
+        this.trabajadorJubilado = trabajadorJubilado;
+    }
+
+    public boolean getTrabajadorIps() {
+        return trabajadorIps;
+    }
+
+    public void setTrabajadorIps(boolean trabajadorIps) {
+        this.trabajadorIps = trabajadorIps;
     }
 
     public int getTrabajadorCodigo() {
@@ -368,6 +401,14 @@ public class Trabajador implements Serializable {
         this.trabajadorEmail = trabajadorEmail;
     }
 
+    public boolean getTrabajadorPoseeCargas() {
+        return trabajadorPoseeCargas;
+    }
+
+    public void setTrabajadorPoseeCargas(boolean trabajadorPoseeCargas) {
+        this.trabajadorPoseeCargas = trabajadorPoseeCargas;
+    }
+
     public int getTrabajadorNumeroCargas() {
         return trabajadorNumeroCargas;
     }
@@ -382,6 +423,14 @@ public class Trabajador implements Serializable {
 
     public void setTrabajadorMontoSalud(Float trabajadorMontoSalud) {
         this.trabajadorMontoSalud = trabajadorMontoSalud;
+    }
+
+    public boolean getTrabajadorPoseeApv() {
+        return trabajadorPoseeApv;
+    }
+
+    public void setTrabajadorPoseeApv(boolean trabajadorPoseeApv) {
+        this.trabajadorPoseeApv = trabajadorPoseeApv;
     }
 
     public Boolean getTrabajadorFormaPagoApv() {
@@ -422,6 +471,14 @@ public class Trabajador implements Serializable {
 
     public void setTrabajadorContratado(Boolean trabajadorContratado) {
         this.trabajadorContratado = trabajadorContratado;
+    }
+
+    public boolean getTrabajadorPoseeCuentaBanco() {
+        return trabajadorPoseeCuentaBanco;
+    }
+
+    public void setTrabajadorPoseeCuentaBanco(boolean trabajadorPoseeCuentaBanco) {
+        this.trabajadorPoseeCuentaBanco = trabajadorPoseeCuentaBanco;
     }
 
     public Date getTrabajadorFechaIngreso() {
@@ -466,6 +523,15 @@ public class Trabajador implements Serializable {
 
     public void setDespachoList(List<Despacho> despachoList) {
         this.despachoList = despachoList;
+    }
+
+    @XmlTransient
+    public List<VentaBoleto> getVentaBoletoList() {
+        return ventaBoletoList;
+    }
+
+    public void setVentaBoletoList(List<VentaBoleto> ventaBoletoList) {
+        this.ventaBoletoList = ventaBoletoList;
     }
 
     @XmlTransient
@@ -517,20 +583,20 @@ public class Trabajador implements Serializable {
         this.trabajadorIdComuna = trabajadorIdComuna;
     }
 
-    public Cuenta getTrabajadorIdCuenta() {
-        return trabajadorIdCuenta;
-    }
-
-    public void setTrabajadorIdCuenta(Cuenta trabajadorIdCuenta) {
-        this.trabajadorIdCuenta = trabajadorIdCuenta;
-    }
-
     public TipoCotizacionTrabajador getTrabajadorIdTipoCotizacionTrabajador() {
         return trabajadorIdTipoCotizacionTrabajador;
     }
 
     public void setTrabajadorIdTipoCotizacionTrabajador(TipoCotizacionTrabajador trabajadorIdTipoCotizacionTrabajador) {
         this.trabajadorIdTipoCotizacionTrabajador = trabajadorIdTipoCotizacionTrabajador;
+    }
+
+    public Cuenta getTrabajadorIdCuenta() {
+        return trabajadorIdCuenta;
+    }
+
+    public void setTrabajadorIdCuenta(Cuenta trabajadorIdCuenta) {
+        this.trabajadorIdCuenta = trabajadorIdCuenta;
     }
 
     public EstadoCivil getTrabajadorIdEstadoCivil() {
@@ -557,20 +623,20 @@ public class Trabajador implements Serializable {
         this.trabajadorIdInstitucionSalud = trabajadorIdInstitucionSalud;
     }
 
-    public Sindicato getTrabajadorIdSindicato() {
-        return trabajadorIdSindicato;
-    }
-
-    public void setTrabajadorIdSindicato(Sindicato trabajadorIdSindicato) {
-        this.trabajadorIdSindicato = trabajadorIdSindicato;
-    }
-
     public Terminal getTrabajadorIdTerminal() {
         return trabajadorIdTerminal;
     }
 
     public void setTrabajadorIdTerminal(Terminal trabajadorIdTerminal) {
         this.trabajadorIdTerminal = trabajadorIdTerminal;
+    }
+
+    public Sindicato getTrabajadorIdSindicato() {
+        return trabajadorIdSindicato;
+    }
+
+    public void setTrabajadorIdSindicato(Sindicato trabajadorIdSindicato) {
+        this.trabajadorIdSindicato = trabajadorIdSindicato;
     }
 
     @XmlTransient
@@ -580,6 +646,15 @@ public class Trabajador implements Serializable {
 
     public void setReconocimientoDeudaList(List<ReconocimientoDeuda> reconocimientoDeudaList) {
         this.reconocimientoDeudaList = reconocimientoDeudaList;
+    }
+
+    @XmlTransient
+    public List<Recaudacion> getRecaudacionList() {
+        return recaudacionList;
+    }
+
+    public void setRecaudacionList(List<Recaudacion> recaudacionList) {
+        this.recaudacionList = recaudacionList;
     }
 
     @XmlTransient
@@ -679,54 +754,6 @@ public class Trabajador implements Serializable {
 
     public void setObservacionTrabajadorList(List<ObservacionTrabajador> observacionTrabajadorList) {
         this.observacionTrabajadorList = observacionTrabajadorList;
-    }
-
-    public boolean getTrabajadorFonasa() {
-        return trabajadorFonasa;
-    }
-
-    public void setTrabajadorFonasa(boolean trabajadorFonasa) {
-        this.trabajadorFonasa = trabajadorFonasa;
-    }
-
-    public boolean getTrabajadorJubilado() {
-        return trabajadorJubilado;
-    }
-
-    public void setTrabajadorJubilado(boolean trabajadorJubilado) {
-        this.trabajadorJubilado = trabajadorJubilado;
-    }
-
-    public boolean getTrabajadorPoseeCargas() {
-        return trabajadorPoseeCargas;
-    }
-
-    public void setTrabajadorPoseeCargas(boolean trabajadorPoseeCargas) {
-        this.trabajadorPoseeCargas = trabajadorPoseeCargas;
-    }
-
-    public boolean getTrabajadorPoseeApv() {
-        return trabajadorPoseeApv;
-    }
-
-    public void setTrabajadorPoseeApv(boolean trabajadorPoseeApv) {
-        this.trabajadorPoseeApv = trabajadorPoseeApv;
-    }
-
-    public boolean getTrabajadorPoseeCuentaBanco() {
-        return trabajadorPoseeCuentaBanco;
-    }
-
-    public void setTrabajadorPoseeCuentaBanco(boolean trabajadorPoseeCuentaBanco) {
-        this.trabajadorPoseeCuentaBanco = trabajadorPoseeCuentaBanco;
-    }
-
-    public boolean getTrabajadorIps() {
-        return this.trabajadorIps;
-    }
-
-    public void setTrabajadorIps(Boolean trabajadorIps) {
-        this.trabajadorIps = trabajadorIps;
     }
 
     @Override

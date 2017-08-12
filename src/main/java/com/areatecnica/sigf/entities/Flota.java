@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "flota", catalog = "sigf_v2", schema = "")
+@Table(name = "flota", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Flota.findAll", query = "SELECT f FROM Flota f")
@@ -167,8 +166,4 @@ public class Flota implements Serializable {
         return "com.areatecnica.sigf.entities.Flota[ flotaId=" + flotaId + " ]";
     }
 
-    @PrePersist
-    protected void onPrePersist() {
-        this.flotaFechaIngreso = new Date();
-    }
 }

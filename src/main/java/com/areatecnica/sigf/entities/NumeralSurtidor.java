@@ -28,12 +28,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "numeral_surtidor", catalog = "sigf_v2", schema = "")
+@Table(name = "numeral_surtidor", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "NumeralSurtidor.findAll", query = "SELECT n FROM NumeralSurtidor n")
     , @NamedQuery(name = "NumeralSurtidor.findByNumeralSurtidorId", query = "SELECT n FROM NumeralSurtidor n WHERE n.numeralSurtidorId = :numeralSurtidorId")
-    , @NamedQuery(name = "NumeralSurtidor.findByNumeralSurtidorFechaNumeral", query = "SELECT n FROM NumeralSurtidor n WHERE n.numeralSurtidorFechaNumeral = :numeralSurtidorFechaNumeral")
+    , @NamedQuery(name = "NumeralSurtidor.findByNumeralSurtidorFechaMedicion", query = "SELECT n FROM NumeralSurtidor n WHERE n.numeralSurtidorFechaMedicion = :numeralSurtidorFechaMedicion")
     , @NamedQuery(name = "NumeralSurtidor.findByNumeralSurtidorNumeralInicial", query = "SELECT n FROM NumeralSurtidor n WHERE n.numeralSurtidorNumeralInicial = :numeralSurtidorNumeralInicial")
     , @NamedQuery(name = "NumeralSurtidor.findByNumeralSurtidorNumeralFinal", query = "SELECT n FROM NumeralSurtidor n WHERE n.numeralSurtidorNumeralFinal = :numeralSurtidorNumeralFinal")
     , @NamedQuery(name = "NumeralSurtidor.findByNumeralSurtidorIndicadorMuestra", query = "SELECT n FROM NumeralSurtidor n WHERE n.numeralSurtidorIndicadorMuestra = :numeralSurtidorIndicadorMuestra")
@@ -48,9 +48,9 @@ public class NumeralSurtidor implements Serializable {
     private Integer numeralSurtidorId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "numeral_surtidor_fecha_numeral")
+    @Column(name = "numeral_surtidor_fecha_medicion")
     @Temporal(TemporalType.DATE)
-    private Date numeralSurtidorFechaNumeral;
+    private Date numeralSurtidorFechaMedicion;
     @Basic(optional = false)
     @NotNull
     @Column(name = "numeral_surtidor_numeral_inicial")
@@ -77,9 +77,9 @@ public class NumeralSurtidor implements Serializable {
         this.numeralSurtidorId = numeralSurtidorId;
     }
 
-    public NumeralSurtidor(Integer numeralSurtidorId, Date numeralSurtidorFechaNumeral, int numeralSurtidorNumeralInicial, int numeralSurtidorNumeralFinal, Date numeralSurtidorFechaIngreso) {
+    public NumeralSurtidor(Integer numeralSurtidorId, Date numeralSurtidorFechaMedicion, int numeralSurtidorNumeralInicial, int numeralSurtidorNumeralFinal, Date numeralSurtidorFechaIngreso) {
         this.numeralSurtidorId = numeralSurtidorId;
-        this.numeralSurtidorFechaNumeral = numeralSurtidorFechaNumeral;
+        this.numeralSurtidorFechaMedicion = numeralSurtidorFechaMedicion;
         this.numeralSurtidorNumeralInicial = numeralSurtidorNumeralInicial;
         this.numeralSurtidorNumeralFinal = numeralSurtidorNumeralFinal;
         this.numeralSurtidorFechaIngreso = numeralSurtidorFechaIngreso;
@@ -93,12 +93,12 @@ public class NumeralSurtidor implements Serializable {
         this.numeralSurtidorId = numeralSurtidorId;
     }
 
-    public Date getNumeralSurtidorFechaNumeral() {
-        return numeralSurtidorFechaNumeral;
+    public Date getNumeralSurtidorFechaMedicion() {
+        return numeralSurtidorFechaMedicion;
     }
 
-    public void setNumeralSurtidorFechaNumeral(Date numeralSurtidorFechaNumeral) {
-        this.numeralSurtidorFechaNumeral = numeralSurtidorFechaNumeral;
+    public void setNumeralSurtidorFechaMedicion(Date numeralSurtidorFechaMedicion) {
+        this.numeralSurtidorFechaMedicion = numeralSurtidorFechaMedicion;
     }
 
     public int getNumeralSurtidorNumeralInicial() {

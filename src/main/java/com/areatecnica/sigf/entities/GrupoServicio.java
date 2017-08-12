@@ -33,14 +33,15 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "grupo_servicio", catalog = "sigf_v2", schema = "")
+@Table(name = "grupo_servicio", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "GrupoServicio.findAll", query = "SELECT g FROM GrupoServicio g"),
-    @NamedQuery(name = "GrupoServicio.findAllByCuenta", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioIdCuenta = :idCuenta"),
-    @NamedQuery(name = "GrupoServicio.findByGrupoServicioId", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioId = :grupoServicioId"),
-    @NamedQuery(name = "GrupoServicio.findByTerminal", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioIdTerminal = :grupoServicioIdTerminal AND g.grupoServicioAccesoInspector = true"),
-    @NamedQuery(name = "GrupoServicio.findByGrupoServicioFechaIngreso", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioFechaIngreso = :grupoServicioFechaIngreso")})
+    @NamedQuery(name = "GrupoServicio.findAll", query = "SELECT g FROM GrupoServicio g")
+    , @NamedQuery(name = "GrupoServicio.findAllByCuenta", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioIdCuenta = :idCuenta")
+    , @NamedQuery(name = "GrupoServicio.findByGrupoServicioId", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioId = :grupoServicioId")
+    , @NamedQuery(name = "GrupoServicio.findByGrupoServicioIdentificador", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioIdentificador = :grupoServicioIdentificador")
+    , @NamedQuery(name = "GrupoServicio.findByGrupoServicioAccesoInspector", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioAccesoInspector = :grupoServicioAccesoInspector")
+    , @NamedQuery(name = "GrupoServicio.findByGrupoServicioFechaIngreso", query = "SELECT g FROM GrupoServicio g WHERE g.grupoServicioFechaIngreso = :grupoServicioFechaIngreso")})
 public class GrupoServicio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -83,7 +84,7 @@ public class GrupoServicio implements Serializable {
         this.grupoServicioId = grupoServicioId;
     }
 
-    public GrupoServicio(Integer grupoServicioId, String grupoServicioIdentificador, Boolean grupoServicioAccesoInspector, Date grupoServicioFechaIngreso) {
+    public GrupoServicio(Integer grupoServicioId, String grupoServicioIdentificador, boolean grupoServicioAccesoInspector, Date grupoServicioFechaIngreso) {
         this.grupoServicioId = grupoServicioId;
         this.grupoServicioIdentificador = grupoServicioIdentificador;
         this.grupoServicioAccesoInspector = grupoServicioAccesoInspector;
@@ -114,14 +115,6 @@ public class GrupoServicio implements Serializable {
         this.grupoServicioAccesoInspector = grupoServicioAccesoInspector;
     }
 
-    public Terminal getGrupoServicioIdTerminal() {
-        return grupoServicioIdTerminal;
-    }
-
-    public void setGrupoServicioIdTerminal(Terminal grupoServicioIdTerminal) {
-        this.grupoServicioIdTerminal = grupoServicioIdTerminal;
-    }
-
     public Date getGrupoServicioFechaIngreso() {
         return grupoServicioFechaIngreso;
     }
@@ -145,6 +138,14 @@ public class GrupoServicio implements Serializable {
 
     public void setGrupoServicioIdCuenta(Cuenta grupoServicioIdCuenta) {
         this.grupoServicioIdCuenta = grupoServicioIdCuenta;
+    }
+
+    public Terminal getGrupoServicioIdTerminal() {
+        return grupoServicioIdTerminal;
+    }
+
+    public void setGrupoServicioIdTerminal(Terminal grupoServicioIdTerminal) {
+        this.grupoServicioIdTerminal = grupoServicioIdTerminal;
     }
 
     @XmlTransient

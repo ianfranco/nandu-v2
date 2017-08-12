@@ -5,10 +5,6 @@
  */
 package com.areatecnica.sigf.beans;
 
-import com.areatecnica.sigf.entities.EgresoGuia;
-import com.areatecnica.sigf.entities.Guia;
-import java.util.LinkedHashMap;
-
 /**
  *
  * @author ianfr

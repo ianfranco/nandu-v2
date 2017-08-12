@@ -41,19 +41,7 @@ public class VentaBoletoController extends AbstractController<VentaBoleto> {
         ventaBoletoIdGuiaController.setSelected(null);
         ventaBoletoIdInventarioCajaController.setSelected(null);
     }
-
-    /**
-     * Sets the "selected" attribute of the Guia controller in order to display
-     * its data in its View dialog.
-     *
-     * @param event Event object for the widget that triggered an action
-     */
-    public void prepareVentaBoletoIdGuia(ActionEvent event) {
-        if (this.getSelected() != null && ventaBoletoIdGuiaController.getSelected() == null) {
-            ventaBoletoIdGuiaController.setSelected(this.getSelected().getVentaBoletoIdGuia());
-        }
-    }
-
+    
     /**
      * Sets the "selected" attribute of the InventarioCaja controller in order
      * to display its data in its View dialog.

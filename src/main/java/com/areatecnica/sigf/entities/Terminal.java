@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "terminal", catalog = "sigf_v2", schema = "")
+@Table(name = "terminal", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Terminal.findAll", query = "SELECT t FROM Terminal t")
@@ -91,10 +90,11 @@ public class Terminal implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trabajadorIdTerminal")
     private List<Trabajador> trabajadorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "busIdTerminal")
-    @OrderBy("busNumero")
     private List<Bus> busList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "relacionLaboralIdTerminal")
     private List<RelacionLaboral> relacionLaboralList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupoServicioIdTerminal")
+    private List<GrupoServicio> grupoServicioList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cajaRecaudacionIdTerminal")
     private List<CajaRecaudacion> cajaRecaudacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "servicioIdTerminal")
@@ -243,6 +243,15 @@ public class Terminal implements Serializable {
 
     public void setRelacionLaboralList(List<RelacionLaboral> relacionLaboralList) {
         this.relacionLaboralList = relacionLaboralList;
+    }
+
+    @XmlTransient
+    public List<GrupoServicio> getGrupoServicioList() {
+        return grupoServicioList;
+    }
+
+    public void setGrupoServicioList(List<GrupoServicio> grupoServicioList) {
+        this.grupoServicioList = grupoServicioList;
     }
 
     @XmlTransient

@@ -85,11 +85,11 @@
                 <h:outputLabel value="#{item.servicioIdTerminal.terminalNombre}"/>
             </p:column>
 
-            <p:column sortBy="#{item.servicioIdUnidad.unidadNegocioId}" filterBy="#{item.servicioIdUnidad.unidadNegocioId}">
+            <p:column sortBy="#{item.servicioIdUnidad.unidadNegocioIdOperadorTransporte.operadorTransporteNombre}" filterBy="#{item.servicioIdUnidad.unidadNegocioIdOperadorTransporte.operadorTransporteNombre}">
                 <f:facet name="header">
                     <h:outputText value="Unidad"/>
                 </f:facet>
-                <h:outputLabel value="#{item.servicioIdUnidad.unidadNegocioId}"/>
+                <h:outputLabel value="#{item.servicioIdUnidad.unidadNegocioIdOperadorTransporte.operadorTransporteNombre}"/>
             </p:column>
 
 

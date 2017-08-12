@@ -20,7 +20,7 @@ public class IEgresoDaoImpl extends GenericDAOImpl<Egreso> implements IEgresoDao
     @Override
     public List<Egreso> findAllByCuenta(Cuenta cuenta) {
         try {
-            return this.entityManager.createNamedQuery("Egreso.findByCuenta").setParameter("egresoIdCuenta", cuenta).getResultList();
+            return this.entityManager.createNamedQuery("Egreso.findAllByCuenta").setParameter("idCuenta", cuenta).getResultList();
         } catch (NoResultException ne) {
             return null;
         }

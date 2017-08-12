@@ -33,11 +33,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "usuario", catalog = "sigf_v2", schema = "")
+@Table(name = "usuario", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"), 
-    @NamedQuery(name = "Usuario.findAllByCuenta", query = "SELECT u FROM Usuario u WHERE u.usuarioIdCuenta =:idCuenta")
+    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")
+    , @NamedQuery(name = "Usuario.findAllByCuenta", query = "SELECT u FROM Usuario u WHERE u.usuarioIdCuenta =:idCuenta")
     , @NamedQuery(name = "Usuario.findByUsuarioId", query = "SELECT u FROM Usuario u WHERE u.usuarioId = :usuarioId")
     , @NamedQuery(name = "Usuario.findByUsuarioRut", query = "SELECT u FROM Usuario u WHERE u.usuarioRut = :usuarioRut")
     , @NamedQuery(name = "Usuario.findByUsuarioRutAndPass", query = "SELECT u FROM Usuario u WHERE u.usuarioRut = :usuarioRut AND u.usuarioPass = :usuarioPass")
@@ -85,13 +85,13 @@ public class Usuario implements Serializable {
     @Column(name = "usuario_fecha_ingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date usuarioFechaIngreso;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioSessionIdUsuario")
+    private List<UsuarioSession> usuarioSessionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "despachoIdInspector")
     private List<Despacho> despachoList;
     @JoinColumn(name = "usuario_id_cuenta", referencedColumnName = "cuenta_id")
     @ManyToOne(optional = false)
     private Cuenta usuarioIdCuenta;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioSessionIdUsuario")
-    private List<UsuarioSession> usuarioSessionList;
     @JoinColumn(name = "usuario_id_rol", referencedColumnName = "rol_id")
     @ManyToOne(optional = false)
     private Rol usuarioIdRol;
@@ -190,21 +190,21 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public List<Despacho> getDespachoList() {
-        return despachoList;
-    }
-
-    public void setDespachoList(List<Despacho> despachoList) {
-        this.despachoList = despachoList;
-    }
-    
-    @XmlTransient
     public List<UsuarioSession> getUsuarioSessionList() {
         return usuarioSessionList;
     }
 
     public void setUsuarioSessionList(List<UsuarioSession> usuarioSessionList) {
         this.usuarioSessionList = usuarioSessionList;
+    }
+
+    @XmlTransient
+    public List<Despacho> getDespachoList() {
+        return despachoList;
+    }
+
+    public void setDespachoList(List<Despacho> despachoList) {
+        this.despachoList = despachoList;
     }
 
     public Cuenta getUsuarioIdCuenta() {
@@ -273,5 +273,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.Usuario[ usuarioId=" + usuarioId + " ]";
     }
-    
+
 }

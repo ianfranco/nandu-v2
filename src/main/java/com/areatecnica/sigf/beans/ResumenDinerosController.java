@@ -11,7 +11,7 @@ import com.areatecnica.sigf.dao.impl.ICajaRecaudacionDaoImpl;
 import com.areatecnica.sigf.dao.impl.IResumenRecaudacionDaoImpl;
 import com.areatecnica.sigf.entities.CajaProceso;
 import com.areatecnica.sigf.entities.CajaRecaudacion;
-import com.areatecnica.sigf.entities.EgresoRecaudacion;
+import com.areatecnica.sigf.entities.EgresoResumenRecaudacion;
 import com.areatecnica.sigf.entities.ProcesoRecaudacion;
 import com.areatecnica.sigf.entities.ResumenRecaudacion;
 import java.text.DecimalFormat;
@@ -54,7 +54,7 @@ public class ResumenDinerosController extends AbstractController<ResumenRecaudac
     private List<ResumenRecaudacion> list;
     private List<CajaRecaudacion> cajaRecaudacionList;
     private List<ProcesoRecaudacion> procesoRecaudacionList;
-    private List<EgresoRecaudacion> egresoRecaudacionList;
+    private List<EgresoResumenRecaudacion> egresoRecaudacionList;
     private Map mapResumen;
     private CajaRecaudacion cajaRecaudacion;
     private ProcesoRecaudacion procesoRecaudacion;
@@ -234,14 +234,14 @@ public class ResumenDinerosController extends AbstractController<ResumenRecaudac
     /**
      * @return the egresoRecaudacionList
      */
-    public List<EgresoRecaudacion> getEgresoRecaudacionList() {
+    public List<EgresoResumenRecaudacion> getEgresoRecaudacionList() {
         return egresoRecaudacionList;
     }
 
     /**
      * @param egresoRecaudacionList the egresoRecaudacionList to set
      */
-    public void setEgresoRecaudacionList(List<EgresoRecaudacion> egresoRecaudacionList) {
+    public void setEgresoRecaudacionList(List<EgresoResumenRecaudacion> egresoRecaudacionList) {
         this.egresoRecaudacionList = egresoRecaudacionList;
     }
 
@@ -318,10 +318,10 @@ public class ResumenDinerosController extends AbstractController<ResumenRecaudac
 
         if (mapResumen.containsKey(event.getStartDate())) {
             ResumenRecaudacion resumen = (ResumenRecaudacion) mapResumen.get(event.getStartDate());
-            this.setEgresoRecaudacionList(resumen.getEgresoRecaudacionList());
+            this.setEgresoRecaudacionList(resumen.getEgresoResumenRecaudacionList());
             int total = 0;
-            for (EgresoRecaudacion er : this.egresoRecaudacionList) {
-                total += er.getEgresoRecaudacionTotalEgreso();
+            for (EgresoResumenRecaudacion er : this.egresoRecaudacionList) {
+                total += er.getEgresoResumenRecaudacionTotal();
             }
             this.setResumenTotal(total);
             this.setResumenTotalFormat(decimalFormat.format(getResumenTotal()));

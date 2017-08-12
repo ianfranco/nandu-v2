@@ -19,7 +19,7 @@
                     <f:selectItems value="#{cajaTerminalController.items}"
                                    var="busIdFlotaItem"
                                    itemValue="#{busIdFlotaItem}"
-                                   itemLabel="#{busIdFlotaItem.cajaRecaudacionNombreCaja}"
+                                   itemLabel="#{busIdFlotaItem.cajaRecaudacionNombre}"
                                    />
                 </p:selectOneMenu>
                 <p:commandButton value="Buscar" id="addButton" actionListener="#{cajaProcesoController.find(event)}" styleClass="ui-priority-primary" update="datalist, growl" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()"/>                
@@ -35,7 +35,7 @@
                          emptyMessage="No se han encontrado registros">
 
                 <f:facet name="header">
-                    Detalle x Caja #{cajaProcesoController.cajaRecaudacion.cajaRecaudacionNombreCaja}
+                    Detalle x Caja #{cajaProcesoController.cajaRecaudacion.cajaRecaudacionNombre}
                 </f:facet>
 
                 <p:column style="text-align: center;">

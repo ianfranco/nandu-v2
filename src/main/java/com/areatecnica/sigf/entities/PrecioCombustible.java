@@ -28,16 +28,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "precio_combustible", catalog = "sigf_v2", schema = "")
+@Table(name = "precio_combustible", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PrecioCombustible.findAll", query = "SELECT p FROM PrecioCombustible p"),
-    @NamedQuery(name = "PrecioCombustible.findAllByCuenta", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleIdCuenta =:precioCombustibleIdCuenta"),
-    @NamedQuery(name = "PrecioCombustible.findLastPrecio", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleIdCuenta =:precioCombustibleIdCuenta ORDER BY p.precioCombustibleFechaPrecioCombustible DESC"),
-    @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleId", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleId = :precioCombustibleId"),
-    @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleValor", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleValor = :precioCombustibleValor"),
-    @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleFechaPrecioCombustible", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleFechaPrecioCombustible = :precioCombustibleFechaPrecioCombustible"),
-    @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleFechaIngreso", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleFechaIngreso = :precioCombustibleFechaIngreso")})
+    @NamedQuery(name = "PrecioCombustible.findAll", query = "SELECT p FROM PrecioCombustible p")
+    , @NamedQuery(name = "PrecioCombustible.findAllByCuenta", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleIdCuenta =:precioCombustibleIdCuenta")
+    , @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleId", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleId = :precioCombustibleId")
+    , @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleValor", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleValor = :precioCombustibleValor")
+    , @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleFechaPrecioCombustible", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleFechaPrecioCombustible = :precioCombustibleFechaPrecioCombustible")
+    , @NamedQuery(name = "PrecioCombustible.findByPrecioCombustibleFechaIngreso", query = "SELECT p FROM PrecioCombustible p WHERE p.precioCombustibleFechaIngreso = :precioCombustibleFechaIngreso")})
 public class PrecioCombustible implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -153,5 +152,5 @@ public class PrecioCombustible implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.PrecioCombustible[ precioCombustibleId=" + precioCombustibleId + " ]";
     }
-    
+
 }

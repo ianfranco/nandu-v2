@@ -7,9 +7,7 @@ package com.areatecnica.sigf.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,35 +17,28 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author ianfr
  */
 @Entity
-@Table(name = "venta_boleto", catalog = "sigf_v2", schema = "")
+@Table(name = "venta_boleto", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "VentaBoleto.findAll", query = "SELECT v FROM VentaBoleto v"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoId", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoId = :ventaBoletoId"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoIdGuia", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoIdGuia = :ventaBoletoIdGuia"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoIdGuiaBus", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoIdGuia.guiaIdBus = :ventaBoletoIdBus"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoIdGuiaBusEstado", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoIdGuia.guiaIdBus = :ventaBoletoIdBus AND v.ventaBoletoUtilizado = 0"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoIdGuiaBusBoletoEstado", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoIdGuia.guiaIdBus = :ventaBoletoIdBus AND v.ventaBoletoIdInventarioCaja.inventarioCajaIdInventarioInterno.inventarioInternoIdBoleto = :inventarioInternoIdBoleto AND v.ventaBoletoUtilizado = false ORDER BY v.ventaBoletoFechaIngreso DESC"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoDefaultIdGuia", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoIdGuia.guiaId = 1"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoIdCajaDate", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoIdInventarioCaja.inventarioCajaIdCaja = :inventarioCajaIdCaja AND v.ventaBoletoFecha  = :ventaBoletoFecha ORDER BY v.ventaBoletoIdGuia.guiaIdBus.busNumero ASC"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoNumeroBoleta", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoNumeroBoleta = :ventaBoletoNumeroBoleta"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoValorVentaBoleto", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoValorVentaBoleto = :ventaBoletoValorVentaBoleto"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoRecaudado", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoRecaudado = :ventaBoletoRecaudado"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoUtilizado", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoUtilizado = :ventaBoletoUtilizado"),
-    @NamedQuery(name = "VentaBoleto.findByVentaBoletoFechaIngreso", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoFechaIngreso = :ventaBoletoFechaIngreso")})
+    @NamedQuery(name = "VentaBoleto.findAll", query = "SELECT v FROM VentaBoleto v")
+    , @NamedQuery(name = "VentaBoleto.findByVentaBoletoId", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoId = :ventaBoletoId")
+    , @NamedQuery(name = "VentaBoleto.findByVentaBoletoFecha", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoFecha = :ventaBoletoFecha")
+    , @NamedQuery(name = "VentaBoleto.findByVentaBoletoNumeroBoleta", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoNumeroBoleta = :ventaBoletoNumeroBoleta")
+    , @NamedQuery(name = "VentaBoleto.findByVentaBoletoValor", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoValor = :ventaBoletoValor")
+    , @NamedQuery(name = "VentaBoleto.findByVentaBoletoRecaudado", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoRecaudado = :ventaBoletoRecaudado")
+    , @NamedQuery(name = "VentaBoleto.findByVentaBoletoUtilizado", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoUtilizado = :ventaBoletoUtilizado")
+    , @NamedQuery(name = "VentaBoleto.findByVentaBoletoFechaIngreso", query = "SELECT v FROM VentaBoleto v WHERE v.ventaBoletoFechaIngreso = :ventaBoletoFechaIngreso")})
 public class VentaBoleto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,17 +49,17 @@ public class VentaBoleto implements Serializable {
     private Integer ventaBoletoId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "venta_boleto_numero_boleta")
-    private int ventaBoletoNumeroBoleta;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "venta_boleto_fecha")
     @Temporal(TemporalType.DATE)
     private Date ventaBoletoFecha;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "venta_boleto_valor_venta_boleto")
-    private int ventaBoletoValorVentaBoleto;
+    @Column(name = "venta_boleto_numero_boleta")
+    private int ventaBoletoNumeroBoleta;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "venta_boleto_valor")
+    private int ventaBoletoValor;
     @Basic(optional = false)
     @NotNull
     @Column(name = "venta_boleto_recaudado")
@@ -80,14 +71,15 @@ public class VentaBoleto implements Serializable {
     @Column(name = "venta_boleto_fecha_ingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date ventaBoletoFechaIngreso;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "serieBoletoGuiaIdVentaBoleto")
-    private List<SerieBoletoGuia> serieBoletoGuiaList;
-    @JoinColumn(name = "venta_boleto_id_guia", referencedColumnName = "guia_id")
+    @JoinColumn(name = "venta_boleto_id_bus", referencedColumnName = "bus_id")
     @ManyToOne(optional = false)
-    private Guia ventaBoletoIdGuia;
+    private Bus ventaBoletoIdBus;
     @JoinColumn(name = "venta_boleto_id_inventario_caja", referencedColumnName = "inventario_caja_id")
     @ManyToOne(optional = false)
     private InventarioCaja ventaBoletoIdInventarioCaja;
+    @JoinColumn(name = "venta_boleto_id_trabajador", referencedColumnName = "trabajador_id")
+    @ManyToOne(optional = false)
+    private Trabajador ventaBoletoIdTrabajador;
 
     public VentaBoleto() {
     }
@@ -96,11 +88,11 @@ public class VentaBoleto implements Serializable {
         this.ventaBoletoId = ventaBoletoId;
     }
 
-    public VentaBoleto(Integer ventaBoletoId, Date ventaBoletoFecha, int ventaBoletoNumeroBoleta, int ventaBoletoValorVentaBoleto, boolean ventaBoletoRecaudado, Date ventaBoletoFechaIngreso) {
+    public VentaBoleto(Integer ventaBoletoId, Date ventaBoletoFecha, int ventaBoletoNumeroBoleta, int ventaBoletoValor, boolean ventaBoletoRecaudado, Date ventaBoletoFechaIngreso) {
         this.ventaBoletoId = ventaBoletoId;
         this.ventaBoletoFecha = ventaBoletoFecha;
         this.ventaBoletoNumeroBoleta = ventaBoletoNumeroBoleta;
-        this.ventaBoletoValorVentaBoleto = ventaBoletoValorVentaBoleto;
+        this.ventaBoletoValor = ventaBoletoValor;
         this.ventaBoletoRecaudado = ventaBoletoRecaudado;
         this.ventaBoletoFechaIngreso = ventaBoletoFechaIngreso;
     }
@@ -117,24 +109,24 @@ public class VentaBoleto implements Serializable {
         return ventaBoletoFecha;
     }
 
-    public int getVentaBoletoNumeroBoleta() {
-        return ventaBoletoNumeroBoleta;
-    }
-
     public void setVentaBoletoFecha(Date ventaBoletoFecha) {
         this.ventaBoletoFecha = ventaBoletoFecha;
+    }
+
+    public int getVentaBoletoNumeroBoleta() {
+        return ventaBoletoNumeroBoleta;
     }
 
     public void setVentaBoletoNumeroBoleta(int ventaBoletoNumeroBoleta) {
         this.ventaBoletoNumeroBoleta = ventaBoletoNumeroBoleta;
     }
 
-    public int getVentaBoletoValorVentaBoleto() {
-        return ventaBoletoValorVentaBoleto;
+    public int getVentaBoletoValor() {
+        return ventaBoletoValor;
     }
 
-    public void setVentaBoletoValorVentaBoleto(int ventaBoletoValorVentaBoleto) {
-        this.ventaBoletoValorVentaBoleto = ventaBoletoValorVentaBoleto;
+    public void setVentaBoletoValor(int ventaBoletoValor) {
+        this.ventaBoletoValor = ventaBoletoValor;
     }
 
     public boolean getVentaBoletoRecaudado() {
@@ -161,21 +153,12 @@ public class VentaBoleto implements Serializable {
         this.ventaBoletoFechaIngreso = ventaBoletoFechaIngreso;
     }
 
-    @XmlTransient
-    public List<SerieBoletoGuia> getSerieBoletoGuiaList() {
-        return serieBoletoGuiaList;
+    public Bus getVentaBoletoIdBus() {
+        return ventaBoletoIdBus;
     }
 
-    public void setSerieBoletoGuiaList(List<SerieBoletoGuia> serieBoletoGuiaList) {
-        this.serieBoletoGuiaList = serieBoletoGuiaList;
-    }
-
-    public Guia getVentaBoletoIdGuia() {
-        return ventaBoletoIdGuia;
-    }
-
-    public void setVentaBoletoIdGuia(Guia ventaBoletoIdGuia) {
-        this.ventaBoletoIdGuia = ventaBoletoIdGuia;
+    public void setVentaBoletoIdBus(Bus ventaBoletoIdBus) {
+        this.ventaBoletoIdBus = ventaBoletoIdBus;
     }
 
     public InventarioCaja getVentaBoletoIdInventarioCaja() {
@@ -184,6 +167,14 @@ public class VentaBoleto implements Serializable {
 
     public void setVentaBoletoIdInventarioCaja(InventarioCaja ventaBoletoIdInventarioCaja) {
         this.ventaBoletoIdInventarioCaja = ventaBoletoIdInventarioCaja;
+    }
+
+    public Trabajador getVentaBoletoIdTrabajador() {
+        return ventaBoletoIdTrabajador;
+    }
+
+    public void setVentaBoletoIdTrabajador(Trabajador ventaBoletoIdTrabajador) {
+        this.ventaBoletoIdTrabajador = ventaBoletoIdTrabajador;
     }
 
     @Override
@@ -208,7 +199,7 @@ public class VentaBoleto implements Serializable {
 
     @Override
     public String toString() {
-        return "com.areatecnica.entities.VentaBoleto[ ventaBoletoId=" + ventaBoletoId + " ]";
+        return "com.areatecnica.sigf.entities.VentaBoleto[ ventaBoletoId=" + ventaBoletoId + " ]";
     }
-
+    
 }

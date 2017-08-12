@@ -90,17 +90,6 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
         ventaCombustibleIdSurtidorController.setSelected(null);
     }
 
-    /**
-     * Sets the "selected" attribute of the Guia controller in order to display
-     * its data in its View dialog.
-     *
-     * @param event Event object for the widget that triggered an action
-     */
-    public void prepareVentaCombustibleIdGuia(ActionEvent event) {
-        if (this.getSelected() != null && ventaCombustibleIdGuiaController.getSelected() == null) {
-            ventaCombustibleIdGuiaController.setSelected(this.getSelected().getVentaCombustibleIdGuia());
-        }
-    }
 
     /**
      * Sets the "selected" attribute of the Surtidor controller in order to
@@ -190,7 +179,7 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     public VentaCombustible prepareCreate(ActionEvent event) {
         super.prepareCreate(event); //To change body of generated methods, choose Tools | Templates.
         this.getSelected().setVentaCombustibleFecha(new Date());
-        this.getSelected().setVentaCombustibleValorCombustible(precioCombustible.getPrecioCombustibleValor());
+        this.getSelected().setVentaCombustiblePrecio(precioCombustible.getPrecioCombustibleValor());
         return this.getSelected();
     }
 
@@ -206,23 +195,14 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
         this.guiaDao = new IGuiaDaoImpl();
         this.guiaSelected = this.guiaDao.findLastGuiaByBusEqualsFecha(busSelected, fecha);
 
-        if (this.guiaSelected != null) {
-            this.getSelected().setVentaCombustibleIdGuia(guiaSelected);
-        } else {
-            JsfUtil.addExclamationMessage("No se han encontrado Guías para el item seleccionado, debe crear una");
-            this.guiaSelected = new Guia();
-            this.guiaSelected.setGuiaIdBus(busSelected);
-            this.guiaSelected.setGuiaIdCuenta(this.getUserCount());
-            //this.guiaSelected.setGuiaIdTrabajador(guiaIdTrabajador);
-        }
     }
 
     public void handleTotalChange() {
-        this.getSelected().setVentaCombustibleCantidad((float) this.getSelected().getVentaCombustibleValor() / precioCombustible.getPrecioCombustibleValor());
+        this.getSelected().setVentaCombustibleCantidad((float) this.getSelected().getVentaCombustibleTotal()/ precioCombustible.getPrecioCombustibleValor());
     }
 
     public void handleNumeroLitrosChange() {
-        this.getSelected().setVentaCombustibleValor((int) (precioCombustible.getPrecioCombustibleValor() * this.getSelected().getVentaCombustibleCantidad()));
+        this.getSelected().setVentaCombustiblePrecio((int) (precioCombustible.getPrecioCombustibleValor() * this.getSelected().getVentaCombustibleCantidad()));
     }
     
     

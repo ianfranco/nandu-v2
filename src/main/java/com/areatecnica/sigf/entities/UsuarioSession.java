@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "usuario_session", catalog = "sigf_v2", schema = "")
+@Table(name = "usuario_session", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UsuarioSession.findAll", query = "SELECT u FROM UsuarioSession u")
@@ -125,7 +125,7 @@ public class UsuarioSession implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.mavenproject1.UsuarioSession[ usuarioSessionId=" + usuarioSessionId + " ]";
+        return "com.areatecnica.sigf.entities.UsuarioSession[ usuarioSessionId=" + usuarioSessionId + " ]";
     }
     
 }

@@ -1,8 +1,5 @@
 package com.areatecnica.sigf.beans;
 
-import com.areatecnica.sigf.beans.AbstractController;
-import com.areatecnica.sigf.beans.TrabajadorController;
-import com.areatecnica.sigf.beans.BusController;
 import com.areatecnica.sigf.entities.Guia;
 import com.areatecnica.sigf.controllers.GuiaFacade;
 import javax.inject.Named;
@@ -20,8 +17,6 @@ public class GuiaController extends AbstractController<Guia> {
     private GuiaFacade ejbFacade;
     @Inject
     private BusController guiaIdBusController;
-    @Inject
-    private EstadoGuiaController guiaIdEstadoController;
     @Inject
     private CajaRecaudacionController guiaIdCajaTerminalController;
     @Inject
@@ -47,7 +42,6 @@ public class GuiaController extends AbstractController<Guia> {
      */
     public void resetParents() {
         guiaIdBusController.setSelected(null);
-        guiaIdEstadoController.setSelected(null);
         guiaIdCajaTerminalController.setSelected(null);
         guiaIdTrabajadorController.setSelected(null);
     }
@@ -59,25 +53,11 @@ public class GuiaController extends AbstractController<Guia> {
      *
      * @return navigation outcome for SerieBoletoGuia page
      */
-    public String navigateSerieBoletoGuiaList() {
+    public String navigateRegistroBoletoList() {
         if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("SerieBoletoGuia_items", this.getSelected().getSerieBoletoGuiaList());
+            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("SerieBoletoGuia_items", this.getSelected().getRegistroBoletoList());
         }
         return "/serieBoletoGuia/index";
-    }
-    
-    /**
-     * Sets the "items" attribute with a collection of VentaCombustible entities
-     * that are retrieved from Guia?cap_first and returns the navigation
-     * outcome.
-     *
-     * @return navigation outcome for VentaCombustible page
-     */
-    public String navigateVentaCombustibleList() {
-        if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("VentaCombustible_items", this.getSelected().getVentaCombustibleList());
-        }
-        return "/ventaCombustible/index";
     }
 
     /**
@@ -93,20 +73,6 @@ public class GuiaController extends AbstractController<Guia> {
     }
 
     /**
-     * Sets the "selected" attribute of the EstadoGuia controller in order to
-     * display its data in its View dialog.
-     *
-     * @param event Event object for the widget that triggered an action
-     */
-    public void prepareGuiaIdEstado(ActionEvent event) {
-        if (this.getSelected() != null && guiaIdEstadoController.getSelected() == null) {
-            guiaIdEstadoController.setSelected(this.getSelected().getGuiaIdEstado());
-        }
-    }
-
-    
-
-    /**
      * Sets the "selected" attribute of the Trabajador controller in order to
      * display its data in its View dialog.
      *
@@ -116,19 +82,6 @@ public class GuiaController extends AbstractController<Guia> {
         if (this.getSelected() != null && guiaIdTrabajadorController.getSelected() == null) {
             guiaIdTrabajadorController.setSelected(this.getSelected().getGuiaIdTrabajador());
         }
-    }
-
-    /**
-     * Sets the "items" attribute with a collection of EgresoGuia entities that
-     * are retrieved from Guia?cap_first and returns the navigation outcome.
-     *
-     * @return navigation outcome for EgresoGuia page
-     */
-    public String navigateEgresoGuiaList() {
-        if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("EgresoGuia_items", this.getSelected().getEgresoGuiaList());
-        }
-        return "/egresoGuia/index";
     }
 
 }

@@ -33,30 +33,30 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "bus", catalog = "sigf_v2", schema = "")
+@Table(name = "bus", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Bus.findAll", query = "SELECT b FROM Bus b"),
-    @NamedQuery(name = "Bus.findByBusId", query = "SELECT b FROM Bus b WHERE b.busId = :busId"),
-    @NamedQuery(name = "Bus.findByBusIdUnidadNegocio", query = "SELECT b FROM Bus b WHERE b.busIdUnidadNegocio = :busIdUnidadNegocio ORDER BY b.busNumero ASC"),
-    @NamedQuery(name = "Bus.findByProcesoRecaudacion", query = "SELECT b FROM Bus b WHERE b.busIdProcesoRecaudacion = :busIdProcesoRecaudacion ORDER BY b.busNumero ASC"),
-    @NamedQuery(name = "Bus.findByGrupoServicio", query = "SELECT b FROM Bus b WHERE b.busIdGrupoServicio = :busIdGrupoServicio ORDER BY b.busNumero ASC"),
-    @NamedQuery(name = "Bus.findByTerminal", query = "SELECT b FROM Bus b WHERE b.busIdTerminal = :busIdTerminal ORDER BY b.busNumero ASC"),
-    @NamedQuery(name = "Bus.findByBusNumero", query = "SELECT b FROM Bus b WHERE b.busNumero = :busNumero"),
-    @NamedQuery(name = "Bus.findMaxNumeroUnidad", query = "SELECT b FROM Bus b WHERE b.busIdUnidadNegocio = :busIdUnidadNegocio ORDER BY b.busNumero DESC"),
-    @NamedQuery(name = "Bus.findByBusPatente", query = "SELECT b FROM Bus b WHERE b.busPatente = :busPatente"),
-    @NamedQuery(name = "Bus.findByBusTieneAdministrador", query = "SELECT b FROM Bus b WHERE b.busTieneAdministrador = :busTieneAdministrador"),
-    @NamedQuery(name = "Bus.findByBusAdministrador", query = "SELECT b FROM Bus b WHERE b.busAdministrador = :busAdministrador"),
-    @NamedQuery(name = "Bus.findByBusAnio", query = "SELECT b FROM Bus b WHERE b.busAnio = :busAnio"),
-    @NamedQuery(name = "Bus.findByBusFechaRevisionTecnica", query = "SELECT b FROM Bus b WHERE b.busFechaRevisionTecnica = :busFechaRevisionTecnica"),
-    @NamedQuery(name = "Bus.findByBusNumeroMotor", query = "SELECT b FROM Bus b WHERE b.busNumeroMotor = :busNumeroMotor"),
-    @NamedQuery(name = "Bus.findByBusNumeroChasis", query = "SELECT b FROM Bus b WHERE b.busNumeroChasis = :busNumeroChasis"),
-    @NamedQuery(name = "Bus.findByBusCarroceria", query = "SELECT b FROM Bus b WHERE b.busCarroceria = :busCarroceria"),
-    @NamedQuery(name = "Bus.findByBusTieneEgresoIndividual", query = "SELECT b FROM Bus b WHERE b.busTieneEgresoIndividual = :busTieneEgresoIndividual"),
-    @NamedQuery(name = "Bus.findByBusTieneEgresoFlota", query = "SELECT b FROM Bus b WHERE b.busTieneEgresoFlota = :busTieneEgresoFlota"),
-    @NamedQuery(name = "Bus.findByBusComparteServicio", query = "SELECT b FROM Bus b WHERE b.busComparteServicio = :busComparteServicio"),
-    @NamedQuery(name = "Bus.findByBusActivo", query = "SELECT b FROM Bus b WHERE b.busActivo = :busActivo"),
-    @NamedQuery(name = "Bus.findByBusFechaIngreso", query = "SELECT b FROM Bus b WHERE b.busFechaIngreso = :busFechaIngreso")})
+    @NamedQuery(name = "Bus.findAll", query = "SELECT b FROM Bus b")
+    , @NamedQuery(name = "Bus.findByBusId", query = "SELECT b FROM Bus b WHERE b.busId = :busId")
+    , @NamedQuery(name = "Bus.findByBusIdUnidadNegocio", query = "SELECT b FROM Bus b WHERE b.busIdUnidadNegocio = :busIdUnidadNegocio ORDER BY b.busNumero ASC")
+    , @NamedQuery(name = "Bus.findByProcesoRecaudacion", query = "SELECT b FROM Bus b WHERE b.busIdProcesoRecaudacion = :busIdProcesoRecaudacion ORDER BY b.busNumero ASC")
+    , @NamedQuery(name = "Bus.findByGrupoServicio", query = "SELECT b FROM Bus b WHERE b.busIdGrupoServicio = :busIdGrupoServicio ORDER BY b.busNumero ASC")
+    , @NamedQuery(name = "Bus.findByTerminal", query = "SELECT b FROM Bus b WHERE b.busIdTerminal = :busIdTerminal ORDER BY b.busNumero ASC")
+    , @NamedQuery(name = "Bus.findByBusNumero", query = "SELECT b FROM Bus b WHERE b.busNumero = :busNumero")
+    , @NamedQuery(name = "Bus.findMaxNumeroUnidad", query = "SELECT b FROM Bus b WHERE b.busIdUnidadNegocio = :busIdUnidadNegocio ORDER BY b.busNumero DESC")    
+    , @NamedQuery(name = "Bus.findByBusPatente", query = "SELECT b FROM Bus b WHERE b.busPatente = :busPatente")
+    , @NamedQuery(name = "Bus.findByBusTieneAdministrador", query = "SELECT b FROM Bus b WHERE b.busTieneAdministrador = :busTieneAdministrador")
+    , @NamedQuery(name = "Bus.findByBusAdministrador", query = "SELECT b FROM Bus b WHERE b.busAdministrador = :busAdministrador")
+    , @NamedQuery(name = "Bus.findByBusAnio", query = "SELECT b FROM Bus b WHERE b.busAnio = :busAnio")
+    , @NamedQuery(name = "Bus.findByBusFechaRevisionTecnica", query = "SELECT b FROM Bus b WHERE b.busFechaRevisionTecnica = :busFechaRevisionTecnica")
+    , @NamedQuery(name = "Bus.findByBusNumeroMotor", query = "SELECT b FROM Bus b WHERE b.busNumeroMotor = :busNumeroMotor")
+    , @NamedQuery(name = "Bus.findByBusNumeroChasis", query = "SELECT b FROM Bus b WHERE b.busNumeroChasis = :busNumeroChasis")
+    , @NamedQuery(name = "Bus.findByBusCarroceria", query = "SELECT b FROM Bus b WHERE b.busCarroceria = :busCarroceria")
+    , @NamedQuery(name = "Bus.findByBusTieneEgresoIndividual", query = "SELECT b FROM Bus b WHERE b.busTieneEgresoIndividual = :busTieneEgresoIndividual")
+    , @NamedQuery(name = "Bus.findByBusTieneEgresoFlota", query = "SELECT b FROM Bus b WHERE b.busTieneEgresoFlota = :busTieneEgresoFlota")
+    , @NamedQuery(name = "Bus.findByBusComparteServicio", query = "SELECT b FROM Bus b WHERE b.busComparteServicio = :busComparteServicio")
+    , @NamedQuery(name = "Bus.findByBusActivo", query = "SELECT b FROM Bus b WHERE b.busActivo = :busActivo")
+    , @NamedQuery(name = "Bus.findByBusFechaIngreso", query = "SELECT b FROM Bus b WHERE b.busFechaIngreso = :busFechaIngreso")})
 public class Bus implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -112,6 +112,10 @@ public class Bus implements Serializable {
     private List<CargoBus> cargoBusList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "despachoIdBus")
     private List<Despacho> despachoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ventaBoletoIdBus")
+    private List<VentaBoleto> ventaBoletoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recaudacionIdBus")
+    private List<Recaudacion> recaudacionList;
     @JoinColumn(name = "bus_id_empresa", referencedColumnName = "empresa_id")
     @ManyToOne(optional = false)
     private Empresa busIdEmpresa;
@@ -136,6 +140,8 @@ public class Bus implements Serializable {
     @JoinColumn(name = "bus_id_unidad_negocio", referencedColumnName = "unidad_negocio_id")
     @ManyToOne(optional = false)
     private UnidadNegocio busIdUnidadNegocio;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ventaCombustibleIdBus")
+    private List<VentaCombustible> ventaCombustibleList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "egresoBusIdBus")
     private List<EgresoBus> egresoBusList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "guiaIdBus")
@@ -306,6 +312,24 @@ public class Bus implements Serializable {
         this.despachoList = despachoList;
     }
 
+    @XmlTransient
+    public List<VentaBoleto> getVentaBoletoList() {
+        return ventaBoletoList;
+    }
+
+    public void setVentaBoletoList(List<VentaBoleto> ventaBoletoList) {
+        this.ventaBoletoList = ventaBoletoList;
+    }
+
+    @XmlTransient
+    public List<Recaudacion> getRecaudacionList() {
+        return recaudacionList;
+    }
+
+    public void setRecaudacionList(List<Recaudacion> recaudacionList) {
+        this.recaudacionList = recaudacionList;
+    }
+
     public Empresa getBusIdEmpresa() {
         return busIdEmpresa;
     }
@@ -368,6 +392,15 @@ public class Bus implements Serializable {
 
     public void setBusIdUnidadNegocio(UnidadNegocio busIdUnidadNegocio) {
         this.busIdUnidadNegocio = busIdUnidadNegocio;
+    }
+
+    @XmlTransient
+    public List<VentaCombustible> getVentaCombustibleList() {
+        return ventaCombustibleList;
+    }
+
+    public void setVentaCombustibleList(List<VentaCombustible> ventaCombustibleList) {
+        this.ventaCombustibleList = ventaCombustibleList;
     }
 
     @XmlTransient

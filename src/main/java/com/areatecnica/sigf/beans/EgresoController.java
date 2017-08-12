@@ -36,20 +36,6 @@ public class EgresoController extends AbstractController<Egreso> {
     }
 
     /**
-     * Sets the "items" attribute with a collection of EgresoRecaudacion
-     * entities that are retrieved from Egreso?cap_first and returns the
-     * navigation outcome.
-     *
-     * @return navigation outcome for EgresoRecaudacion page
-     */
-    public String navigateEgresoRecaudacionList() {
-        if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("EgresoRecaudacion_items", this.getSelected().getEgresoRecaudacionList());
-        }
-        return "/egresoRecaudacion/index";
-    }
-
-    /**
      * Sets the "items" attribute with a collection of EgresoBus entities that
      * are retrieved from Egreso?cap_first and returns the navigation outcome.
      *
@@ -60,19 +46,6 @@ public class EgresoController extends AbstractController<Egreso> {
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("EgresoBus_items", this.getSelected().getEgresoBusList());
         }
         return "/egresoBus/index";
-    }
-
-    /**
-     * Sets the "items" attribute with a collection of EgresoGuia entities that
-     * are retrieved from Egreso?cap_first and returns the navigation outcome.
-     *
-     * @return navigation outcome for EgresoGuia page
-     */
-    public String navigateEgresoGuiaList() {
-        if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("EgresoGuia_items", this.getSelected().getEgresoGuiaList());
-        }
-        return "/egresoGuia/index";
     }
 
     /**

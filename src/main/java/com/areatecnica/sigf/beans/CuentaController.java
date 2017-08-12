@@ -1,7 +1,6 @@
 package com.areatecnica.sigf.beans;
 
 
-import com.areatecnica.sigf.beans.AbstractController;
 import com.areatecnica.sigf.controllers.CuentaFacade;
 import com.areatecnica.sigf.entities.Cuenta;
 import javax.inject.Named;
@@ -529,20 +528,7 @@ public class CuentaController extends AbstractController<Cuenta> {
         }
         return "//terminal/index";
     }
-
-    /**
-     * Sets the "items" attribute with a collection of EstadoGuia entities that
-     * are retrieved from Cuenta?cap_first and returns the navigation outcome.
-     *
-     * @return navigation outcome for EstadoGuia page
-     */
-    public String navigateEstadoGuiaList() {
-        if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("EstadoGuia_items", this.getSelected().getEstadoGuiaList());
-        }
-        return "//estadoGuia/index";
-    }
-
+    
     /**
      * Sets the "items" attribute with a collection of Departamento entities
      * that are retrieved from Cuenta?cap_first and returns the navigation

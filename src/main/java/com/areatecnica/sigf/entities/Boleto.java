@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "boleto", catalog = "sigf_v2", schema = "")
+@Table(name = "boleto", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Boleto.findAll", query = "SELECT b FROM Boleto b")
@@ -71,6 +71,8 @@ public class Boleto implements Serializable {
     private List<InventarioInterno> inventarioInternoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "detalleCompraBoletoIdBoleto")
     private List<DetalleCompraBoleto> detalleCompraBoletoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registroBoletoIdBoleto")
+    private List<RegistroBoleto> registroBoletoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tarifaGrupoServicioIdBoleto")
     private List<TarifaGrupoServicio> tarifaGrupoServicioList;
 
@@ -144,6 +146,15 @@ public class Boleto implements Serializable {
 
     public void setDetalleCompraBoletoList(List<DetalleCompraBoleto> detalleCompraBoletoList) {
         this.detalleCompraBoletoList = detalleCompraBoletoList;
+    }
+
+    @XmlTransient
+    public List<RegistroBoleto> getRegistroBoletoList() {
+        return registroBoletoList;
+    }
+
+    public void setRegistroBoletoList(List<RegistroBoleto> registroBoletoList) {
+        this.registroBoletoList = registroBoletoList;
     }
 
     @XmlTransient

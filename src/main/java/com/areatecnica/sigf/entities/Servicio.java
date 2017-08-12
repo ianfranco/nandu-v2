@@ -5,7 +5,6 @@
  */
 package com.areatecnica.sigf.entities;
 
-import com.areatecnica.sigf.audit.AuditListener;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,12 +33,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "servicio", catalog = "sigf_v2", schema = "")
-@EntityListeners({AuditListener.class})
+@Table(name = "servicio", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Servicio.findAll", query = "SELECT s FROM Servicio s"), 
-    @NamedQuery(name = "Servicio.findAllByCuenta", query = "SELECT s FROM Servicio s WHERE s.servicioIdCuenta = :idCuenta")
+    @NamedQuery(name = "Servicio.findAll", query = "SELECT s FROM Servicio s")
+    , @NamedQuery(name = "Servicio.findAllByCuenta", query = "SELECT s FROM Servicio s WHERE s.servicioIdCuenta = :idCuenta")
     , @NamedQuery(name = "Servicio.findByServicioId", query = "SELECT s FROM Servicio s WHERE s.servicioId = :servicioId")
     , @NamedQuery(name = "Servicio.findByServicioNumeroServicio", query = "SELECT s FROM Servicio s WHERE s.servicioNumeroServicio = :servicioNumeroServicio")
     , @NamedQuery(name = "Servicio.findByServicioLongitud", query = "SELECT s FROM Servicio s WHERE s.servicioLongitud = :servicioLongitud")
@@ -114,6 +110,8 @@ public class Servicio implements Serializable {
     @JoinColumn(name = "servicio_id_unidad", referencedColumnName = "unidad_negocio_id")
     @ManyToOne(optional = false)
     private UnidadNegocio servicioIdUnidad;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registroBoletoIdServicio")
+    private List<RegistroBoleto> registroBoletoList;
 
     public Servicio() {
     }
@@ -249,6 +247,14 @@ public class Servicio implements Serializable {
         this.horarioServicioList = horarioServicioList;
     }
 
+    public Cuenta getServicioIdCuenta() {
+        return servicioIdCuenta;
+    }
+
+    public void setServicioIdCuenta(Cuenta servicioIdCuenta) {
+        this.servicioIdCuenta = servicioIdCuenta;
+    }
+
     public GrupoServicio getServicioIdGrupoServicio() {
         return servicioIdGrupoServicio;
     }
@@ -265,20 +271,21 @@ public class Servicio implements Serializable {
         this.servicioIdTerminal = servicioIdTerminal;
     }
 
-    public Cuenta getServicioIdCuenta() {
-        return servicioIdCuenta;
-    }
-
-    public void setServicioIdCuenta(Cuenta servicioIdCuenta) {
-        this.servicioIdCuenta = servicioIdCuenta;
-    }
-    
     public UnidadNegocio getServicioIdUnidad() {
         return servicioIdUnidad;
     }
 
     public void setServicioIdUnidad(UnidadNegocio servicioIdUnidad) {
         this.servicioIdUnidad = servicioIdUnidad;
+    }
+
+    @XmlTransient
+    public List<RegistroBoleto> getRegistroBoletoList() {
+        return registroBoletoList;
+    }
+
+    public void setRegistroBoletoList(List<RegistroBoleto> registroBoletoList) {
+        this.registroBoletoList = registroBoletoList;
     }
 
     @Override
@@ -305,9 +312,5 @@ public class Servicio implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.Servicio[ servicioId=" + servicioId + " ]";
     }
-    
-    @PrePersist
-    private void setInsert(){
-        this.servicioFechaIngreso = new Date();
-    }
+
 }

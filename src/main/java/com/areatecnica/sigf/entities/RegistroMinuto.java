@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,13 +29,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "registro_minuto", catalog = "sigf_v2", schema = "")
+@Table(name = "registro_minuto", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "RegistroMinuto.findAll", query = "SELECT r FROM RegistroMinuto r")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoId", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoId = :registroMinutoId")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoFechaIngreso", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoFechaIngreso = :registroMinutoFechaIngreso")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoFechaMinuto", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoFechaMinuto = :registroMinutoFechaMinuto")
+    , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoCantidad", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoCantidad = :registroMinutoCantidad")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoMonto", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoMonto = :registroMinutoMonto")})
 public class RegistroMinuto implements Serializable {
 
@@ -54,6 +56,9 @@ public class RegistroMinuto implements Serializable {
     @Column(name = "registro_minuto_fecha_minuto")
     @Temporal(TemporalType.TIMESTAMP)
     private Date registroMinutoFechaMinuto;
+    @Size(max = 45)
+    @Column(name = "registro_minuto_cantidad")
+    private String registroMinutoCantidad;
     @Basic(optional = false)
     @NotNull
     @Column(name = "registro_minuto_monto")
@@ -104,6 +109,14 @@ public class RegistroMinuto implements Serializable {
 
     public void setRegistroMinutoFechaMinuto(Date registroMinutoFechaMinuto) {
         this.registroMinutoFechaMinuto = registroMinutoFechaMinuto;
+    }
+
+    public String getRegistroMinutoCantidad() {
+        return registroMinutoCantidad;
+    }
+
+    public void setRegistroMinutoCantidad(String registroMinutoCantidad) {
+        this.registroMinutoCantidad = registroMinutoCantidad;
     }
 
     public int getRegistroMinutoMonto() {

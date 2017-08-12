@@ -5,7 +5,6 @@
  */
 package com.areatecnica.sigf.entities;
 
-import com.areatecnica.sigf.audit.AuditListener;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,9 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "banco", catalog = "sigf_v2", schema = "")
+@Table(name = "banco", catalog = "sigf_v3", schema = "")
 @XmlRootElement
-@EntityListeners({AuditListener.class})
 @NamedQueries({
     @NamedQuery(name = "Banco.findAll", query = "SELECT b FROM Banco b")
     , @NamedQuery(name = "Banco.findByBancoId", query = "SELECT b FROM Banco b WHERE b.bancoId = :bancoId")

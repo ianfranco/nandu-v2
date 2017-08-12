@@ -18,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,18 +29,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "egreso_flota", catalog = "sigf_v2", schema = "")
+@Table(name = "egreso_flota", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "EgresoFlota.findAll", query = "SELECT e FROM EgresoFlota e"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaId", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaId = :egresoFlotaId"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaIdFlota", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaIdFlota = :egresoFlotaIdFlota ORDER BY e.egresoFlotaNumeroOrden ASC"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaValorDefecto", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaValorDefecto = :egresoFlotaValorDefecto"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaPorcentaje", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaPorcentaje = :egresoFlotaPorcentaje"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaNumeroOrden", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaNumeroOrden = :egresoFlotaNumeroOrden"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaActivo", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaActivo = :egresoFlotaActivo"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaFechaIngreso", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaFechaIngreso = :egresoFlotaFechaIngreso"),
-    @NamedQuery(name = "EgresoFlota.findByEgresoFlotaFechaActualizacion", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaFechaActualizacion = :egresoFlotaFechaActualizacion")})
+    @NamedQuery(name = "EgresoFlota.findAll", query = "SELECT e FROM EgresoFlota e")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaId", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaId = :egresoFlotaId")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaIdFlota", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaIdFlota = :egresoFlotaIdFlota ORDER BY e.egresoFlotaNumeroOrden ASC")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaValorDefecto", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaValorDefecto = :egresoFlotaValorDefecto")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaPorcentaje", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaPorcentaje = :egresoFlotaPorcentaje")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaNumeroOrden", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaNumeroOrden = :egresoFlotaNumeroOrden")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaActivo", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaActivo = :egresoFlotaActivo")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaFechaIngreso", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaFechaIngreso = :egresoFlotaFechaIngreso")
+    , @NamedQuery(name = "EgresoFlota.findByEgresoFlotaFechaActualizacion", query = "SELECT e FROM EgresoFlota e WHERE e.egresoFlotaFechaActualizacion = :egresoFlotaFechaActualizacion")})
 public class EgresoFlota implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -62,7 +61,6 @@ public class EgresoFlota implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "egreso_flota_numero_orden")
-    @OrderBy("egresoFlotaNumeroOrden ASC")
     private int egresoFlotaNumeroOrden;
     @Basic(optional = false)
     @NotNull
@@ -77,7 +75,7 @@ public class EgresoFlota implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date egresoFlotaFechaActualizacion;
     @JoinColumn(name = "egreso_flota_id_egreso", referencedColumnName = "egreso_id")
-    @ManyToOne(optional = false)    
+    @ManyToOne(optional = false)
     private Egreso egresoFlotaIdEgreso;
     @JoinColumn(name = "egreso_flota_id_flota", referencedColumnName = "flota_id")
     @ManyToOne(optional = false)

@@ -30,21 +30,19 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- *
  * @author ianfr
  */
 @Entity
-@Table(name = "caja_recaudacion", catalog = "sigf_v2", schema = "")
+@Table(name = "caja_recaudacion", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CajaRecaudacion.findAll", query = "SELECT c FROM CajaRecaudacion c"),
-    @NamedQuery(name = "CajaRecaudacion.findAllByCuenta", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionIdCuenta =:idCuenta"),
-    @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionId", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionId = :cajaRecaudacionId"),
-    @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionIdUsuario", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionIdUsuario = :cajaRecaudacionIdUsuario AND c.cajaRecaudacionActiva = 1"),
-    @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionNombreCaja", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionNombreCaja = :cajaRecaudacionNombreCaja"),
-    @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionTieneEgresos", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionTieneEgresos = :cajaRecaudacionTieneEgresos"),
-    @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionActiva", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionActiva = :cajaRecaudacionActiva"),
-    @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionFechaIngreso", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionFechaIngreso = :cajaRecaudacionFechaIngreso")})
+    @NamedQuery(name = "CajaRecaudacion.findAll", query = "SELECT c FROM CajaRecaudacion c")
+    , @NamedQuery(name = "CajaRecaudacion.findAllByCuenta", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionIdCuenta =:idCuenta")
+    , @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionId", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionId = :cajaRecaudacionId")
+    , @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionNombre", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionNombre = :cajaRecaudacionNombre")
+    , @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionTieneEgresos", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionTieneEgresos = :cajaRecaudacionTieneEgresos")
+    , @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionActiva", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionActiva = :cajaRecaudacionActiva")
+    , @NamedQuery(name = "CajaRecaudacion.findByCajaRecaudacionFechaIngreso", query = "SELECT c FROM CajaRecaudacion c WHERE c.cajaRecaudacionFechaIngreso = :cajaRecaudacionFechaIngreso")})
 public class CajaRecaudacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,8 +54,8 @@ public class CajaRecaudacion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "caja_recaudacion_nombre_caja")
-    private String cajaRecaudacionNombreCaja;
+    @Column(name = "caja_recaudacion_nombre")
+    private String cajaRecaudacionNombre;
     @Basic(optional = false)
     @NotNull
     @Column(name = "caja_recaudacion_tiene_egresos")
@@ -73,6 +71,8 @@ public class CajaRecaudacion implements Serializable {
     private Date cajaRecaudacionFechaIngreso;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "egresoCajaRecaudacionIdCaja")
     private List<EgresoCajaRecaudacion> egresoCajaRecaudacionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recaudacionIdCaja")
+    private List<Recaudacion> recaudacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cajaProcesoIdCaja")
     private List<CajaProceso> cajaProcesoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "resumenRecaudacionIdCaja")
@@ -86,8 +86,6 @@ public class CajaRecaudacion implements Serializable {
     @JoinColumn(name = "caja_recaudacion_id_usuario", referencedColumnName = "usuario_id")
     @ManyToOne(optional = false)
     private Usuario cajaRecaudacionIdUsuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "egresoGuiaIdCajaRecaudacion")
-    private List<EgresoGuia> egresoGuiaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "inventarioCajaIdCaja")
     private List<InventarioCaja> inventarioCajaList;
 
@@ -98,9 +96,9 @@ public class CajaRecaudacion implements Serializable {
         this.cajaRecaudacionId = cajaRecaudacionId;
     }
 
-    public CajaRecaudacion(Integer cajaRecaudacionId, String cajaRecaudacionNombreCaja, boolean cajaRecaudacionTieneEgresos, boolean cajaRecaudacionActiva, Date cajaRecaudacionFechaIngreso) {
+    public CajaRecaudacion(Integer cajaRecaudacionId, String cajaRecaudacionNombre, boolean cajaRecaudacionTieneEgresos, boolean cajaRecaudacionActiva, Date cajaRecaudacionFechaIngreso) {
         this.cajaRecaudacionId = cajaRecaudacionId;
-        this.cajaRecaudacionNombreCaja = cajaRecaudacionNombreCaja;
+        this.cajaRecaudacionNombre = cajaRecaudacionNombre;
         this.cajaRecaudacionTieneEgresos = cajaRecaudacionTieneEgresos;
         this.cajaRecaudacionActiva = cajaRecaudacionActiva;
         this.cajaRecaudacionFechaIngreso = cajaRecaudacionFechaIngreso;
@@ -114,12 +112,12 @@ public class CajaRecaudacion implements Serializable {
         this.cajaRecaudacionId = cajaRecaudacionId;
     }
 
-    public String getCajaRecaudacionNombreCaja() {
-        return cajaRecaudacionNombreCaja;
+    public String getCajaRecaudacionNombre() {
+        return cajaRecaudacionNombre;
     }
 
-    public void setCajaRecaudacionNombreCaja(String cajaRecaudacionNombreCaja) {
-        this.cajaRecaudacionNombreCaja = cajaRecaudacionNombreCaja;
+    public void setCajaRecaudacionNombre(String cajaRecaudacionNombre) {
+        this.cajaRecaudacionNombre = cajaRecaudacionNombre;
     }
 
     public boolean getCajaRecaudacionTieneEgresos() {
@@ -156,14 +154,14 @@ public class CajaRecaudacion implements Serializable {
     }
 
     @XmlTransient
-    public List<EgresoGuia> getEgresoGuiaList() {
-        return egresoGuiaList;
+    public List<Recaudacion> getRecaudacionList() {
+        return recaudacionList;
     }
 
-    public void setEgresoGuiaList(List<EgresoGuia> egresoGuiaList) {
-        this.egresoGuiaList = egresoGuiaList;
+    public void setRecaudacionList(List<Recaudacion> recaudacionList) {
+        this.recaudacionList = recaudacionList;
     }
-    
+
     @XmlTransient
     public List<CajaProceso> getCajaProcesoList() {
         return cajaProcesoList;
@@ -181,7 +179,7 @@ public class CajaRecaudacion implements Serializable {
     public void setResumenRecaudacionList(List<ResumenRecaudacion> resumenRecaudacionList) {
         this.resumenRecaudacionList = resumenRecaudacionList;
     }
-    
+
     public Cuenta getCajaRecaudacionIdCuenta() {
         return cajaRecaudacionIdCuenta;
     }
@@ -205,7 +203,7 @@ public class CajaRecaudacion implements Serializable {
     public void setCajaRecaudacionIdUsuario(Usuario cajaRecaudacionIdUsuario) {
         this.cajaRecaudacionIdUsuario = cajaRecaudacionIdUsuario;
     }
-    
+
     @XmlTransient
     public List<InventarioCaja> getInventarioCajaList() {
         return inventarioCajaList;

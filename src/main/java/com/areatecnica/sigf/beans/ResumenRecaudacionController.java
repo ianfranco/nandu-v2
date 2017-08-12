@@ -57,20 +57,6 @@ public class ResumenRecaudacionController extends AbstractController<ResumenReca
     }
 
     /**
-     * Sets the "items" attribute with a collection of EgresoRecaudacion
-     * entities that are retrieved from ResumenRecaudacion?cap_first and returns
-     * the navigation outcome.
-     *
-     * @return navigation outcome for EgresoRecaudacion page
-     */
-    public String navigateEgresoRecaudacionList() {
-        if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("EgresoRecaudacion_items", this.getSelected().getEgresoRecaudacionList());
-        }
-        return "/egresoRecaudacion/index";
-    }
-
-    /**
      * Sets the "selected" attribute of the CajaTerminal controller in order to
      * display its data in its View dialog.
      *

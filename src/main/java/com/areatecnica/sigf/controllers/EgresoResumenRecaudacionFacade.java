@@ -5,7 +5,7 @@
  */
 package com.areatecnica.sigf.controllers;
 
-import com.areatecnica.sigf.entities.SerieBoletoGuia;
+import com.areatecnica.sigf.entities.EgresoResumenRecaudacion;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author ianfr
  */
 @Stateless
-public class SerieBoletoGuiaFacade extends AbstractFacade<SerieBoletoGuia> {
+public class EgresoResumenRecaudacionFacade extends AbstractFacade<EgresoResumenRecaudacion> {
 
     @PersistenceContext(unitName = "com.areatecnica_sigf-admin_war_2PU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class SerieBoletoGuiaFacade extends AbstractFacade<SerieBoletoGuia> {
         return em;
     }
 
-    public SerieBoletoGuiaFacade() {
-        super(SerieBoletoGuia.class);
+    public EgresoResumenRecaudacionFacade() {
+        super(EgresoResumenRecaudacion.class);
     }
     
 }

@@ -7,16 +7,16 @@ package com.areatecnica.sigf.dao;
 
 import com.areatecnica.sigf.entities.Boleto;
 import com.areatecnica.sigf.entities.Guia;
-import com.areatecnica.sigf.entities.SerieBoletoGuia;
+import com.areatecnica.sigf.entities.RegistroBoleto;
 import java.util.List;
 
 /**
  *
  * @author ianfr
  */
-public interface ISerieBoletoDao<T> extends IGenericDAO<T> {
+public interface IRegistroBoletoDao<T> extends IGenericDAO<T> {
 
-    public List<SerieBoletoGuia> findByGuia(Guia guia);
+    public List<RegistroBoleto> findByGuia(Guia guia);
 
-    public SerieBoletoGuia findByGuiaBoleto(Guia guia, Boleto boleto);
+    public RegistroBoleto findByGuiaBoleto(Guia guia, Boleto boleto);
 }

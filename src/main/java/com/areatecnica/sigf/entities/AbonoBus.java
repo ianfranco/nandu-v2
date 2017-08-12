@@ -33,19 +33,19 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "abono_bus", catalog = "sigf_v2", schema = "")
+@Table(name = "abono_bus", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AbonoBus.findAll", query = "SELECT a FROM AbonoBus a"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusId", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusId = :abonoBusId"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusFechaInicio", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusFechaInicio = :abonoBusFechaInicio"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusFechaTermino", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusFechaTermino = :abonoBusFechaTermino"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusCuotaActual", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusCuotaActual = :abonoBusCuotaActual"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusTotalCuotas", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusTotalCuotas = :abonoBusTotalCuotas"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusMontoFijo", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusMontoFijo = :abonoBusMontoFijo"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusDescripcion", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusDescripcion = :abonoBusDescripcion"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusActivo", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusActivo = :abonoBusActivo"),
-    @NamedQuery(name = "AbonoBus.findByAbonoBusFechaIngreso", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusFechaIngreso = :abonoBusFechaIngreso")})
+    @NamedQuery(name = "AbonoBus.findAll", query = "SELECT a FROM AbonoBus a")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusId", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusId = :abonoBusId")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusFechaInicio", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusFechaInicio = :abonoBusFechaInicio")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusFechaTermino", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusFechaTermino = :abonoBusFechaTermino")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusCuotaActual", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusCuotaActual = :abonoBusCuotaActual")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusTotalCuotas", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusTotalCuotas = :abonoBusTotalCuotas")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusMontoFijo", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusMontoFijo = :abonoBusMontoFijo")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusDescripcion", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusDescripcion = :abonoBusDescripcion")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusActivo", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusActivo = :abonoBusActivo")
+    , @NamedQuery(name = "AbonoBus.findByAbonoBusFechaIngreso", query = "SELECT a FROM AbonoBus a WHERE a.abonoBusFechaIngreso = :abonoBusFechaIngreso")})
 public class AbonoBus implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -236,5 +236,5 @@ public class AbonoBus implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.AbonoBus[ abonoBusId=" + abonoBusId + " ]";
     }
-
+    
 }

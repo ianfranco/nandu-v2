@@ -28,15 +28,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "venta_combustible", catalog = "sigf_v2", schema = "")
+@Table(name = "venta_combustible", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "VentaCombustible.findAll", query = "SELECT v FROM VentaCombustible v")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleId", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleId = :ventaCombustibleId")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleFecha", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleFecha = :ventaCombustibleFecha")
-    , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleValor", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleValor = :ventaCombustibleValor")
+    , @NamedQuery(name = "VentaCombustible.findByVentaCombustiblePrecio", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustiblePrecio = :ventaCombustiblePrecio")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleCantidad", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleCantidad = :ventaCombustibleCantidad")
-    , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleValorCombustible", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleValorCombustible = :ventaCombustibleValorCombustible")
+    , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleTotal", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleTotal = :ventaCombustibleTotal")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleNumeroBoleta", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleNumeroBoleta = :ventaCombustibleNumeroBoleta")})
 public class VentaCombustible implements Serializable {
 
@@ -53,21 +53,23 @@ public class VentaCombustible implements Serializable {
     private Date ventaCombustibleFecha;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "venta_combustible_valor")
-    private int ventaCombustibleValor;
+    @Column(name = "venta_combustible_precio")
+    private float ventaCombustiblePrecio;
     @Basic(optional = false)
     @NotNull
     @Column(name = "venta_combustible_cantidad")
     private float ventaCombustibleCantidad;
-    @Column(name = "venta_combustible_valor_combustible")
-    private Integer ventaCombustibleValorCombustible;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "venta_combustible_total")
+    private int ventaCombustibleTotal;
     @Basic(optional = false)
     @NotNull
     @Column(name = "venta_combustible_numero_boleta")
     private int ventaCombustibleNumeroBoleta;
-    @JoinColumn(name = "venta_combustible_id_guia", referencedColumnName = "guia_id")
+    @JoinColumn(name = "venta_combustible_id_bus", referencedColumnName = "bus_id")
     @ManyToOne(optional = false)
-    private Guia ventaCombustibleIdGuia;
+    private Bus ventaCombustibleIdBus;
     @JoinColumn(name = "venta_combustible_id_surtidor", referencedColumnName = "surtidor_id")
     @ManyToOne(optional = false)
     private Surtidor ventaCombustibleIdSurtidor;
@@ -79,11 +81,12 @@ public class VentaCombustible implements Serializable {
         this.ventaCombustibleId = ventaCombustibleId;
     }
 
-    public VentaCombustible(Integer ventaCombustibleId, Date ventaCombustibleFecha, int ventaCombustibleValor, float ventaCombustibleCantidad, int ventaCombustibleNumeroBoleta) {
+    public VentaCombustible(Integer ventaCombustibleId, Date ventaCombustibleFecha, float ventaCombustiblePrecio, float ventaCombustibleCantidad, int ventaCombustibleTotal, int ventaCombustibleNumeroBoleta) {
         this.ventaCombustibleId = ventaCombustibleId;
         this.ventaCombustibleFecha = ventaCombustibleFecha;
-        this.ventaCombustibleValor = ventaCombustibleValor;
+        this.ventaCombustiblePrecio = ventaCombustiblePrecio;
         this.ventaCombustibleCantidad = ventaCombustibleCantidad;
+        this.ventaCombustibleTotal = ventaCombustibleTotal;
         this.ventaCombustibleNumeroBoleta = ventaCombustibleNumeroBoleta;
     }
 
@@ -103,12 +106,12 @@ public class VentaCombustible implements Serializable {
         this.ventaCombustibleFecha = ventaCombustibleFecha;
     }
 
-    public int getVentaCombustibleValor() {
-        return ventaCombustibleValor;
+    public float getVentaCombustiblePrecio() {
+        return ventaCombustiblePrecio;
     }
 
-    public void setVentaCombustibleValor(int ventaCombustibleValor) {
-        this.ventaCombustibleValor = ventaCombustibleValor;
+    public void setVentaCombustiblePrecio(float ventaCombustiblePrecio) {
+        this.ventaCombustiblePrecio = ventaCombustiblePrecio;
     }
 
     public float getVentaCombustibleCantidad() {
@@ -119,12 +122,12 @@ public class VentaCombustible implements Serializable {
         this.ventaCombustibleCantidad = ventaCombustibleCantidad;
     }
 
-    public Integer getVentaCombustibleValorCombustible() {
-        return ventaCombustibleValorCombustible;
+    public int getVentaCombustibleTotal() {
+        return ventaCombustibleTotal;
     }
 
-    public void setVentaCombustibleValorCombustible(Integer ventaCombustibleValorCombustible) {
-        this.ventaCombustibleValorCombustible = ventaCombustibleValorCombustible;
+    public void setVentaCombustibleTotal(int ventaCombustibleTotal) {
+        this.ventaCombustibleTotal = ventaCombustibleTotal;
     }
 
     public int getVentaCombustibleNumeroBoleta() {
@@ -135,12 +138,12 @@ public class VentaCombustible implements Serializable {
         this.ventaCombustibleNumeroBoleta = ventaCombustibleNumeroBoleta;
     }
 
-    public Guia getVentaCombustibleIdGuia() {
-        return ventaCombustibleIdGuia;
+    public Bus getVentaCombustibleIdBus() {
+        return ventaCombustibleIdBus;
     }
 
-    public void setVentaCombustibleIdGuia(Guia ventaCombustibleIdGuia) {
-        this.ventaCombustibleIdGuia = ventaCombustibleIdGuia;
+    public void setVentaCombustibleIdBus(Bus ventaCombustibleIdBus) {
+        this.ventaCombustibleIdBus = ventaCombustibleIdBus;
     }
 
     public Surtidor getVentaCombustibleIdSurtidor() {

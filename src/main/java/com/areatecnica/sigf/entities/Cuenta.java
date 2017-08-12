@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "cuenta", catalog = "sigf_v2", schema = "")
+@Table(name = "cuenta", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cuenta.findAll", query = "SELECT c FROM Cuenta c")
@@ -93,8 +93,6 @@ public class Cuenta implements Serializable {
     private List<Flota> flotaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "egresoIdCuenta")
     private List<Egreso> egresoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cajaRecaudacionIdCuenta")
-    private List<CajaRecaudacion> cajaRecaudacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoObservacionIdCuenta")
     private List<TipoObservacion> tipoObservacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "administracionMensualIdCuenta")
@@ -103,10 +101,10 @@ public class Cuenta implements Serializable {
     private List<IntervalosAdministracion> intervalosAdministracionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoHaberTrabajadorIdCuenta")
     private List<TipoHaberTrabajador> tipoHaberTrabajadorList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trabajadorIdCuenta")
+    private List<Trabajador> trabajadorList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "precioCombustibleIdCuenta")
     private List<PrecioCombustible> precioCombustibleList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "guiaIdCuenta")
-    private List<Guia> guiaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "institucionApvIdCuenta")
     private List<InstitucionApv> institucionApvList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoContratoIdCuenta")
@@ -123,6 +121,8 @@ public class Cuenta implements Serializable {
     private List<InstitucionPrevision> institucionPrevisionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "grupoServicioIdCuenta")
     private List<GrupoServicio> grupoServicioList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cajaRecaudacionIdCuenta")
+    private List<CajaRecaudacion> cajaRecaudacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "compraCombustibleIdCuenta")
     private List<CompraCombustible> compraCombustibleList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mutualIdCuenta")
@@ -148,8 +148,6 @@ public class Cuenta implements Serializable {
     private List<Control> controlList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "terminalIdCuenta")
     private List<Terminal> terminalList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadoGuiaIdCuenta")
-    private List<EstadoGuia> estadoGuiaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "departamentoIdCuenta")
     private List<Departamento> departamentoList;
 
@@ -279,15 +277,6 @@ public class Cuenta implements Serializable {
     public void setUsuarioList(List<Usuario> usuarioList) {
         this.usuarioList = usuarioList;
     }
-    
-    @XmlTransient
-    public List<Guia> getGuiaList() {
-        return guiaList;
-    }
-
-    public void setGuiaList(List<Guia> guiaList) {
-        this.guiaList = guiaList;
-    }
 
     @XmlTransient
     public List<AsignacionFamiliar> getAsignacionFamiliarList() {
@@ -362,6 +351,15 @@ public class Cuenta implements Serializable {
     }
 
     @XmlTransient
+    public List<Trabajador> getTrabajadorList() {
+        return trabajadorList;
+    }
+
+    public void setTrabajadorList(List<Trabajador> trabajadorList) {
+        this.trabajadorList = trabajadorList;
+    }
+
+    @XmlTransient
     public List<PrecioCombustible> getPrecioCombustibleList() {
         return precioCombustibleList;
     }
@@ -369,7 +367,7 @@ public class Cuenta implements Serializable {
     public void setPrecioCombustibleList(List<PrecioCombustible> precioCombustibleList) {
         this.precioCombustibleList = precioCombustibleList;
     }
-    
+
     @XmlTransient
     public List<InstitucionApv> getInstitucionApvList() {
         return institucionApvList;
@@ -441,7 +439,7 @@ public class Cuenta implements Serializable {
     public void setGrupoServicioList(List<GrupoServicio> grupoServicioList) {
         this.grupoServicioList = grupoServicioList;
     }
-    
+
     @XmlTransient
     public List<CajaRecaudacion> getCajaRecaudacionList() {
         return cajaRecaudacionList;
@@ -512,7 +510,7 @@ public class Cuenta implements Serializable {
     public void setCuentaIdTipo(TipoCuenta cuentaIdTipo) {
         this.cuentaIdTipo = cuentaIdTipo;
     }
-    
+
     @XmlTransient
     public List<Servicio> getServicioList() {
         return servicioList;
@@ -559,15 +557,6 @@ public class Cuenta implements Serializable {
     }
 
     @XmlTransient
-    public List<EstadoGuia> getEstadoGuiaList() {
-        return estadoGuiaList;
-    }
-
-    public void setEstadoGuiaList(List<EstadoGuia> estadoGuiaList) {
-        this.estadoGuiaList = estadoGuiaList;
-    }
-
-    @XmlTransient
     public List<Departamento> getDepartamentoList() {
         return departamentoList;
     }
@@ -575,7 +564,7 @@ public class Cuenta implements Serializable {
     public void setDepartamentoList(List<Departamento> departamentoList) {
         this.departamentoList = departamentoList;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

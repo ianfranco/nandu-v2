@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author ianfr
  */
 @Entity
-@Table(name = "menu", catalog = "sigf_v2", schema = "")
+@Table(name = "menu", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Menu.findAll", query = "SELECT m FROM Menu m")
@@ -51,7 +50,6 @@ public class Menu implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rolMenuIdMenu")
     private List<RolMenu> rolMenuList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "privilegioIdMenu")
-    @OrderBy("privilegioNumeroOrden")
     private List<Privilegio> privilegioList;
 
     public Menu() {

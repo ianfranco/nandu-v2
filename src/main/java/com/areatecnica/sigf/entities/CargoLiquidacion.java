@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "cargo_liquidacion", catalog = "sigf_v2", schema = "")
+@Table(name = "cargo_liquidacion", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CargoLiquidacion.findAll", query = "SELECT c FROM CargoLiquidacion c")
@@ -62,9 +62,9 @@ public class CargoLiquidacion implements Serializable {
     @JoinColumn(name = "cargo_liquidacion_id_cargo", referencedColumnName = "cargo_bus_id")
     @ManyToOne(optional = false)
     private CargoBus cargoLiquidacionIdCargo;
-    @JoinColumn(name = "cargo_liquidacion_id_liquidacion_empresa", referencedColumnName = "liquidacion_empresa_id")
+    @JoinColumn(name = "cargo_liquidacion_id_liquidacion", referencedColumnName = "liquidacion_empresa_id")
     @ManyToOne(optional = false)
-    private LiquidacionEmpresa cargoLiquidacionIdLiquidacionEmpresa;
+    private LiquidacionEmpresa cargoLiquidacionIdLiquidacion;
 
     public CargoLiquidacion() {
     }
@@ -120,12 +120,12 @@ public class CargoLiquidacion implements Serializable {
         this.cargoLiquidacionIdCargo = cargoLiquidacionIdCargo;
     }
 
-    public LiquidacionEmpresa getCargoLiquidacionIdLiquidacionEmpresa() {
-        return cargoLiquidacionIdLiquidacionEmpresa;
+    public LiquidacionEmpresa getCargoLiquidacionIdLiquidacion() {
+        return cargoLiquidacionIdLiquidacion;
     }
 
-    public void setCargoLiquidacionIdLiquidacionEmpresa(LiquidacionEmpresa cargoLiquidacionIdLiquidacionEmpresa) {
-        this.cargoLiquidacionIdLiquidacionEmpresa = cargoLiquidacionIdLiquidacionEmpresa;
+    public void setCargoLiquidacionIdLiquidacion(LiquidacionEmpresa cargoLiquidacionIdLiquidacion) {
+        this.cargoLiquidacionIdLiquidacion = cargoLiquidacionIdLiquidacion;
     }
 
     @Override

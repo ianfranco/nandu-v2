@@ -138,7 +138,7 @@ public class EgresoCajaRecaudacionController extends AbstractController<EgresoCa
     public void onTransfer(TransferEvent event) {
         StringBuilder builder = new StringBuilder();
         for (Object item : event.getItems()) {
-            builder.append(((EgresoCajaRecaudacion) item).getEgresoCajaRecaudacionIdEgreso().getEgresoNombreEgreso()).append("<br />");
+            builder.append(((EgresoCajaRecaudacion) item).getEgresoCajaRecaudacionIdEgreso().getEgresoNombre()).append("<br />");
         }
 
         FacesMessage msg = new FacesMessage();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="com.areatecnica_sigf-admin_war_2PU" transaction-type="JTA">
-    <jta-data-source>java:/MySqlDS</jta-data-source>
+    <jta-data-source>java:/MySqlDS3</jta-data-source>
     <class>com.areatecnica.sigf.entities.AbonoBus</class>
     <class>com.areatecnica.sigf.entities.AbonoLiquidacion</class>
     <class>com.areatecnica.sigf.entities.AdministracionMensual</class>
@@ -158,7 +158,11 @@
     <class>com.areatecnica.sigf.entities.TipoCuenta</class>
     <class>com.areatecnica.sigf.entities.Menu</class>
     <class>com.areatecnica.sigf.entities.EgresoProcesoRecaudacion</class>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <class>com.areatecnica.sigf.entities.EgresoResumenRecaudacion</class>
+    <class>com.areatecnica.sigf.entities.Recaudacion</class>
+    <class>com.areatecnica.sigf.entities.RecaudacionEgreso</class>
+    <class>com.areatecnica.sigf.entities.RegistroBoleto</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <shared-cache-mode>DISABLE_SELECTIVE</shared-cache-mode>
     <properties>
       <property name="hibernate.show_sql" value="true"/>

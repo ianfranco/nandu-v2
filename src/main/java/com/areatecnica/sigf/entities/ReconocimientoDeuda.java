@@ -29,13 +29,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "reconocimiento_deuda", catalog = "sigf_v2", schema = "")
+@Table(name = "reconocimiento_deuda", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ReconocimientoDeuda.findAll", query = "SELECT r FROM ReconocimientoDeuda r")
     , @NamedQuery(name = "ReconocimientoDeuda.findByReconocimientoDeudaId", query = "SELECT r FROM ReconocimientoDeuda r WHERE r.reconocimientoDeudaId = :reconocimientoDeudaId")
-    , @NamedQuery(name = "ReconocimientoDeuda.findByReconocimientoDeudaMontoReconocimiento", query = "SELECT r FROM ReconocimientoDeuda r WHERE r.reconocimientoDeudaMontoReconocimiento = :reconocimientoDeudaMontoReconocimiento")
-    , @NamedQuery(name = "ReconocimientoDeuda.findByReconocimientoDeudaDescripcionReconocimiento", query = "SELECT r FROM ReconocimientoDeuda r WHERE r.reconocimientoDeudaDescripcionReconocimiento = :reconocimientoDeudaDescripcionReconocimiento")
+    , @NamedQuery(name = "ReconocimientoDeuda.findByReconocimientoDeudaMonto", query = "SELECT r FROM ReconocimientoDeuda r WHERE r.reconocimientoDeudaMonto = :reconocimientoDeudaMonto")
+    , @NamedQuery(name = "ReconocimientoDeuda.findByReconocimientoDeudaDescripcion", query = "SELECT r FROM ReconocimientoDeuda r WHERE r.reconocimientoDeudaDescripcion = :reconocimientoDeudaDescripcion")
     , @NamedQuery(name = "ReconocimientoDeuda.findByReconocimientoDeudaFechaIngreso", query = "SELECT r FROM ReconocimientoDeuda r WHERE r.reconocimientoDeudaFechaIngreso = :reconocimientoDeudaFechaIngreso")
     , @NamedQuery(name = "ReconocimientoDeuda.findByReconocimientoDeudaFechaActualizacion", query = "SELECT r FROM ReconocimientoDeuda r WHERE r.reconocimientoDeudaFechaActualizacion = :reconocimientoDeudaFechaActualizacion")})
 public class ReconocimientoDeuda implements Serializable {
@@ -48,11 +48,11 @@ public class ReconocimientoDeuda implements Serializable {
     private Integer reconocimientoDeudaId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "reconocimiento_deuda_monto_reconocimiento")
-    private int reconocimientoDeudaMontoReconocimiento;
+    @Column(name = "reconocimiento_deuda_monto")
+    private int reconocimientoDeudaMonto;
     @Size(max = 255)
-    @Column(name = "reconocimiento_deuda_descripcion_reconocimiento")
-    private String reconocimientoDeudaDescripcionReconocimiento;
+    @Column(name = "reconocimiento_deuda_descripcion")
+    private String reconocimientoDeudaDescripcion;
     @Basic(optional = false)
     @NotNull
     @Column(name = "reconocimiento_deuda_fecha_ingreso")
@@ -75,9 +75,9 @@ public class ReconocimientoDeuda implements Serializable {
         this.reconocimientoDeudaId = reconocimientoDeudaId;
     }
 
-    public ReconocimientoDeuda(Integer reconocimientoDeudaId, int reconocimientoDeudaMontoReconocimiento, Date reconocimientoDeudaFechaIngreso) {
+    public ReconocimientoDeuda(Integer reconocimientoDeudaId, int reconocimientoDeudaMonto, Date reconocimientoDeudaFechaIngreso) {
         this.reconocimientoDeudaId = reconocimientoDeudaId;
-        this.reconocimientoDeudaMontoReconocimiento = reconocimientoDeudaMontoReconocimiento;
+        this.reconocimientoDeudaMonto = reconocimientoDeudaMonto;
         this.reconocimientoDeudaFechaIngreso = reconocimientoDeudaFechaIngreso;
     }
 
@@ -89,20 +89,20 @@ public class ReconocimientoDeuda implements Serializable {
         this.reconocimientoDeudaId = reconocimientoDeudaId;
     }
 
-    public int getReconocimientoDeudaMontoReconocimiento() {
-        return reconocimientoDeudaMontoReconocimiento;
+    public int getReconocimientoDeudaMonto() {
+        return reconocimientoDeudaMonto;
     }
 
-    public void setReconocimientoDeudaMontoReconocimiento(int reconocimientoDeudaMontoReconocimiento) {
-        this.reconocimientoDeudaMontoReconocimiento = reconocimientoDeudaMontoReconocimiento;
+    public void setReconocimientoDeudaMonto(int reconocimientoDeudaMonto) {
+        this.reconocimientoDeudaMonto = reconocimientoDeudaMonto;
     }
 
-    public String getReconocimientoDeudaDescripcionReconocimiento() {
-        return reconocimientoDeudaDescripcionReconocimiento;
+    public String getReconocimientoDeudaDescripcion() {
+        return reconocimientoDeudaDescripcion;
     }
 
-    public void setReconocimientoDeudaDescripcionReconocimiento(String reconocimientoDeudaDescripcionReconocimiento) {
-        this.reconocimientoDeudaDescripcionReconocimiento = reconocimientoDeudaDescripcionReconocimiento;
+    public void setReconocimientoDeudaDescripcion(String reconocimientoDeudaDescripcion) {
+        this.reconocimientoDeudaDescripcion = reconocimientoDeudaDescripcion;
     }
 
     public Date getReconocimientoDeudaFechaIngreso() {

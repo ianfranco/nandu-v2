@@ -29,18 +29,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "egreso_caja_recaudacion", catalog = "sigf_v2", schema = "")
+@Table(name = "egreso_caja_recaudacion", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "EgresoCajaRecaudacion.findAll", query = "SELECT e FROM EgresoCajaRecaudacion e"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionId", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionId = :egresoCajaRecaudacionId"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionegresoCajaRecaudacionIdCaja", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionIdCaja = :egresoCajaRecaudacionIdCaja"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionValorDefecto", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionValorDefecto = :egresoCajaRecaudacionValorDefecto"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionPorcentaje", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionPorcentaje = :egresoCajaRecaudacionPorcentaje"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionNumeroOrden", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionNumeroOrden = :egresoCajaRecaudacionNumeroOrden"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionActivo", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionActivo = :egresoCajaRecaudacionActivo"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionFechaIngreso", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionFechaIngreso = :egresoCajaRecaudacionFechaIngreso"),
-    @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionFechaActualizacion", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionFechaActualizacion = :egresoCajaRecaudacionFechaActualizacion")})
+    @NamedQuery(name = "EgresoCajaRecaudacion.findAll", query = "SELECT e FROM EgresoCajaRecaudacion e")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionId", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionId = :egresoCajaRecaudacionId")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionegresoCajaRecaudacionIdCaja", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionIdCaja = :egresoCajaRecaudacionIdCaja")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionValorDefecto", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionValorDefecto = :egresoCajaRecaudacionValorDefecto")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionPorcentaje", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionPorcentaje = :egresoCajaRecaudacionPorcentaje")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionNumeroOrden", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionNumeroOrden = :egresoCajaRecaudacionNumeroOrden")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionActivo", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionActivo = :egresoCajaRecaudacionActivo")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionFechaIngreso", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionFechaIngreso = :egresoCajaRecaudacionFechaIngreso")
+    , @NamedQuery(name = "EgresoCajaRecaudacion.findByEgresoCajaRecaudacionFechaActualizacion", query = "SELECT e FROM EgresoCajaRecaudacion e WHERE e.egresoCajaRecaudacionFechaActualizacion = :egresoCajaRecaudacionFechaActualizacion")})
 public class EgresoCajaRecaudacion implements Serializable {
 
     private static final long serialVersionUID = 1L;

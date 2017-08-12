@@ -24,20 +24,18 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 
  *
  * @author ianfr
  */
 @Entity
-@Table(name = "caja_proceso", catalog = "sigf_v2", schema = "")
+@Table(name = "caja_proceso", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CajaProceso.findAll", query = "SELECT c FROM CajaProceso c")
     , @NamedQuery(name = "CajaProceso.findByCajaProcesoId", query = "SELECT c FROM CajaProceso c WHERE c.cajaProcesoId = :cajaProcesoId")
-    , @NamedQuery(name = "CajaProceso.findByCajaProcesoIdCaja", query = "SELECT c FROM CajaProceso c WHERE c.cajaProcesoIdCaja = :cajaProcesoIdCaja")
-    , @NamedQuery(name = "CajaProceso.findByCajaProcesoIdCajaIdProceso", query = "SELECT c FROM CajaProceso c WHERE c.cajaProcesoIdCaja = :cajaProcesoIdCaja AND c.cajaProcesoIdProceso = :cajaProcesoIdProceso")
     , @NamedQuery(name = "CajaProceso.findByCajaProcesoFechaIngreso", query = "SELECT c FROM CajaProceso c WHERE c.cajaProcesoFechaIngreso = :cajaProcesoFechaIngreso")
-    , @NamedQuery(name = "CajaProceso.findByCajaProcesoFechaActualizacion", query = "SELECT c FROM CajaProceso c WHERE c.cajaProcesoFechaActualizacion = :cajaProcesoFechaActualizacion")})
+    , @NamedQuery(name = "CajaProceso.findByCajaProcesoFechaActualizacion", query = "SELECT c FROM CajaProceso c WHERE c.cajaProcesoFechaActualizacion = :cajaProcesoFechaActualizacion")
+    , @NamedQuery(name = "CajaProceso.findByCajaProcesoActivo", query = "SELECT c FROM CajaProceso c WHERE c.cajaProcesoActivo = :cajaProcesoActivo")})
 public class CajaProceso implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -147,5 +145,5 @@ public class CajaProceso implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.CajaProceso[ cajaProcesoId=" + cajaProcesoId + " ]";
     }
-
+    
 }

@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.areatecnica.sigf.entities;
 
 import java.io.Serializable;
@@ -27,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author ianfr
  */
 @Entity
-@Table(name = "tipo_nomina", catalog = "sigf_v2", schema = "")
+@Table(name = "tipo_nomina", catalog = "sigf_v3", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoNomina.findAll", query = "SELECT t FROM TipoNomina t")
@@ -114,5 +115,5 @@ public class TipoNomina implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.TipoNomina[ tipoNominaId=" + tipoNominaId + " ]";
     }
-    
+
 }

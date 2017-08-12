@@ -1,8 +1,8 @@
 package com.areatecnica.sigf.converters;
 
-import com.areatecnica.sigf.entities.SerieBoletoGuia;
-import com.areatecnica.sigf.controllers.SerieBoletoGuiaFacade;
+import com.areatecnica.sigf.controllers.EgresoResumenRecaudacionFacade;
 import com.areatecnica.sigf.beans.util.JsfUtil;
+import com.areatecnica.sigf.entities.EgresoResumenRecaudacion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.convert.FacesConverter;
@@ -11,11 +11,11 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
-@FacesConverter(value = "serieBoletoGuiaConverter")
-public class SerieBoletoGuiaConverter implements Converter {
+@FacesConverter(value = "egresoRecaudacionConverter")
+public class EgresoResumenRecaudacionConverter implements Converter {
 
     @Inject
-    private SerieBoletoGuiaFacade ejbFacade;
+    private EgresoResumenRecaudacionFacade ejbFacade;
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
@@ -43,11 +43,11 @@ public class SerieBoletoGuiaConverter implements Converter {
                 || (object instanceof String && ((String) object).length() == 0)) {
             return null;
         }
-        if (object instanceof SerieBoletoGuia) {
-            SerieBoletoGuia o = (SerieBoletoGuia) object;
-            return getStringKey(o.getSerieBoletoGuiaId());
+        if (object instanceof EgresoResumenRecaudacion) {
+            EgresoResumenRecaudacion o = (EgresoResumenRecaudacion) object;
+            return getStringKey(o.getEgresoResumenRecaudacionId());
         } else {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), SerieBoletoGuia.class.getName()});
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), EgresoResumenRecaudacion.class.getName()});
             return null;
         }
     }
