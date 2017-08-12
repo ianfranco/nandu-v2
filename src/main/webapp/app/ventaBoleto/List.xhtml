@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:coco="http://xmlns.jcp.org/jsf/composite/ui">
+
+    <h:form id="VentaBoletoListForm" class="form-height">
+        <p:panel header="Venta de Boletos">
+            <p:panelGrid columns="2">
+                <h:outputLabel value="Caja Recaudación" for="cajaRecaudacionIdCaja" style="text-align: right;"/>
+                <p:selectOneMenu id="cajaRecaudacionIdCaja" value="#{ventaBoletoRecaudacionController.cajaRecaudacion}" required="true" requiredMessage="Debe seleccionar la Caja de Recaudación" converter="omnifaces.SelectItemsConverter">
+                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                    <f:selectItems value="#{ventaBoletoRecaudacionController.cajaRecaudacionList}"
+                                   var="cajaId"
+                                   itemValue="#{cajaId}"
+                                   itemLabel="#{cajaId.cajaRecaudacionNombreCaja}"
+                                   />                    
+                </p:selectOneMenu>
+            </p:panelGrid>
+            
+            <p:dataTable id="datalist"
+                         value="#{ventaBoletoRecaudacionController.items}"
+                         rowKey="#{item.ventaBoletoId}"
+                         selection="#{ventaBoletoRecaudacionController.selected}"
+                         var="item"
+                         rowIndexVar="rowIndex"
+                         emptyMessage="No se han encontrado registros">
+
+                <p:ajax event="colResize" listener="#{ventaBoletoRecaudacionController.onResize}"/>
+
+                <f:facet name="header">
+                    <h:outputText value="Ventas a la Fecha : #{ventaBoletoRecaudacionController.formatFechaVentaBoleto}" />
+                </f:facet>
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#"/>
+                    </f:facet>
+                    <h:outputLabel value="#{rowIndex+1}"/>
+                </p:column>
+
+
+                <p:column sortBy="#{item.ventaBoletoValorVentaBoleto}" filterBy="#{item.ventaBoletoValorVentaBoleto}">
+                    <f:facet name="header">
+                        <h:outputText value="Valor"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.ventaBoletoValorVentaBoleto}"/>
+                </p:column>
+
+
+                <p:column sortBy="#{item.ventaBoletoRecaudado}" filterBy="#{item.ventaBoletoRecaudado}">
+                    <f:facet name="header">
+                        <h:outputText value="Recaudado"/>
+                    </f:facet>
+                    <p:selectBooleanCheckbox id="ventaBoletoRecaudado" value="#{item.ventaBoletoRecaudado}" title="#{bundle.EditVentaBoletoTitle_ventaBoletoRecaudado}" required="true" requiredMessage="#{bundle.EditVentaBoletoRequiredMessage_ventaBoletoRecaudado}" disabled="true"/>
+                </p:column>
+
+
+                <p:column sortBy="#{item.ventaBoletoFechaIngreso}" filterBy="#{item.ventaBoletoFechaIngreso}">
+                    <f:facet name="header">
+                        <h:outputText value="Hora de Venta"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.ventaBoletoFechaIngreso}">
+                        <f:convertDateTime pattern="HH:mm:ss" />
+                    </h:outputLabel>
+                </p:column>
+
+
+                <p:column sortBy="#{item.ventaBoletoIdGuia.guiaIdBus.busNumero}" filterBy="#{item.ventaBoletoIdGuia.guiaIdBus.busNumero}">
+                    <f:facet name="header">
+                        <h:outputText value="N° Bus"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.ventaBoletoIdGuia.guiaIdBus.busNumero}"/>
+                </p:column>
+
+
+                <p:column sortBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaId}" filterBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaId}">
+                    <f:facet name="header">
+                        <h:outputText value="Caja"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.ventaBoletoIdInventarioCaja.inventarioCajaId}"/>
+                </p:column>
+
+                <f:facet name="footer">
+                    <p:commandButton id="createButton" styleClass="btn btn-primary" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{ventaBoletoRecaudacionController.prepareCreate}" update=":VentaBoletoCreateForm" oncomplete="PF('VentaBoletoCreateDialog').show()" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()"/>
+                    <p:commandButton id="viewButton"   styleClass="btn btn-primary" icon="fa fa-search" value="#{bundle.View}" update=":VentaBoletoViewForm" oncomplete="PF('VentaBoletoViewDialog').show()" disabled="#{empty ventaBoletoRecaudacionController.selected}" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()"/>
+                    <p:commandButton id="editButton"   styleClass="btn btn-primary" icon="fa fa-pencil" value="#{bundle.Edit}" update=":VentaBoletoEditForm" oncomplete="PF('VentaBoletoEditDialog').show()" disabled="#{empty ventaBoletoRecaudacionController.selected}" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()"/>
+                    <p:commandButton id="deleteButton" styleClass="btn btn-primary" icon="fa fa-trash"  value="#{bundle.Delete}" actionListener="#{ventaBoletoRecaudacionController.delete}" update=":growl,datalist" disabled="#{empty ventaBoletoRecaudacionController.selected}" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()">
+                        <p:confirm header="#{bundle.ConfirmationHeader}" message="#{bundle.ConfirmDeleteMessage}" icon="fa fa-warning"/>
+                    </p:commandButton>
+                </f:facet>
+
+            </p:dataTable>
+        </p:panel>
+
+
+        <ui:include src="/confirmation.xhtml"/>
+    </h:form>
+
+</ui:composition>

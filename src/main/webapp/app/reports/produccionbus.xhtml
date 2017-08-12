@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:coco="http://xmlns.jcp.org/jsf/composite/ui">
+
+
+    <h:form id="GuiaListForm" class="form-height">
+
+        <p:panel>
+            <f:facet name="header">
+                Registro de Guías
+            </f:facet>
+            <p:panelGrid columns="7" style="width: 100%;margin-bottom: 10px;">
+                
+                <p:outputLabel value="N° Bus:"/>
+                <p:selectOneMenu id="guiaIdBus" value="#{reporteProduccionbusController.bus}" required="true" requiredMessage="Debe seleccionar el Bus" converter="omnifaces.SelectItemsConverter">
+                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                    <f:selectItems value="#{reporteProduccionbusController.itemsBus}"
+                                   var="guiaIdBusItem"
+                                   itemValue="#{guiaIdBusItem}"
+                                   itemLabel="#{guiaIdBusItem.busNumero}"
+                                   />                    
+                </p:selectOneMenu>
+
+                <h:outputLabel for="mes" value="Seleccionar:" />
+                <p:selectOneMenu id="mes" value="#{reporteProduccionbusController.mes}" style="width:125px">
+                    <f:selectItem itemLabel="Enero" itemValue="1" />
+                    <f:selectItem itemLabel="Febrero" itemValue="2" />
+                    <f:selectItem itemLabel="Marzo" itemValue="3" />
+                    <f:selectItem itemLabel="Abril" itemValue="4" />
+                    <f:selectItem itemLabel="Mayo" itemValue="5" />
+                    <f:selectItem itemLabel="Junio" itemValue="6" />
+                    <f:selectItem itemLabel="Julio" itemValue="7" />
+                    <f:selectItem itemLabel="Agosto" itemValue="8" />
+                    <f:selectItem itemLabel="Septiembre" itemValue="9" />
+                    <f:selectItem itemLabel="Octubre" itemValue="10" />
+                    <f:selectItem itemLabel="Noviembre" itemValue="11" />
+                    <f:selectItem itemLabel="Diciembre" itemValue="12" />
+                </p:selectOneMenu>
+
+                <h:outputLabel for="anio" value="Año:" />
+                <p:inputText id="anio" value="#{reporteProduccionbusController.anio}" size="5" />
+
+                <p:commandButton id="value2" ajax="true" icon="fa fa-database" value="Cargar Guías" update="@(.clase), GuiaListForm:datalist, growl, :GuiaListForm:datalist:createButton" styleClass="btn btn-primary" style="width:120px" actionListener="#{reporteProduccionbusController.load}" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()">
+                </p:commandButton>
+
+
+            </p:panelGrid>
+
+            <h:commandLink>
+                <p:graphicImage name="excel.png" library="images" />
+                <p:dataExporter type="xls" target="datalist" fileName="Recaudacion" pageOnly="true"/>
+            </h:commandLink>
+            <h:commandLink actionListener="#{reporteProduccionbusController.exportPdf(actionEvent)}">
+                <p:graphicImage name="pdf.png" library="images" />                
+            </h:commandLink>
+
+            <p:dataTable id="datalist"
+                         selection="#{reporteProduccionbusController.selected}"                         
+                         scrollHeight="500" 
+                         scrollable="false"                         
+                         value="#{reporteProduccionbusController.items}"
+                         widgetVar="datalist"
+                         var="item"
+                         rowKey="#{item.guiaId}"                         
+                         selectionMode="single"
+                         rowIndexVar="rowIndex"
+                         emptyMessage="No se han encontrado registros"                         
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                
+                <f:facet name="{Exporters}">
+                    <h:commandLink>
+                        <p:graphicImage name="excel.png" library="images" width="24"/>
+                        <p:dataExporter type="xls" target="datalist" fileName="Recaudacion" />
+                    </h:commandLink>                    
+                </f:facet>
+
+                <p:column style="text-align: center; font-weight: 900;">
+                    <f:facet name="header">
+                        <h:outputText value="#"/>
+                    </f:facet>
+                    <h:outputText value="#{rowIndex+1}"/>
+                </p:column>
+
+
+                <p:column sortBy="#{item.guiaFolio}" filterBy="#{item.guiaFolio}" style="text-align: center; font-weight: 900;">
+                    <f:facet name="header">
+                        <h:outputText value="Folio"/>
+                    </f:facet>
+                    <h:outputText value="#{item.guiaFolio}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.guiaFecha}" filterBy="#{item.guiaFecha}" style="text-align: center; font-weight: 900;">
+                    <f:facet name="header">
+                        <h:outputText value="Fecha"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.guiaFecha}">
+                        <f:convertDateTime pattern="dd/MM/yy" />
+                    </h:outputLabel>
+                </p:column>
+
+                <p:column sortBy="#{item.guiaIdBus.busNumero}" filterBy="#{item.guiaIdBus.busNumero}" style="text-align: center; font-weight: 900;">
+                    <f:facet name="header">
+                        <h:outputText value="N° Bus"/>
+                    </f:facet>
+                    <h:outputText value="#{item.guiaIdBus.busNumero}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.guiaIdTrabajador.trabajadorApellidoPaterno}" filterBy="#{item.guiaIdTrabajador.trabajadorApellidoPaterno}" style="text-align: center; font-weight: 900;">
+                    <f:facet name="header">
+                        <h:outputText value="Conductor"/>
+                    </f:facet>
+                    <h:outputText value="#{item.guiaIdTrabajador.trabajadorApellidoPaterno}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.guiaTotalIngresos}" filterBy="#{item.guiaTotalIngresos}" style="text-align: center; font-weight: 900;">
+                    <f:facet name="header">
+                        <h:outputText value="Bruto"/>
+                    </f:facet>
+                    <h:outputText value="#{item.guiaTotalIngresos}">
+                        <f:convertNumber currencySymbol="$"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column sortBy="#{item.guiaTurno}" filterBy="#{item.guiaTurno}" style="text-align: center; font-weight: 900;">
+                    <f:facet name="header">
+                        <h:outputText value="Turno"/>
+                    </f:facet>
+                    <h:outputText value="#{item.guiaTurno}"/>
+                </p:column>
+
+                <p:columns styleClass="clase"
+                           value="#{reporteProduccionbusController.listOfMaps.get(0).keySet().toArray()}" 
+                           var="key" 
+                           headerText="#{reporteProduccionbusController.resultsHeader.get(col)}" 
+                           footerText="#{reporteProduccionbusController.resultsTotals.get(col)}"                    
+                           columnIndexVar="col" 
+                           filterBy="#{item.link[key]}"
+                           style="text-align: center; font-weight: 900;">
+                    <h:outputText value="#{item.link[key]}">
+                        <f:convertNumber currencySymbol="$"/>
+                    </h:outputText>
+                </p:columns>
+
+                <!--
+                                    <p:column sortBy="#{item.guiaViajeEspecial}" filterBy="#{item.guiaViajeEspecial}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaViajeEspecial}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.guiaViajeEspecial}"/>
+                                    </p:column>
+                -->
+                <!--
+                                    <p:column sortBy="#{item.guiaOtrosIngresos}" filterBy="#{item.guiaOtrosIngresos}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaOtrosIngresos}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.guiaOtrosIngresos}"/>
+                                    </p:column>
+                -->
+                <!--
+                                    <p:column sortBy="#{item.guiaSaldo}" filterBy="#{item.guiaSaldo}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaSaldo}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.guiaSaldo}"/>
+                                    </p:column>
+                -->
+                <!--
+                                    <p:column sortBy="#{item.guiaNumeroVueltas}" filterBy="#{item.guiaNumeroVueltas}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaNumeroVueltas}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.guiaNumeroVueltas}"/>
+                                    </p:column>
+                -->
+                <!--
+                                    
+                -->
+                <!--
+                                    <p:column sortBy="#{item.guiaObservacion}" filterBy="#{item.guiaObservacion}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaObservacion}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.guiaObservacion}"/>
+                                    </p:column>
+                -->
+                <!--
+                                    <p:column sortBy="#{item.guiaRecaudada}" filterBy="#{item.guiaRecaudada}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaRecaudada}"/>
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="guiaRecaudada" value="#{item.guiaRecaudada}" title="#{bundle.EditGuiaTitle_guiaRecaudada}"  disabled="true"/>
+                                    </p:column>
+                -->    
+                -->
+                <!--
+                                    <p:column sortBy="#{item.guiaIdEstado.estadoGuiaId}" filterBy="#{item.guiaIdEstado.estadoGuiaId}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaIdEstado}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.guiaIdEstado.estadoGuiaId}"/>
+                                    </p:column>
+                -->
+                <!--
+                                    <p:column sortBy="#{item.guiaIdCajaTerminal.cajaTerminalId}" filterBy="#{item.guiaIdCajaTerminal.cajaTerminalId}">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListGuiaTitle_guiaIdCajaTerminal}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.guiaIdCajaTerminal.cajaTerminalId}"/>
+                                    </p:column>
+                -->
+                <!--
+                                    
+                -->
+
+                <f:facet name="footer">
+                    <div>
+                    </div>                    
+                </f:facet>
+
+            </p:dataTable>
+        </p:panel>
+
+
+    </h:form>
+
+</ui:composition>
