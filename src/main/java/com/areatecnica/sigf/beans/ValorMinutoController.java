@@ -33,20 +33,6 @@ public class ValorMinutoController extends AbstractController<ValorMinuto> {
         super(ValorMinuto.class);
     }
 
-    /**
-     * Sets the "items" attribute with a collection of RegistroMinuto entities
-     * that are retrieved from ValorMinuto?cap_first and returns the navigation
-     * outcome.
-     *
-     * @return navigation outcome for RegistroMinuto page
-     */
-    public String navigateRegistroMinutoList() {
-        if (this.getSelected() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("RegistroMinuto_items", this.getSelected().getRegistroMinutoList());
-        }
-        return "/registroMinuto/index";
-    }
-
     @Override
     public ValorMinuto prepareCreate(ActionEvent event) {
         super.prepareCreate(event); //To change body of generated methods, choose Tools | Templates.

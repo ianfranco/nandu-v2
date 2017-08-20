@@ -31,7 +31,7 @@ public class ITrabajadorDaoImpl extends GenericDAOImpl<Trabajador> implements IT
     @Override
     public List<Trabajador> findByTerminal(Terminal terminal) {
         try {
-            return this.entityManager.createNamedQuery("Trabajador.findByIdTerminal").setParameter("trabajadorIdTerminal", terminal).getResultList();
+            return this.entityManager.createNamedQuery("Trabajador.findByTrabajadorIdTerminal").setParameter("trabajadorIdTerminal", terminal).getResultList();
         } catch (NoResultException ne) {
             return null;
         }

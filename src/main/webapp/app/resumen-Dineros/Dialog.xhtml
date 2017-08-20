@@ -15,7 +15,7 @@
                          value="#{resumenDinerosController.egresoRecaudacionList}"
                          widgetVar="datalistResumen"
                          var="itemResumen"
-                         rowKey="#{itemResumen.egresoRecaudacionId}"                         
+                         rowKey="#{itemResumen.egresoResumenRecaudacionId}"                         
                          rowIndexVar="rowIndex"
                          emptyMessage="No se han encontrado registros"                         
                          >
@@ -35,14 +35,14 @@
                     <f:facet name="header">
                         <h:outputText value="Egreso"/>
                     </f:facet>
-                    <p:outputLabel value="#{itemResumen.egresoRecaudacionIdEgreso.egresoNombreEgreso}"/>
+                    <p:outputLabel value="#{itemResumen.egresoResumenRecaudacionIdEgreso.egresoNombre}"/>
                 </p:column>
 
                 <p:column style="text-align: center;font-weight: 900;">
                     <f:facet name="header">
                         <h:outputText value="Valor"/>
                     </f:facet>
-                    <p:outputLabel value="#{itemResumen.egresoRecaudacionTotalEgreso}">
+                    <p:outputLabel value="#{itemResumen.egresoResumenRecaudacionTotal}">
                         <f:convertNumber currencySymbol="$"/>
                     </p:outputLabel>
                 </p:column>

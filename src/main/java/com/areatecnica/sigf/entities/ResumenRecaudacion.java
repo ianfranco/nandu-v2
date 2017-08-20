@@ -37,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "ResumenRecaudacion.findAll", query = "SELECT r FROM ResumenRecaudacion r")
     , @NamedQuery(name = "ResumenRecaudacion.findByResumenRecaudacionId", query = "SELECT r FROM ResumenRecaudacion r WHERE r.resumenRecaudacionId = :resumenRecaudacionId")
+    , @NamedQuery(name = "ResumenRecaudacion.findByCajaProcesoDate", query = "SELECT r FROM ResumenRecaudacion r WHERE r.resumenRecaudacionIdCaja = :resumenRecaudacionIdCaja AND r.resumenRecaudacionIdProceso = :resumenRecaudacionIdProceso AND r.resumenRecaudacionFecha = :resumenRecaudacionFecha")    
+    , @NamedQuery(name = "ResumenRecaudacion.findByResumenRecaudacionIdRecaudador", query = "SELECT r FROM ResumenRecaudacion r WHERE r.resumenRecaudacionIdRecaudador = :resumenRecaudacionIdRecaudador")
     , @NamedQuery(name = "ResumenRecaudacion.findByResumenRecaudacionFecha", query = "SELECT r FROM ResumenRecaudacion r WHERE r.resumenRecaudacionFecha = :resumenRecaudacionFecha")
     , @NamedQuery(name = "ResumenRecaudacion.findByResumenRecaudacionTotal", query = "SELECT r FROM ResumenRecaudacion r WHERE r.resumenRecaudacionTotal = :resumenRecaudacionTotal")
     , @NamedQuery(name = "ResumenRecaudacion.findByResumenRecaudacionTieneTransporte", query = "SELECT r FROM ResumenRecaudacion r WHERE r.resumenRecaudacionTieneTransporte = :resumenRecaudacionTieneTransporte")
@@ -51,6 +53,10 @@ public class ResumenRecaudacion implements Serializable {
     @Basic(optional = false)
     @Column(name = "resumen_recaudacion_id")
     private Integer resumenRecaudacionId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "resumen_recaudacion_id_recaudador")
+    private int resumenRecaudacionIdRecaudador;
     @Basic(optional = false)
     @NotNull
     @Column(name = "resumen_recaudacion_fecha")
@@ -96,8 +102,9 @@ public class ResumenRecaudacion implements Serializable {
         this.resumenRecaudacionId = resumenRecaudacionId;
     }
 
-    public ResumenRecaudacion(Integer resumenRecaudacionId, Date resumenRecaudacionFecha, int resumenRecaudacionTotal, int resumenRecaudacionTieneTransporte, boolean resumenRecaudacionCerrado, Date resumenRecaudacionFechaIngreso) {
+    public ResumenRecaudacion(Integer resumenRecaudacionId, int resumenRecaudacionIdRecaudador, Date resumenRecaudacionFecha, int resumenRecaudacionTotal, int resumenRecaudacionTieneTransporte, boolean resumenRecaudacionCerrado, Date resumenRecaudacionFechaIngreso) {
         this.resumenRecaudacionId = resumenRecaudacionId;
+        this.resumenRecaudacionIdRecaudador = resumenRecaudacionIdRecaudador;
         this.resumenRecaudacionFecha = resumenRecaudacionFecha;
         this.resumenRecaudacionTotal = resumenRecaudacionTotal;
         this.resumenRecaudacionTieneTransporte = resumenRecaudacionTieneTransporte;
@@ -111,6 +118,14 @@ public class ResumenRecaudacion implements Serializable {
 
     public void setResumenRecaudacionId(Integer resumenRecaudacionId) {
         this.resumenRecaudacionId = resumenRecaudacionId;
+    }
+
+    public int getResumenRecaudacionIdRecaudador() {
+        return resumenRecaudacionIdRecaudador;
+    }
+
+    public void setResumenRecaudacionIdRecaudador(int resumenRecaudacionIdRecaudador) {
+        this.resumenRecaudacionIdRecaudador = resumenRecaudacionIdRecaudador;
     }
 
     public Date getResumenRecaudacionFecha() {

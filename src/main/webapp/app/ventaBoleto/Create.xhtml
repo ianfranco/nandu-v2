@@ -23,26 +23,33 @@
                         <p:outputLabel/>
 
                         <p:outputLabel value="N° Bus" for="ventaBoletoIdGuia" />
-                        <p:selectOneMenu id="ventaBoletoIdGuia" value="#{ventaBoletoRecaudacionController.busGuiaItem}" required="true" requiredMessage="Debe seleccionar el Bus" converter="omnifaces.SelectItemsConverter" style="width: 50px;">
+                        <p:selectOneMenu id="ventaBoletoIdGuia" value="#{ventaBoletoRecaudacionController.selected.ventaBoletoIdBus}" required="true" requiredMessage="Debe seleccionar el Bus" converter="omnifaces.SelectItemsConverter" style="width: 50px;">
                             <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{ventaBoletoRecaudacionController.guiaList}"
+                            <f:selectItems value="#{ventaBoletoRecaudacionController.busesList}"
                                            var="busItem"
                                            itemValue="#{busItem}"
-                                           itemLabel="#{busItem.guiaIdBus.busNumero} (#{busItem.guiaTurno})"
+                                           itemLabel="#{busItem.busNumero}"
                                            />
                             <p:ajax update="ppu, conductor, datalist" event="valueChange" listener="#{ventaBoletoRecaudacionController.handleBusChange(event)}"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel value="PPU"/>
-                        <p:outputLabel id="ppu" value="#{ventaBoletoRecaudacionController.busGuiaItem.guiaIdBus.busPatente}" style="width: 100px;"/>
+                        <p:outputLabel id="ppu" value="#{ventaBoletoRecaudacionController.selected.ventaBoletoIdBus.busPatente}" style="width: 100px;"/>
+
+
+                        <p:outputLabel value="N° Conductor" for="conductor" />
+                        <p:selectOneMenu id="ventaBoletoIdConductor" value="#{ventaBoletoRecaudacionController.selected.ventaBoletoIdTrabajador}" required="true" requiredMessage="Debe seleccionar el Conductor" converter="omnifaces.SelectItemsConverter" style="width: 50px;">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{ventaBoletoRecaudacionController.trabajadorItems}"
+                                           var="trabajadorItem"
+                                           itemValue="#{trabajadorItem}"
+                                           itemLabel="#{trabajadorItem.trabajadorCodigo}"
+                                           />
+                            <p:ajax update="ppu, conductor, datalist" event="valueChange" listener="#{ventaBoletoRecaudacionController.handleBusChange(event)}"/>
+                        </p:selectOneMenu>
 
                         <p:outputLabel value="Conductor"/>
-                        <p:outputLabel id="conductor" value="#{ventaBoletoRecaudacionController.busGuiaItem.guiaIdTrabajador.trabajadorApellidoPaterno} #{ventaBoletoRecaudacionController.busGuiaItem.guiaIdTrabajador.trabajadorApellidoMaterno} #{ventaBoletoRecaudacionController.busGuiaItem.guiaIdTrabajador.trabajadorNombres}"/>
-
-                        <p:outputLabel value=""/>
-                        <p:outputLabel value=""/>
-
-
+                        <p:outputLabel id="conductor" value="#{ventaBoletoRecaudacionController.selected.ventaBoletoIdTrabajador.trabajadorApellidoPaterno} #{ventaBoletoRecaudacionController.selected.ventaBoletoIdTrabajador.trabajadorApellidoMaterno} #{ventaBoletoRecaudacionController.selected.ventaBoletoIdTrabajador.trabajadorNombres}"/>
 
                     </p:panelGrid>
 

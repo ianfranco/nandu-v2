@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "VentaCombustible.findAll", query = "SELECT v FROM VentaCombustible v")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleId", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleId = :ventaCombustibleId")
+    , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleBusRecaudado", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleIdBus = :ventaCombustibleIdBus AND v.ventaCombustibleRecaudado = :ventaCombustibleRecaudado")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleFecha", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleFecha = :ventaCombustibleFecha")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustiblePrecio", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustiblePrecio = :ventaCombustiblePrecio")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleCantidad", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleCantidad = :ventaCombustibleCantidad")
@@ -67,6 +68,10 @@ public class VentaCombustible implements Serializable {
     @NotNull
     @Column(name = "venta_combustible_numero_boleta")
     private int ventaCombustibleNumeroBoleta;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "venta_combustible_recaudado")
+    private boolean ventaCombustibleRecaudado;
     @JoinColumn(name = "venta_combustible_id_bus", referencedColumnName = "bus_id")
     @ManyToOne(optional = false)
     private Bus ventaCombustibleIdBus;
@@ -81,13 +86,14 @@ public class VentaCombustible implements Serializable {
         this.ventaCombustibleId = ventaCombustibleId;
     }
 
-    public VentaCombustible(Integer ventaCombustibleId, Date ventaCombustibleFecha, float ventaCombustiblePrecio, float ventaCombustibleCantidad, int ventaCombustibleTotal, int ventaCombustibleNumeroBoleta) {
+    public VentaCombustible(Integer ventaCombustibleId, Date ventaCombustibleFecha, float ventaCombustiblePrecio, float ventaCombustibleCantidad, int ventaCombustibleTotal, int ventaCombustibleNumeroBoleta, boolean ventaCombustibleRecaudado) {
         this.ventaCombustibleId = ventaCombustibleId;
         this.ventaCombustibleFecha = ventaCombustibleFecha;
         this.ventaCombustiblePrecio = ventaCombustiblePrecio;
         this.ventaCombustibleCantidad = ventaCombustibleCantidad;
         this.ventaCombustibleTotal = ventaCombustibleTotal;
         this.ventaCombustibleNumeroBoleta = ventaCombustibleNumeroBoleta;
+        this.ventaCombustibleRecaudado = ventaCombustibleRecaudado;
     }
 
     public Integer getVentaCombustibleId() {
@@ -136,6 +142,14 @@ public class VentaCombustible implements Serializable {
 
     public void setVentaCombustibleNumeroBoleta(int ventaCombustibleNumeroBoleta) {
         this.ventaCombustibleNumeroBoleta = ventaCombustibleNumeroBoleta;
+    }
+    
+    public boolean getVentaCombustibleRecaudado() {
+        return ventaCombustibleRecaudado;
+    }
+
+    public void setVentaCombustibleRecaudado(boolean ventaCombustibleRecaudado) {
+        this.ventaCombustibleRecaudado = ventaCombustibleRecaudado;
     }
 
     public Bus getVentaCombustibleIdBus() {

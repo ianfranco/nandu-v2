@@ -23,7 +23,7 @@
                     <p:panelGrid columns="2" columnClasses="column" style="width: 500px;">
 
                         <p:outputLabel value="Valor x Litro:" for="ventaCombustibleValor" style="font-size:x-large;"/>
-                        <p:outputLabel id="ventaCombustibleValor" value="$ #{ventaCombustibleController.selected.ventaCombustibleValorCombustible}" title="#{bundle.CreateVentaCombustibleTitle_ventaCombustibleValor}" style="font-size:x-large;"/>
+                        <p:outputLabel id="ventaCombustibleValor" value="$ #{ventaCombustibleController.selected.ventaCombustiblePrecio}" title="#{bundle.CreateVentaCombustibleTitle_ventaCombustibleValor}" style="font-size:x-large;"/>
 
                         <p:outputLabel value="Surtidor:" for="ventaCombustibleIdSurtidor" />
                         <p:selectOneMenu id="ventaCombustibleIdSurtidor" value="#{ventaCombustibleController.selected.ventaCombustibleIdSurtidor}" required="true" requiredMessage="#{bundle.CreateVentaCombustibleRequiredMessage_ventaCombustibleIdSurtidor}" converter="omnifaces.SelectItemsConverter">
@@ -59,9 +59,9 @@
                                 <p:ajax event="valueChange" listener="#{ventaCombustibleController.handleBusChange}" update="growl"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
-
+                        
                         <p:outputLabel value="Total" for="ventaCombustibleValorCombustible" />
-                        <p:inputNumber decimalPlaces="0" id="ventaCombustibleValorCombustible" value="#{ventaCombustibleController.selected.ventaCombustibleValor}" required="true" requiredMessage="Debe ingresar el total de la venta" onfocus="this.setSelectionRange(0, this.value.length)" >
+                        <p:inputNumber decimalPlaces="0" id="ventaCombustibleValorCombustible" value="#{ventaCombustibleController.selected.ventaCombustibleTotal}" required="true" requiredMessage="Debe ingresar el total de la venta" onfocus="this.setSelectionRange(0, this.value.length)" >
                             <p:ajax event="valueChange" listener="#{ventaCombustibleController.handleTotalChange}" update="ventaCombustibleCantidad"/>
                         </p:inputNumber>
 

@@ -18,15 +18,17 @@
                         <h:outputText value="#{bundle.ViewRegistroMinutoLabel_registroMinutoId}"/>
                         <h:outputText value="#{registroMinutoController.selected.registroMinutoId}" title="#{bundle.ViewRegistroMinutoTitle_registroMinutoId}"/>
 
-                        <h:outputText value="#{bundle.ViewRegistroMinutoLabel_registroMinutoFechaIngreso}"/>
+                        <h:outputText value="Fecha Registro:"/>
                         <h:outputText value="#{registroMinutoController.selected.registroMinutoFechaIngreso}" title="#{bundle.ViewRegistroMinutoTitle_registroMinutoFechaIngreso}">
-                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
 
-                        <h:outputText value="#{bundle.ViewRegistroMinutoLabel_registroMinutoFechaMinuto}"/>
-                        <h:outputText value="#{registroMinutoController.selected.registroMinutoFechaMinuto}" title="#{bundle.ViewRegistroMinutoTitle_registroMinutoFechaMinuto}">
-                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
-                        </h:outputText>
+                        <h:outputText value="Fecha Minuto:"/>
+                        <p:outputLabel value="#{registroMinutoController.fecha}" id="registroMinutoFechaMinuto" >
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+
+                        
 
                         <h:outputText value="#{bundle.ViewRegistroMinutoLabel_registroMinutoMonto}"/>
                         <h:outputText value="#{registroMinutoController.selected.registroMinutoMonto}" title="#{bundle.ViewRegistroMinutoTitle_registroMinutoMonto}"/>

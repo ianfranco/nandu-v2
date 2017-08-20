@@ -65,9 +65,7 @@ public class ValorMinuto implements Serializable {
     private Date valorMinutoFechaIngreso;
     @JoinColumn(name = "valor_minuto_id_cuenta", referencedColumnName = "cuenta_id")
     @ManyToOne(optional = false)
-    private Cuenta valorMinutoIdCuenta;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registroMinutoIdValorMinuto")
-    private List<RegistroMinuto> registroMinutoList;
+    private Cuenta valorMinutoIdCuenta;    
 
     public ValorMinuto() {
     }
@@ -121,15 +119,6 @@ public class ValorMinuto implements Serializable {
 
     public void setValorMinutoIdCuenta(Cuenta valorMinutoIdCuenta) {
         this.valorMinutoIdCuenta = valorMinutoIdCuenta;
-    }
-
-    @XmlTransient
-    public List<RegistroMinuto> getRegistroMinutoList() {
-        return registroMinutoList;
-    }
-
-    public void setRegistroMinutoList(List<RegistroMinuto> registroMinutoList) {
-        this.registroMinutoList = registroMinutoList;
     }
 
     @Override

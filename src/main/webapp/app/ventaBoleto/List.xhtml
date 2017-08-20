@@ -7,9 +7,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:coco="http://xmlns.jcp.org/jsf/composite/ui">
 
-    <h:form id="VentaBoletoListForm" class="form-height">
-        <p:panel header="Venta de Boletos">
-            <p:panelGrid columns="2">
+
+    <p:panel header="Venta de Boletos">
+        <h:form id="selector">
+            <p:panelGrid columns="5" style="padding-bottom: 10px;">
                 <h:outputLabel value="Caja Recaudación" for="cajaRecaudacionIdCaja" style="text-align: right;"/>
                 <p:selectOneMenu id="cajaRecaudacionIdCaja" value="#{ventaBoletoRecaudacionController.cajaRecaudacion}" required="true" requiredMessage="Debe seleccionar la Caja de Recaudación" converter="omnifaces.SelectItemsConverter">
                     <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
@@ -19,8 +20,11 @@
                                    itemLabel="#{cajaId.cajaRecaudacionNombre}"
                                    />                    
                 </p:selectOneMenu>
+
+                <p:commandButton id="okButton" styleClass="btn btn-primary" icon="fa fa-search" value="Buscar Ventas de Boletos" actionListener="#{ventaBoletoRecaudacionController.load}" update="VentaBoletoListForm:datalist"  onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()" />
             </p:panelGrid>
-            
+        </h:form>
+        <h:form id="VentaBoletoListForm" class="form-height"> 
             <p:dataTable id="datalist"
                          value="#{ventaBoletoRecaudacionController.items}"
                          rowKey="#{item.ventaBoletoId}"
@@ -42,15 +46,6 @@
                     <h:outputLabel value="#{rowIndex+1}"/>
                 </p:column>
 
-
-                <p:column sortBy="#{item.ventaBoletoValorVentaBoleto}" filterBy="#{item.ventaBoletoValorVentaBoleto}">
-                    <f:facet name="header">
-                        <h:outputText value="Valor"/>
-                    </f:facet>
-                    <h:outputLabel value="#{item.ventaBoletoValorVentaBoleto}"/>
-                </p:column>
-
-
                 <p:column sortBy="#{item.ventaBoletoRecaudado}" filterBy="#{item.ventaBoletoRecaudado}">
                     <f:facet name="header">
                         <h:outputText value="Recaudado"/>
@@ -69,20 +64,41 @@
                 </p:column>
 
 
-                <p:column sortBy="#{item.ventaBoletoIdGuia.guiaIdBus.busNumero}" filterBy="#{item.ventaBoletoIdGuia.guiaIdBus.busNumero}">
+                <p:column sortBy="#{item.ventaBoletoIdBus.busNumero}" filterBy="#{item.ventaBoletoIdBus.busNumero}">
                     <f:facet name="header">
                         <h:outputText value="N° Bus"/>
                     </f:facet>
-                    <h:outputLabel value="#{item.ventaBoletoIdGuia.guiaIdBus.busNumero}"/>
+                    <h:outputLabel value="#{item.ventaBoletoIdBus.busNumero}"/>
                 </p:column>
 
-
-                <p:column sortBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaId}" filterBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaId}">
+                <p:column sortBy="#{item.ventaBoletoIdTrabajador.trabajadorCodigo}" filterBy="#{item.ventaBoletoIdTrabajador.trabajadorCodigo}">
                     <f:facet name="header">
-                        <h:outputText value="Caja"/>
+                        <h:outputText value="N° Conductor"/>
                     </f:facet>
-                    <h:outputLabel value="#{item.ventaBoletoIdInventarioCaja.inventarioCajaId}"/>
+                    <h:outputLabel value="#{item.ventaBoletoIdTrabajador.trabajadorCodigo}"/>
                 </p:column>
+
+                <p:column sortBy="#{item.ventaBoletoValor}" filterBy="#{item.ventaBoletoValor}">
+                    <f:facet name="header">
+                        <h:outputText value="Valor"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.ventaBoletoValor}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaIdentificador}" filterBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaIdentificador}">
+                    <f:facet name="header">
+                        <h:outputText value="Identificador"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.ventaBoletoIdInventarioCaja.inventarioCajaIdentificador}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaSerie}" filterBy="#{item.ventaBoletoIdInventarioCaja.inventarioCajaSerie}">
+                    <f:facet name="header">
+                        <h:outputText value="Serie"/>
+                    </f:facet>
+                    <h:outputLabel value="#{item.ventaBoletoIdInventarioCaja.inventarioCajaSerie}"/>
+                </p:column>
+
 
                 <f:facet name="footer">
                     <p:commandButton id="createButton" styleClass="btn btn-primary" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{ventaBoletoRecaudacionController.prepareCreate}" update=":VentaBoletoCreateForm" oncomplete="PF('VentaBoletoCreateDialog').show()" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()"/>
@@ -94,10 +110,7 @@
                 </f:facet>
 
             </p:dataTable>
-        </p:panel>
-
-
-        <ui:include src="/confirmation.xhtml"/>
-    </h:form>
-
+        </h:form>
+    </p:panel>
+    <ui:include src="/confirmation.xhtml"/>
 </ui:composition>

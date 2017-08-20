@@ -51,11 +51,11 @@
                     <h:outputLabel value="#{rowIndex+1}"/>
                 </p:column>
 
-                <p:column sortBy="#{item.egresoCajaRecaudacionIdEgreso.egresoNombreEgreso}" filterBy="#{item.egresoCajaRecaudacionIdEgreso.egresoNombreEgreso}">
+                <p:column sortBy="#{item.egresoCajaRecaudacionIdEgreso.egresoNombre}" filterBy="#{item.egresoCajaRecaudacionIdEgreso.egresoNombre}">
                     <f:facet name="header">
                         <h:outputText value="Egreso"/>
                     </f:facet>
-                    <h:outputLabel value="#{item.egresoCajaRecaudacionIdEgreso.egresoNombreEgreso}"/>
+                    <h:outputLabel value="#{item.egresoCajaRecaudacionIdEgreso.egresoNombre}"/>
                 </p:column>
 
                 <p:column sortBy="#{item.egresoCajaRecaudacionValorDefecto}" filterBy="#{item.egresoCajaRecaudacionValorDefecto}" style="text-align: center;">

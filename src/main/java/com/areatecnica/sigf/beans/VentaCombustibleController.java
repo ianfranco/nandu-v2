@@ -192,8 +192,8 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     }
 
     public void handleBusChange() {
-        this.guiaDao = new IGuiaDaoImpl();
-        this.guiaSelected = this.guiaDao.findLastGuiaByBusEqualsFecha(busSelected, fecha);
+        /*this.guiaDao = new IGuiaDaoImpl();
+        this.guiaSelected = this.guiaDao.findLastGuiaByBusEqualsFecha(busSelected, fecha);*/
 
     }
 

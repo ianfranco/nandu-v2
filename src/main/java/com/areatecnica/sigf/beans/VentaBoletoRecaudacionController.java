@@ -5,12 +5,13 @@ import com.areatecnica.sigf.entities.VentaBoleto;
 import com.areatecnica.sigf.controllers.VentaBoletoFacade;
 import com.areatecnica.sigf.dao.IBusDao;
 import com.areatecnica.sigf.dao.ICajaRecaudacionDao;
-import com.areatecnica.sigf.dao.IGuiaDao;
 import com.areatecnica.sigf.dao.IInventarioCajaDao;
+import com.areatecnica.sigf.dao.ITrabajadorDao;
 import com.areatecnica.sigf.dao.IVentaBoletoDao;
 import com.areatecnica.sigf.dao.impl.ICajaRecaudacionDaoImpl;
 import com.areatecnica.sigf.dao.impl.IGuiaDaoImpl;
 import com.areatecnica.sigf.dao.impl.IInventarioCajaDaoImpl;
+import com.areatecnica.sigf.dao.impl.ITrabajadorDaoImpl;
 import com.areatecnica.sigf.dao.impl.IVentaBoletoDaoImpl;
 import com.areatecnica.sigf.entities.Boleto;
 import com.areatecnica.sigf.entities.Bus;
@@ -19,20 +20,14 @@ import com.areatecnica.sigf.entities.CajaRecaudacion;
 import com.areatecnica.sigf.entities.Guia;
 import com.areatecnica.sigf.entities.InventarioCaja;
 import com.areatecnica.sigf.entities.ProcesoRecaudacion;
+import com.areatecnica.sigf.entities.Trabajador;
 import com.areatecnica.sigf.models.VentaBoletoRecaudacionDataModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.faces.event.ActionEvent;
@@ -56,14 +51,14 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
     private List<CajaRecaudacion> cajaRecaudacionList;
     private List<VentaBoletoHelper> ventaBoletosList;
     private List<Bus> busesList;
-    private List<Guia> guiaList;
+    private List<Trabajador> trabajadorItems;
+
     private Map<Integer, ProcesoRecaudacion> procesosMap;
     private IInventarioCajaDao inventarioCajaDao;
     private ICajaRecaudacionDao cajaRecaudacionDao;
-    private IGuiaDao guiaDao;
     private IVentaBoletoDao ventaBoletoDao;
     private IBusDao busDao;
-    private Guia busGuiaItem;
+    private ITrabajadorDao trabajadorDao;
     private Date fechaVentaBoleto;
     private String formatFechaVentaBoleto;
     private final static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
@@ -84,10 +79,7 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
         this.setCajaRecaudacionList((List<CajaRecaudacion>) this.cajaRecaudacionDao.findAllByUser(this.getCurrentUser()));
         this.setFechaVentaBoleto(new Date());
         this.formatFechaVentaBoleto = format.format(fechaVentaBoleto);
-        this.guiaDao = new IGuiaDaoImpl();
-        this.guiaList = new ArrayList<>();
-        this.setBusesList(new ArrayList<>());
-
+        this.busesList = new ArrayList<>();
         List<CajaRecaudacion> cajaList = this.getCurrentUser().getCajaRecaudacionList();
         if (cajaList.size() > 1) {
             this.setProcesosMap((Map<Integer, ProcesoRecaudacion>) new HashMap());
@@ -99,9 +91,7 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
 
             for (Map.Entry<Integer, ProcesoRecaudacion> entry : getProcesosMap().entrySet()) {
                 ProcesoRecaudacion proceso = (ProcesoRecaudacion) entry.getValue();
-                List<Guia> auxListGuia = this.guiaDao.findByProcesoFechaGuia(proceso, fechaVentaBoleto);
-
-                this.guiaList.addAll(auxListGuia);
+                this.busesList.addAll(proceso.getBusList());
             }
         } else {
             this.setProcesosMap((Map<Integer, ProcesoRecaudacion>) new HashMap());
@@ -109,14 +99,15 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
             for (CajaProceso caja : this.cajaRecaudacion.getCajaProcesoList()) {
                 this.getProcesosMap().put(caja.getCajaProcesoIdProceso().getProcesoRecaudacionId(), caja.getCajaProcesoIdProceso());
             }
+
             for (Map.Entry<Integer, ProcesoRecaudacion> entry : getProcesosMap().entrySet()) {
                 ProcesoRecaudacion proceso = (ProcesoRecaudacion) entry.getValue();
-                List<Guia> auxListGuia = this.guiaDao.findByProcesoFechaGuia(proceso, fechaVentaBoleto);
+                /*List<Guia> auxListGuia = this.guiaDao.findByProcesoFechaGuia(proceso, fechaVentaBoleto);
 
-                this.guiaList.addAll(auxListGuia);
+                this.guiaList.addAll(auxListGuia);*/
             }
 
-            Collection<Guia> guiasSin2Turnos = this.guiaList.stream()
+            /*Collection<Guia> guiasSin2Turnos = this.guiaList.stream()
                     .<Map<Integer, Guia>>collect(HashMap::new, (m, e) -> m.put(e.getGuiaIdBus().getBusId(), e), Map::putAll)
                     .values();
 
@@ -132,11 +123,21 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
                     }
                     return 1;
                 }
-            });
+            });*/
         }
+    }
 
-        this.ventaBoletoDao = new IVentaBoletoDaoImpl();
-        this.setItems(this.ventaBoletoDao.findByCajaDate(cajaRecaudacion, fechaVentaBoleto));
+    public void load() {
+        if (this.cajaRecaudacion != null) {
+
+            this.ventaBoletoDao = new IVentaBoletoDaoImpl();
+            this.setItems((List<VentaBoleto>) this.ventaBoletoDao.findByCajaDate(getCajaRecaudacion(), getFechaVentaBoleto()));
+            this.setModel(new VentaBoletoRecaudacionDataModel(getItems()));
+
+            this.trabajadorDao = new ITrabajadorDaoImpl();
+            this.trabajadorItems = this.trabajadorDao.findByTerminal(this.getCurrentUser().getUsuarioIdTerminal());
+
+        }
     }
 
     public VentaBoletoRecaudacionController() {
@@ -156,20 +157,6 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
      */
     public void setBoletoItem(Boleto boletoItem) {
         this.boletoItem = boletoItem;
-    }
-
-    /**
-     * @return the Guia
-     */
-    public Guia getBusGuiaItem() {
-        return busGuiaItem;
-    }
-
-    /**
-     * @param Guia the boletoItem to set
-     */
-    public void setBusGuiaItem(Guia busGuiaItem) {
-        this.busGuiaItem = busGuiaItem;
     }
 
     /**
@@ -198,20 +185,6 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
      */
     public void setItems(List<VentaBoleto> items) {
         this.items = items;
-    }
-
-    /**
-     * @return the guiaList
-     */
-    public List<Guia> getGuiaList() {
-        return guiaList;
-    }
-
-    /**
-     * @param guiaList the items to set
-     */
-    public void setGuiaList(List<Guia> guiaList) {
-        this.guiaList = guiaList;
     }
 
     /**
@@ -334,7 +307,6 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
         ventaBoletoIdInventarioCajaController.setSelected(null);
     }
 
-
     /**
      * Sets the "selected" attribute of the InventarioCaja controller in order
      * to display its data in its View dialog.
@@ -345,6 +317,14 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
         if (this.getSelected() != null && ventaBoletoIdInventarioCajaController.getSelected() == null) {
             ventaBoletoIdInventarioCajaController.setSelected(this.getSelected().getVentaBoletoIdInventarioCaja());
         }
+    }
+
+    public List<Trabajador> getTrabajadorItems() {
+        return trabajadorItems;
+    }
+
+    public void setTrabajadorItems(List<Trabajador> trabajadorItems) {
+        this.trabajadorItems = trabajadorItems;
     }
 
     @Override
@@ -376,7 +356,7 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
 
                     this.ejbFacade.create(ventaBoleto);
                     this.ventaBoletoIdInventarioCajaController.getFacade().edit(v.inventarioCaja);
-                    JsfUtil.addSuccessMessage("Se ingresado una nueva Venta al Bus N°:" + busGuiaItem.getGuiaIdBus().getBusNumero());
+                    JsfUtil.addSuccessMessage("Se ingresado una nueva Venta al Bus N°:" + ventaBoleto.getVentaBoletoIdBus().getBusNumero());
 
                     this.items.add(ventaBoleto);
                 }
@@ -428,12 +408,6 @@ public class VentaBoletoRecaudacionController extends AbstractController<VentaBo
         //
         //POR MODIFICAR
         this.setInventarioCajaList((List<InventarioCaja>) this.inventarioCajaDao.findByBoletoEstado(this.cajaRecaudacion, this.getBoletoItem(), Boolean.FALSE));
-    }
-
-    public void load() {
-        this.ventaBoletoDao = new IVentaBoletoDaoImpl();
-        this.setItems((List<VentaBoleto>) this.ventaBoletoDao.findByCajaDate(getCajaRecaudacion(), getFechaVentaBoleto()));
-        this.setModel(new VentaBoletoRecaudacionDataModel(getItems()));
     }
 
     public class VentaBoletoHelper {

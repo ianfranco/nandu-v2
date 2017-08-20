@@ -108,7 +108,7 @@
                         <ui:repeat value="#{recaudacionGuiaController.egresoGuiaList}" var="egreso" >
                             <p:row >
                                 <p:column style="font-weight: bold;" colspan="2"/>
-                                <p:column style="font-weight: bold;" >#{egreso.egresoGuiaIdEgreso.egresoNombreEgreso}</p:column>
+                                <p:column style="font-weight: bold;" >#{egreso.egresoGuiaIdEgreso.egresoNombre}</p:column>
                                 <p:column style="font-weight: bold;" >
                                     <p:inputNumber emptyValue="zero" minValue="0" styleClass="clase" id="egresoGuiaMonto" value="#{egreso.egresoGuiaMonto}" decimalPlaces="0" onfocus="this.setSelectionRange(0, this.value.length)" symbol="$ ">
                                         <p:ajax event="valueChange" update="growl, @(.clase2)" listener="#{recaudacionGuiaController.setTotal}" global="false"></p:ajax>

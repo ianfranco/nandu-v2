@@ -12,6 +12,7 @@ import com.areatecnica.sigf.entities.CajaRecaudacion;
 import com.areatecnica.sigf.entities.VentaCombustible;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -39,6 +40,16 @@ public class IVentaCombustibleDaoImpl extends GenericDAOImpl<VentaCombustible> i
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-   
+    @Override
+    public List<VentaCombustible> findByBusSinRecaudar(Bus bus) {
+        try {
+            return this.entityManager.createNamedQuery("VentaCombustible.findByVentaCombustibleBusRecaudado").
+                    setParameter("ventaCombustibleIdBus", bus).
+                    setParameter("ventaCombustibleRecaudado", Boolean.FALSE).
+                    getResultList();
+        } catch (NoResultException ne) {
+            return null;
+        }
+    }
 
 }

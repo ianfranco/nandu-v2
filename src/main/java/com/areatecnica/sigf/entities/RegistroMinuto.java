@@ -34,9 +34,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "RegistroMinuto.findAll", query = "SELECT r FROM RegistroMinuto r")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoId", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoId = :registroMinutoId")
+    , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoDesdeIdBus", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoDesdeIdBus = :registroMinutoDesdeIdBus AND r.registroMinutoFechaMinuto = :registroMinutoFechaMinuto")
+    , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoDesdeSinRecaudar", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoDesdeIdBus = :registroMinutoDesdeIdBus AND r.registroMinutoRecaudado = :registroMinutoRecaudado")    
+    , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoHastaIdBus", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoHastaIdBus = :registroMinutoHastaIdBus AND r.registroMinutoFechaMinuto = :registroMinutoFechaMinuto")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoFechaIngreso", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoFechaIngreso = :registroMinutoFechaIngreso")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoFechaMinuto", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoFechaMinuto = :registroMinutoFechaMinuto")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoCantidad", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoCantidad = :registroMinutoCantidad")
+    , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoRecaudado", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoRecaudado = :registroMinutoRecaudado")
     , @NamedQuery(name = "RegistroMinuto.findByRegistroMinutoMonto", query = "SELECT r FROM RegistroMinuto r WHERE r.registroMinutoMonto = :registroMinutoMonto")})
 public class RegistroMinuto implements Serializable {
 
@@ -56,16 +60,18 @@ public class RegistroMinuto implements Serializable {
     @Column(name = "registro_minuto_fecha_minuto")
     @Temporal(TemporalType.TIMESTAMP)
     private Date registroMinutoFechaMinuto;
-    @Size(max = 45)
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "registro_minuto_cantidad")
-    private String registroMinutoCantidad;
+    private int registroMinutoCantidad;
     @Basic(optional = false)
     @NotNull
     @Column(name = "registro_minuto_monto")
     private int registroMinutoMonto;
-    @JoinColumn(name = "registro_minuto_id_valor_minuto", referencedColumnName = "valor_minuto_id")
-    @ManyToOne(optional = false)
-    private ValorMinuto registroMinutoIdValorMinuto;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "registro_minuto_recaudado")
+    private boolean registroMinutoRecaudado;
     @JoinColumn(name = "registro_minuto_desde_id_bus", referencedColumnName = "bus_id")
     @ManyToOne(optional = false)
     private Bus registroMinutoDesdeIdBus;
@@ -80,11 +86,12 @@ public class RegistroMinuto implements Serializable {
         this.registroMinutoId = registroMinutoId;
     }
 
-    public RegistroMinuto(Integer registroMinutoId, Date registroMinutoFechaIngreso, Date registroMinutoFechaMinuto, int registroMinutoMonto) {
+    public RegistroMinuto(Integer registroMinutoId, Date registroMinutoFechaIngreso, Date registroMinutoFechaMinuto, int registroMinutoMonto, Boolean registroMinutoRecaudado) {
         this.registroMinutoId = registroMinutoId;
         this.registroMinutoFechaIngreso = registroMinutoFechaIngreso;
         this.registroMinutoFechaMinuto = registroMinutoFechaMinuto;
         this.registroMinutoMonto = registroMinutoMonto;
+        this.registroMinutoRecaudado = registroMinutoRecaudado;
     }
 
     public Integer getRegistroMinutoId() {
@@ -111,11 +118,11 @@ public class RegistroMinuto implements Serializable {
         this.registroMinutoFechaMinuto = registroMinutoFechaMinuto;
     }
 
-    public String getRegistroMinutoCantidad() {
+    public int getRegistroMinutoCantidad() {
         return registroMinutoCantidad;
     }
 
-    public void setRegistroMinutoCantidad(String registroMinutoCantidad) {
+    public void setRegistroMinutoCantidad(int registroMinutoCantidad) {
         this.registroMinutoCantidad = registroMinutoCantidad;
     }
 
@@ -125,14 +132,6 @@ public class RegistroMinuto implements Serializable {
 
     public void setRegistroMinutoMonto(int registroMinutoMonto) {
         this.registroMinutoMonto = registroMinutoMonto;
-    }
-
-    public ValorMinuto getRegistroMinutoIdValorMinuto() {
-        return registroMinutoIdValorMinuto;
-    }
-
-    public void setRegistroMinutoIdValorMinuto(ValorMinuto registroMinutoIdValorMinuto) {
-        this.registroMinutoIdValorMinuto = registroMinutoIdValorMinuto;
     }
 
     public Bus getRegistroMinutoDesdeIdBus() {
@@ -149,6 +148,14 @@ public class RegistroMinuto implements Serializable {
 
     public void setRegistroMinutoHastaIdBus(Bus registroMinutoHastaIdBus) {
         this.registroMinutoHastaIdBus = registroMinutoHastaIdBus;
+    }
+
+    public boolean getRegistroMinutoRecaudado() {
+        return registroMinutoRecaudado;
+    }
+
+    public void setRegistroMinutoRecaudado(boolean registroMinutoRecaudado) {
+        this.registroMinutoRecaudado = registroMinutoRecaudado;
     }
 
     @Override
@@ -175,5 +182,5 @@ public class RegistroMinuto implements Serializable {
     public String toString() {
         return "com.areatecnica.sigf.entities.RegistroMinuto[ registroMinutoId=" + registroMinutoId + " ]";
     }
-    
+
 }

@@ -8,60 +8,51 @@
 
     <ui:composition>
 
-        <p:dialog id="RegistroMinutoCreateDlg" widgetVar="RegistroMinutoCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateRegistroMinutoTitle}" closeOnEscape="true">
+        <p:dialog id="RegistroMinutoCreateDlg" widgetVar="RegistroMinutoCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="Registro de Minutos" closeOnEscape="true">
 
             <h:form id="RegistroMinutoCreateForm">
 
                 <h:panelGroup id="display" rendered="#{registroMinutoController.selected != null}">
+                    
+                    <p:focus context="registroMinutoDesdeIdBus"/>
+                    
                     <p:panelGrid columns="2" columnClasses="column">
 
-                        <p:outputLabel value="#{bundle.CreateRegistroMinutoLabel_registroMinutoFechaIngreso}" for="registroMinutoFechaIngreso" />
-                        <p:calendar id="registroMinutoFechaIngreso" pattern="MM/dd/yyyy HH:mm:ss" value="#{registroMinutoController.selected.registroMinutoFechaIngreso}" title="#{bundle.CreateRegistroMinutoTitle_registroMinutoFechaIngreso}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoFechaIngreso}" showOn="button"/>
+                        <p:outputLabel value="Fecha:" for="registroMinutoFechaMinuto" />
+                        <p:outputLabel value="#{registroMinutoController.fecha}" id="registroMinutoFechaMinuto" >
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
 
-                        <p:outputLabel value="#{bundle.CreateRegistroMinutoLabel_registroMinutoFechaMinuto}" for="registroMinutoFechaMinuto" />
-                        <p:calendar id="registroMinutoFechaMinuto" pattern="MM/dd/yyyy HH:mm:ss" value="#{registroMinutoController.selected.registroMinutoFechaMinuto}" title="#{bundle.CreateRegistroMinutoTitle_registroMinutoFechaMinuto}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoFechaMinuto}" showOn="button"/>
-
-                        <p:outputLabel value="#{bundle.CreateRegistroMinutoLabel_registroMinutoMonto}" for="registroMinutoMonto" />
-                        <p:inputText id="registroMinutoMonto" value="#{registroMinutoController.selected.registroMinutoMonto}" title="#{bundle.CreateRegistroMinutoTitle_registroMinutoMonto}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoMonto}"/>
-
-                        <p:outputLabel value="#{bundle.CreateRegistroMinutoLabel_registroMinutoIdValorMinuto}" for="registroMinutoIdValorMinuto" />
-                        <p:selectOneMenu id="registroMinutoIdValorMinuto" value="#{registroMinutoController.selected.registroMinutoIdValorMinuto}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoIdValorMinuto}" converter="valorMinutoConverter">
+                        <p:outputLabel value="Paga:" for="registroMinutoDesdeIdBus" />
+                        <p:selectOneMenu id="registroMinutoDesdeIdBus" value="#{registroMinutoController.selected.registroMinutoDesdeIdBus}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoDesdeIdBus}" converter="omnifaces.SelectItemsConverter">
                             <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{valorMinutoController.items}"
-                                           var="registroMinutoIdValorMinutoItem"
-                                           itemValue="#{registroMinutoIdValorMinutoItem}"
-                                           itemLabel="#{registroMinutoIdValorMinutoItem.valorMinutoId.toString()}"
-                                           />
-
-                        </p:selectOneMenu>
-
-                        <p:outputLabel value="#{bundle.CreateRegistroMinutoLabel_registroMinutoDesdeIdBus}" for="registroMinutoDesdeIdBus" />
-                        <p:selectOneMenu id="registroMinutoDesdeIdBus" value="#{registroMinutoController.selected.registroMinutoDesdeIdBus}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoDesdeIdBus}" converter="busConverter">
-                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{busController.items}"
+                            <f:selectItems value="#{registroMinutoController.pagaBusItems}"
                                            var="registroMinutoDesdeIdBusItem"
                                            itemValue="#{registroMinutoDesdeIdBusItem}"
-                                           itemLabel="#{registroMinutoDesdeIdBusItem.busId.toString()}"
+                                           itemLabel="#{registroMinutoDesdeIdBusItem.busNumero}"
                                            />
-
+                            <p:ajax event="valueChange" listener="#{registroMinutoController.removeBus}" update="registroMinutoHastaIdBus"/>
                         </p:selectOneMenu>
 
-                        <p:outputLabel value="#{bundle.CreateRegistroMinutoLabel_registroMinutoHastaIdBus}" for="registroMinutoHastaIdBus" />
-                        <p:selectOneMenu id="registroMinutoHastaIdBus" value="#{registroMinutoController.selected.registroMinutoHastaIdBus}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoHastaIdBus}" converter="busConverter">
+                        <p:outputLabel value="Recibe:" for="registroMinutoHastaIdBus" />
+                        <p:selectOneMenu id="registroMinutoHastaIdBus" value="#{registroMinutoController.selected.registroMinutoHastaIdBus}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoHastaIdBus}" converter="omnifaces.SelectItemsConverter">
                             <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{busController.items}"
+                            <f:selectItems value="#{registroMinutoController.recibeBusItems}"
                                            var="registroMinutoHastaIdBusItem"
                                            itemValue="#{registroMinutoHastaIdBusItem}"
-                                           itemLabel="#{registroMinutoHastaIdBusItem.busId.toString()}"
+                                           itemLabel="#{registroMinutoHastaIdBusItem.busNumero}"
                                            />
-
                         </p:selectOneMenu>
+
+
+                        <p:outputLabel value="Total:" for="registroMinutoMonto" />
+                        <p:inputNumber id="registroMinutoMonto" decimalPlaces="0" emptyValue="zero" symbol="$ " minValue="0" value="#{registroMinutoController.selected.registroMinutoMonto}" title="#{bundle.CreateRegistroMinutoTitle_registroMinutoMonto}" required="true" requiredMessage="#{bundle.CreateRegistroMinutoRequiredMessage_registroMinutoMonto}" onfocus="this.setSelectionRange(0, this.value.length)" />
                     </p:panelGrid>
-                    <p:commandButton actionListener="#{registroMinutoController.saveNew}" value="#{bundle.Save}" update="display,:RegistroMinutoListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,PF('RegistroMinutoCreateDialog'));">
+                    <p:commandButton actionListener="#{registroMinutoController.saveNew}" value="#{bundle.Save}" update="display,:RegistroMinutoListForm:datalist,:growl" resetValues="true">
                         <p:confirm header="#{bundle.ConfirmationHeader}" message="#{bundle.ConfirmCreateMessage}" icon="ui-icon-alert"/>
                     </p:commandButton>
 
-                    <p:commandButton value="#{bundle.Cancel}" oncomplete="PF('RegistroMinutoCreateDialog').hide()" update="display" process="@this" immediate="true" resetValues="true"/>
+                    <p:commandButton value="Cerrar" oncomplete="PF('RegistroMinutoCreateDialog').hide()" update="display" process="@this" immediate="true" resetValues="true"/>
                 </h:panelGroup>
 
             </h:form>

@@ -18,12 +18,14 @@ import java.util.List;
  * @author ianfr
  */
 public interface IVentaCombustibleDao<T> extends IGenericDAO<T> {
-    
+
     public List<VentaCombustible> findBySurtidorDate(CajaRecaudacion cajaRecaudacion, Date fechaVenta);
-    
-    public List<VentaCombustible> findByBusAndDate(Bus bus);    
-    
+
+    public List<VentaCombustible> findByBusAndDate(Bus bus);
+
     public List<VentaCombustible> findByDefaultBus();
-    
+
+    public List<VentaCombustible> findByBusSinRecaudar(Bus bus);
+
     public VentaCombustible findByBus(Bus bus, Boleto boleto);
 }

@@ -37,8 +37,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Trabajador.findAll", query = "SELECT t FROM Trabajador t")
-    , @NamedQuery(name = "Trabajador.findAllByCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdCuenta =:idCuenta")
+    , @NamedQuery(name = "Trabajador.findAllByCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdCuenta =:idCuenta ORDER BY t.trabajadorCodigo ASC")
     , @NamedQuery(name = "Trabajador.findByTrabajadorId", query = "SELECT t FROM Trabajador t WHERE t.trabajadorId = :trabajadorId")
+    , @NamedQuery(name = "Trabajador.findMaxCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdCuenta = :trabajadorIdCuenta ORDER BY t.trabajadorCodigo DESC")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorIdTerminal", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIdTerminal = :trabajadorIdTerminal")
+    , @NamedQuery(name = "Trabajador.findByTrabajadorRutAndCuenta", query = "SELECT t FROM Trabajador t WHERE t.trabajadorRut = :trabajadorRut AND t.trabajadorIdCuenta =:trabajadorIdCuenta")    
     , @NamedQuery(name = "Trabajador.findByTrabajadorFonasa", query = "SELECT t FROM Trabajador t WHERE t.trabajadorFonasa = :trabajadorFonasa")
     , @NamedQuery(name = "Trabajador.findByTrabajadorJubilado", query = "SELECT t FROM Trabajador t WHERE t.trabajadorJubilado = :trabajadorJubilado")
     , @NamedQuery(name = "Trabajador.findByTrabajadorIps", query = "SELECT t FROM Trabajador t WHERE t.trabajadorIps = :trabajadorIps")
