@@ -1,29 +1,36 @@
 package com.areatecnica.sigf.beans;
 
-import com.areatecnica.sigf.beans.util.JsfUtil;
 import com.areatecnica.sigf.entities.VentaCombustible;
 import com.areatecnica.sigf.controllers.VentaCombustibleFacade;
 import com.areatecnica.sigf.dao.IBusDao;
 import com.areatecnica.sigf.dao.IGuiaDao;
 import com.areatecnica.sigf.dao.IPrecioCombustibleDao;
+import com.areatecnica.sigf.dao.IVentaCombustibleDao;
 import com.areatecnica.sigf.dao.impl.IBusDaoImpl;
-import com.areatecnica.sigf.dao.impl.IGuiaDaoImpl;
 import com.areatecnica.sigf.dao.impl.IPrecioCombustibleDaoImpl;
+import com.areatecnica.sigf.dao.impl.IVentaCombustibleDaoImpl;
 import com.areatecnica.sigf.entities.Bus;
 import com.areatecnica.sigf.entities.Guia;
 import com.areatecnica.sigf.entities.PrecioCombustible;
 import com.areatecnica.sigf.entities.UnidadNegocio;
 import com.areatecnica.sigf.models.VentaCombustibleModel;
+import com.areatecnica.sigf.reports.PdfReportController;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import net.sf.jasperreports.engine.JRException;
 
 @Named(value = "ventaCombustibleController")
 @ViewScoped
@@ -35,10 +42,13 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     private GuiaController ventaCombustibleIdGuiaController;
     @Inject
     private SurtidorController ventaCombustibleIdSurtidorController;
+    @Inject
+    private PdfReportController pdfReportController;
 
     private List<Bus> busItems;
     private List<Guia> guiaItems;
     private List<UnidadNegocio> unidadItems;
+    private List<VentaCombustible> ventasItems;
     private VentaCombustibleModel model;
     private Map unidadMap;
     private Guia guiaSelected;
@@ -46,10 +56,18 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     private UnidadNegocio unidadSelected;
     private IGuiaDao guiaDao;
     private IBusDao busDao;
+    private IVentaCombustibleDao ventasDao;
     private PrecioCombustible precioCombustible;
     private IPrecioCombustibleDao precioCombustibleDao;
     private String tipoVenta;
+    private int total;
+    private int ultimaBoleta;
+    private String formatTotal;
+    private static String pattern = "###,###.###";
+    private static DecimalFormat decimalFormat = new DecimalFormat(pattern);
     private Date fecha;
+    private String formatFechaVentaBoleto;
+    private final static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 
     /**
      * Initialize the concrete VentaCombustible controller bean. The
@@ -60,7 +78,7 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     public void init() {
         super.setFacade(ejbFacade);
         this.fecha = new Date();
-
+        this.formatFechaVentaBoleto = this.format.format(fecha);
         this.busDao = new IBusDaoImpl();
         this.busItems = this.busDao.findAllByTerminal(this.getCurrentUser().getUsuarioIdTerminal());
 
@@ -74,7 +92,18 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
 
         this.precioCombustibleDao = new IPrecioCombustibleDaoImpl();
         this.precioCombustible = this.precioCombustibleDao.findLastPrecio(this.getUserCount());
-        
+
+        this.ventasDao = new IVentaCombustibleDaoImpl();
+        this.ventasItems = this.ventasDao.findByTerminalDate(this.getCurrentUser().getUsuarioIdTerminal(), fecha);
+
+        this.model = new VentaCombustibleModel(ventasItems);
+
+        this.total = 0;
+        for (VentaCombustible v : this.ventasItems) {
+            this.total += v.getVentaCombustibleTotal();
+        }
+        this.formatTotal = this.decimalFormat.format(total);
+        this.ultimaBoleta = this.ventasDao.findLastNumeroBoleta(this.getCurrentUser().getUsuarioIdTerminal());
     }
 
     public VentaCombustibleController() {
@@ -89,7 +118,6 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
         ventaCombustibleIdGuiaController.setSelected(null);
         ventaCombustibleIdSurtidorController.setSelected(null);
     }
-
 
     /**
      * Sets the "selected" attribute of the Surtidor controller in order to
@@ -175,16 +203,76 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
         return busSelected;
     }
 
+    public void setVentasItems(List<VentaCombustible> ventasItems) {
+        this.ventasItems = ventasItems;
+    }
+
+    public List<VentaCombustible> getVentasItems() {
+        return ventasItems;
+    }
+
+    public void setModel(VentaCombustibleModel model) {
+        this.model = model;
+    }
+
+    public VentaCombustibleModel getModel() {
+        return model;
+    }
+
+    public void setFormatFechaVentaBoleto(String formatFechaVentaBoleto) {
+        this.formatFechaVentaBoleto = formatFechaVentaBoleto;
+    }
+
+    public String getFormatFechaVentaBoleto() {
+        return formatFechaVentaBoleto;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public String getFormatTotal() {
+        return formatTotal;
+    }
+
+    public void setFormatTotal(String formatTotal) {
+        this.formatTotal = formatTotal;
+    }
+
+    public void setUltimaBoleta(int ultimaBoleta) {
+        this.ultimaBoleta = ultimaBoleta;
+    }
+
+    public int getUltimaBoleta() {
+        return ultimaBoleta;
+    }
+
     @Override
     public VentaCombustible prepareCreate(ActionEvent event) {
         super.prepareCreate(event); //To change body of generated methods, choose Tools | Templates.
         this.getSelected().setVentaCombustibleFecha(new Date());
         this.getSelected().setVentaCombustiblePrecio(precioCombustible.getPrecioCombustibleValor());
+
+        this.getSelected().setVentaCombustibleNumeroBoleta(this.ventasDao.findLastNumeroBoleta(this.getCurrentUser().getUsuarioIdTerminal()));
         return this.getSelected();
     }
 
+    @Override
+    public void saveNew(ActionEvent event) {
+        this.getSelected().setVentaCombustibleHora(new Date());
+        this.total += this.getSelected().getVentaCombustibleTotal();
+        this.formatTotal = decimalFormat.format(total);
+        super.saveNew(event); //To change body of generated methods, choose Tools | Templates.
+        this.ventasItems.add(this.getSelected());
+        this.ultimaBoleta = this.getSelected().getVentaCombustibleNumeroBoleta();
+    }
+
     public void handleOperadorChange() {
-        
+
         if (this.unidadSelected != null) {
             this.busDao = new IBusDaoImpl();
             this.busItems = this.busDao.findByUnidad(unidadSelected);
@@ -198,12 +286,25 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     }
 
     public void handleTotalChange() {
-        this.getSelected().setVentaCombustibleCantidad((float) this.getSelected().getVentaCombustibleTotal()/ precioCombustible.getPrecioCombustibleValor());
+        this.getSelected().setVentaCombustibleCantidad((float) this.getSelected().getVentaCombustibleTotal() / precioCombustible.getPrecioCombustibleValor());
     }
 
     public void handleNumeroLitrosChange() {
         this.getSelected().setVentaCombustiblePrecio((int) (precioCombustible.getPrecioCombustibleValor() * this.getSelected().getVentaCombustibleCantidad()));
     }
-    
+
+    public void exportPdf(ActionEvent event) {
+        /*this.pdfReportController.setProcesoRecaudacion(this.procesoRecaudacion);
+        this.pdfReportController.setRecaudacion(this.fechaRecaudacion);*/
+
+        try {
+            this.pdfReportController.PDF(event);
+        } catch (JRException ex) {
+            Logger.getLogger(RecaudacionController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RecaudacionController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
     
 }

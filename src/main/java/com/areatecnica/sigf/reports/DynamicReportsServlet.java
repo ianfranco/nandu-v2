@@ -25,41 +25,25 @@ public class DynamicReportsServlet extends HttpServlet {
     private PdfReportController dynamicReportsManagedBean;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/pdf");
-
         OutputStream out = resp.getOutputStream();
-
         out = dynamicReportsManagedBean.getOS(getServletContext(), out);
-
         out.close();
-
     }
 
     @Override
-
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
-
         this.doGet(req, resp);
-
     }
 
-    public void setDynamicReportsManagedBean(
-            PdfReportController dynamicReportsManagedBean) {
-
+    public void setDynamicReportsManagedBean(PdfReportController dynamicReportsManagedBean) {
         this.dynamicReportsManagedBean = dynamicReportsManagedBean;
-
     }
 
     public PdfReportController getDynamicReportsManagedBean() {
-
         return dynamicReportsManagedBean;
-
     }
 
 }

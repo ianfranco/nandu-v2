@@ -9,6 +9,7 @@ import com.areatecnica.sigf.dao.IVentaCombustibleDao;
 import com.areatecnica.sigf.entities.Boleto;
 import com.areatecnica.sigf.entities.Bus;
 import com.areatecnica.sigf.entities.CajaRecaudacion;
+import com.areatecnica.sigf.entities.Terminal;
 import com.areatecnica.sigf.entities.VentaCombustible;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,17 @@ import javax.persistence.NoResultException;
  * @author ianfr
  */
 public class IVentaCombustibleDaoImpl extends GenericDAOImpl<VentaCombustible> implements IVentaCombustibleDao<VentaCombustible> {
+
+    @Override
+    public List<VentaCombustible> findByDate(Date fecha) {
+        try {
+            return this.entityManager.createNamedQuery("VentaCombustible.findByVentaCombustibleFecha").
+                    setParameter("ventaCombustibleFecha", fecha).
+                    getResultList();
+        } catch (NoResultException ne) {
+            return null;
+        }
+    }
 
     @Override
     public List<VentaCombustible> findBySurtidorDate(CajaRecaudacion cajaRecaudacion, Date fechaVenta) {
@@ -49,6 +61,40 @@ public class IVentaCombustibleDaoImpl extends GenericDAOImpl<VentaCombustible> i
                     getResultList();
         } catch (NoResultException ne) {
             return null;
+        }
+    }
+
+    @Override
+    public List<VentaCombustible> findByTerminalDate(Terminal terminal, Date fecha) {
+        try {
+            return this.entityManager.createNamedQuery("VentaCombustible.findByVentaCombustibleTerminalFecha").
+                    setParameter("surtidorIdTerminal", terminal).
+                    setParameter("ventaCombustibleFecha", fecha).
+                    getResultList();
+        } catch (NoResultException ne) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<VentaCombustible> findTodos() {
+        try {
+            return this.entityManager.createNamedQuery("VentaCombustible.findAll").
+                    getResultList();
+        } catch (NoResultException ne) {
+            return null;
+        }
+    }
+
+    @Override
+    public int findLastNumeroBoleta(Terminal terminal) {
+        try {
+
+            return (int) entityManager.createQuery("SELECT MAX(v.ventaCombustibleNumeroBoleta) FROM VentaCombustible v where v.ventaCombustibleIdSurtidor.surtidorIdTerminal = :idTerminal")
+                    .setParameter("idTerminal", terminal)
+                    .getSingleResult() + 1;
+        } catch (NoResultException ne) {
+            return 1;
         }
     }
 

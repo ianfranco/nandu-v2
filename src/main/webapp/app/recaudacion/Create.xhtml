@@ -72,12 +72,12 @@
                                     <f:selectItems value="#{recaudacionController.ventaCombustibleList}"
                                                    var="ventaCombustibleL"
                                                    itemValue="#{ventaCombustibleL}"
-                                                   itemLabel="#{ventaCombustibleL.ventaCombustibleTotal}"
+                                                   itemLabel="#{ventaCombustibleL.observacion}"
                                                    />
                                     <p:ajax event="valueChange" update="guiaIdTotalVentaCombustible, guiaSaldo, @(.clase2)" listener="#{recaudacionController.calculaTotal}"/>
                                 </p:selectOneMenu>
                             </p:column>
-                            <p:column rowspan="1" style="font-weight: bold;">Total: </p:column>
+                            <p:column rowspan="1" style="font-weight: bold;"></p:column>
                             <p:column rowspan="1"><p:outputLabel value="#{recaudacionController.petroleo}" id="guiaIdTotalVentaCombustible" /></p:column>
                         </p:row>
                         <!-- CUARTA FILA -->
@@ -89,12 +89,12 @@
                                     <f:selectItems value="#{recaudacionController.registroMinutoList}"
                                                    var="registroMinutoL"
                                                    itemValue="#{registroMinutoL}"
-                                                   itemLabel="#{registroMinutoL.registroMinutoMonto} - #{registroMinutoL.registroMinutoHastaIdBus.busNumero} "
+                                                   itemLabel="#{registroMinutoL.observacion} "
                                                    />
                                     <p:ajax event="valueChange" update="guiaIdTotalRegistroMinuto, guiaSaldo, @(.clase2)" listener="#{recaudacionController.calculaTotal}"/>
                                 </p:selectOneMenu>
                             </p:column>
-                            <p:column rowspan="1" style="font-weight: bold;">Total:</p:column>
+                            <p:column rowspan="1" style="font-weight: bold;"></p:column>
                             <p:column rowspan="1"><p:outputLabel value="#{recaudacionController.minutos}" id="guiaIdTotalRegistroMinuto" /></p:column>
                         </p:row>
 
@@ -128,7 +128,7 @@
                                 Líquido
                             </p:column>
                             <p:column  colspan="4" style="text-align: left;background: #e5e5e5;">
-                                <p:outputLabel styleClass="clase2" id="guiaSaldo" value="#{recaudacionController.selected.recaudacionTotal}" />
+                                <p:outputLabel styleClass="clase2" id="guiaSaldo" value="#{recaudacionController.resumenTotalFormat}" />
                             </p:column>
                         </p:row>
 

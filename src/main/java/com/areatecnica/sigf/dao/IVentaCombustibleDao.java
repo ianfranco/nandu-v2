@@ -9,6 +9,7 @@ import com.areatecnica.sigf.entities.Boleto;
 import com.areatecnica.sigf.entities.Bus;
 import com.areatecnica.sigf.entities.VentaBoleto;
 import com.areatecnica.sigf.entities.CajaRecaudacion;
+import com.areatecnica.sigf.entities.Terminal;
 import com.areatecnica.sigf.entities.VentaCombustible;
 import java.util.Date;
 import java.util.List;
@@ -16,9 +17,14 @@ import java.util.List;
 /**
  *
  * @author ianfr
+ * @param <T>
  */
 public interface IVentaCombustibleDao<T> extends IGenericDAO<T> {
 
+    public List<VentaCombustible> findTodos();
+    
+    public List<VentaCombustible> findByDate(Date fecha);
+    
     public List<VentaCombustible> findBySurtidorDate(CajaRecaudacion cajaRecaudacion, Date fechaVenta);
 
     public List<VentaCombustible> findByBusAndDate(Bus bus);
@@ -28,4 +34,8 @@ public interface IVentaCombustibleDao<T> extends IGenericDAO<T> {
     public List<VentaCombustible> findByBusSinRecaudar(Bus bus);
 
     public VentaCombustible findByBus(Bus bus, Boleto boleto);
+    
+    public List<VentaCombustible> findByTerminalDate(Terminal terminal, Date fecha);
+    
+    public int findLastNumeroBoleta(Terminal terminal);
 }

@@ -46,9 +46,9 @@ import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
  *
  * @author ianfranco
  */
-@Named(value = "pdfReportController")
+@Named(value = "reportController")
 @SessionScoped
-public class PdfReportController implements Serializable {
+public class ReportController implements Serializable {
 
     private JRMapCollectionDataSource data;
     private Collection<Map<String, ?>> map;
@@ -61,7 +61,7 @@ public class PdfReportController implements Serializable {
     /**
      * Creates a new instance of PdfReportController
      */
-    public PdfReportController() {
+    public ReportController() {
     }
 
     /**

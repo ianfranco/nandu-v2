@@ -34,6 +34,7 @@ import com.areatecnica.sigf.reports.PdfReportController;
 import com.areatecnica.sigf.sockets.NotificationController;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,8 +77,9 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     private List<CajaRecaudacion> cajaRecaudacionList;
     private List<EgresoResumenRecaudacion> egresosResumenList;
     private List<Bus> busesList;
-    private List<VentaCombustible> ventaCombustibleList;
-    private List<RegistroMinuto> registroMinutoList;
+
+    private List<PetroleoHelper> ventaCombustibleList;
+    private List<MinutosHelper> registroMinutoList;
     private ArrayList<LinkedHashMap> listOfMaps;
     private LinkedHashMap guiaLink;
     private LinkedHashMap totals;
@@ -88,8 +90,8 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     private ResumenRecaudacion resumenRecaudacion;
     private CajaRecaudacion cajaRecaudacion;
     private RecaudacionDataModel model;
-    private RegistroMinuto registroMinuto;
-    private VentaCombustible ventaCombustible;
+    private MinutosHelper registroMinuto;
+    private PetroleoHelper ventaCombustible;
     private String minutos;
     private String petroleo;
     private Date fechaRecaudacion;
@@ -108,6 +110,7 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     private IVentaCombustibleDao ventaCombustibleDao;
     private static String pattern = "###,###.###";
     private static DecimalFormat decimalFormat = new DecimalFormat(pattern);
+    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
 
     /**
      * Initialize the concrete Region controller bean. The AbstractController
@@ -509,56 +512,56 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     /**
      * @return the ventaCombustibleList
      */
-    public List<VentaCombustible> getVentaCombustibleList() {
+    public List<PetroleoHelper> getVentaCombustibleList() {
         return ventaCombustibleList;
     }
 
     /**
      * @param ventaCombustibleList the ventaCombustibleList to set
      */
-    public void setVentaCombustibleList(List<VentaCombustible> ventaCombustibleList) {
+    public void setVentaCombustibleList(List<PetroleoHelper> ventaCombustibleList) {
         this.ventaCombustibleList = ventaCombustibleList;
     }
 
     /**
      * @return the registroMinutoList
      */
-    public List<RegistroMinuto> getRegistroMinutoList() {
+    public List<MinutosHelper> getRegistroMinutoList() {
         return registroMinutoList;
     }
 
     /**
      * @param registroMinutoList the registroMinutoList to set
      */
-    public void setRegistroMinutoList(List<RegistroMinuto> registroMinutoList) {
+    public void setRegistroMinutoList(List<MinutosHelper> registroMinutoList) {
         this.registroMinutoList = registroMinutoList;
     }
 
     /**
      * @return the registroMinuto
      */
-    public RegistroMinuto getRegistroMinuto() {
+    public MinutosHelper getRegistroMinuto() {
         return registroMinuto;
     }
 
     /**
      * @param registroMinuto the registroMinuto to set
      */
-    public void setRegistroMinuto(RegistroMinuto registroMinuto) {
+    public void setRegistroMinuto(MinutosHelper registroMinuto) {
         this.registroMinuto = registroMinuto;
     }
 
     /**
      * @return the ventaCombustible
      */
-    public VentaCombustible getVentaCombustible() {
+    public PetroleoHelper getVentaCombustible() {
         return ventaCombustible;
     }
 
     /**
      * @param ventaCombustible the ventaCombustible to set
      */
-    public void setVentaCombustible(VentaCombustible ventaCombustible) {
+    public void setVentaCombustible(PetroleoHelper ventaCombustible) {
         this.ventaCombustible = ventaCombustible;
     }
 
@@ -581,7 +584,7 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     @Override
     public Recaudacion prepareCreate(ActionEvent event) {
         super.prepareCreate(event); //To change body of generated methods, choose Tools | Templates.
-
+        this.resumenTotalFormat = "$ 0";
         this.setRecaudacionEgresoList(egresosRecaudacion(this.getSelected()));
         this.getSelected().setRecaudacionFecha(fechaRecaudacion);
         this.getSelected().setRecaudacionIdCaja(cajaRecaudacion);
@@ -813,6 +816,22 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
         return this.busDao.findByProceso(procesoRecaudacion);
     }
 
+    public void loadGuia() {
+        if (this.getSelected() != null) {
+            this.guiaLink = this.getSelected().getLink();
+            this.recaudacionEgresoList = this.getSelected().getRecaudacionEgresoList();
+            //this.porcentajesList = new ArrayList<PorcentajeHelper>();
+
+            for (RecaudacionEgreso eg : this.recaudacionEgresoList) {
+                if (this.totals.containsKey(eg.getRecaudacionEgresoIdEgreso().getEgresoNombre())) {
+                    int val = (int) this.totals.get(eg.getRecaudacionEgresoIdEgreso().getEgresoNombre());
+                    val -= eg.getRecaudacionEgresoMonto();
+                    this.totals.put(eg.getRecaudacionEgresoIdEgreso().getEgresoNombre(), val);
+                }
+            }
+        }
+    }
+
     public int calculaTotal() {
         int total = 0;
 
@@ -820,18 +839,19 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
             total = total + r.getRecaudacionEgresoMonto();
         }
         if (this.ventaCombustible != null) {
-            total = total + ventaCombustible.getVentaCombustibleTotal();
-            if (this.ventaCombustible.getVentaCombustibleIdBus() == null) {
-                this.petroleo = "Sin deuda";
-            } 
+            total = total + ventaCombustible.getVentaCombustible().getVentaCombustibleTotal();
+            if (this.ventaCombustible.getVentaCombustible().getVentaCombustibleIdBus() == null) {
+
+            }
         }
         if (this.registroMinuto != null) {
-            total = total + registroMinuto.getRegistroMinutoMonto();
-            if (this.registroMinuto.getRegistroMinutoDesdeIdBus() == null) {
-                this.minutos = "Sin deuda";
+            total = total + registroMinuto.getRegistro().getRegistroMinutoMonto();
+            if (this.registroMinuto.getRegistro().getRegistroMinutoDesdeIdBus() == null) {
+
             }
         }
         this.getSelected().setRecaudacionTotal(total);
+        this.resumenTotalFormat = decimalFormat.format(total);
         return total;
     }
 
@@ -839,10 +859,10 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
         int total = calculaTotal();
 
         if (this.ventaCombustible != null) {
-            if (this.ventaCombustible.getVentaCombustibleIdBus() == null) {
+            if (this.ventaCombustible.getVentaCombustible().getVentaCombustibleIdBus() == null) {
                 this.petroleo = "Sin deuda";
             } else {
-                total = total + ventaCombustible.getVentaCombustibleTotal();
+                total = total + ventaCombustible.getVentaCombustible().getVentaCombustibleTotal();
             }
         }
 
@@ -855,10 +875,10 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
         int total = calculaTotal();
 
         if (this.registroMinuto != null) {
-            if (this.registroMinuto.getRegistroMinutoDesdeIdBus() == null) {
+            if (this.registroMinuto.getRegistro().getRegistroMinutoDesdeIdBus() == null) {
                 this.minutos = "Sin deuda";
             } else {
-                total = total + registroMinuto.getRegistroMinutoMonto();
+                total = total + registroMinuto.getRegistro().getRegistroMinutoMonto();
             }
         }
 
@@ -890,27 +910,59 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
             this.ventaCombustible = null;
             this.registroMinuto = null;
 
-            this.registroMinutoList = this.registroMinutoDao.findByBusSinRecaudar(this.getSelected().getRecaudacionIdBus());
+            List<RegistroMinuto> minutosList = this.registroMinutoDao.findByBusSinRecaudar(this.getSelected().getRecaudacionIdBus());
 
-            if (this.registroMinutoList.isEmpty()) {
+            if (minutosList.isEmpty()) {
                 this.registroMinuto = null;
                 /*RegistroMinuto minuto = new RegistroMinuto();
                 minuto.setRegistroMinutoMonto(0);
                 this.registroMinutoList.add(minuto);*/
             } else {
-                this.registroMinuto = new RegistroMinuto();
+                this.registroMinutoList = new ArrayList<>();
+                if (minutosList.size() > 1) {
+
+                    int total = 0;
+                    for (RegistroMinuto m : minutosList) {
+                        total = total + m.getRegistroMinutoMonto();
+                        MinutosHelper minuto = new MinutosHelper();
+                        minuto.setRegistro(m);
+                        minuto.setObservacion("$ " + decimalFormat.format(m.getRegistroMinutoMonto()) + "   N° Bus: " + m.getRegistroMinutoHastaIdBus().getBusNumero() + " - " + sdf.format(m.getRegistroMinutoFechaMinuto()));
+                        this.registroMinutoList.add(minuto);
+                    }
+                    RegistroMinuto r = new RegistroMinuto();
+                    r.setRegistroMinutoMonto(total);
+                    MinutosHelper totalMinutos = new MinutosHelper();
+                    totalMinutos.setObservacion("$ " + decimalFormat.format(total) + " Todos");
+                    totalMinutos.setRegistro(r);
+                    this.registroMinutoList.add(0, totalMinutos);
+                    calculaTotal();
+
+                } else {
+                    RegistroMinuto r = minutosList.get(0);
+                    MinutosHelper minuto = new MinutosHelper();
+                    minuto.setRegistro(r);
+                    minuto.setObservacion("$ " + decimalFormat.format(r.getRegistroMinutoMonto()) + "   N° Bus: " + r.getRegistroMinutoHastaIdBus().getBusNumero() + " - " + sdf.format(r.getRegistroMinutoFechaMinuto()));
+                    this.registroMinutoList.add(minuto);
+                }
+
             }
 
-            this.ventaCombustibleList = this.ventaCombustibleDao.findByBusSinRecaudar(this.getSelected().getRecaudacionIdBus());
+            List<VentaCombustible> combustibleList = this.ventaCombustibleDao.findByBusSinRecaudar(this.getSelected().getRecaudacionIdBus());
 
-            if (this.ventaCombustibleList.isEmpty()) {
+            if (combustibleList.isEmpty()) {
                 this.ventaCombustible = null;
                 /*VentaCombustible venta = new VentaCombustible();
                 venta.setVentaCombustibleTotal(0);
                 this.ventaCombustibleList.add(venta);*/
             } else {
-                this.ventaCombustible = new VentaCombustible();
-                System.err.println("");
+                this.ventaCombustibleList = new ArrayList<>();
+
+                for (VentaCombustible v : combustibleList) {
+                    PetroleoHelper vPetroleo = new PetroleoHelper();
+                    vPetroleo.setObservacion("$ " + decimalFormat.format(v.getVentaCombustibleTotal()) + " -  " + sdf.format(v.getVentaCombustibleFecha()));
+                    vPetroleo.setVentaCombustible(v);
+                    this.ventaCombustibleList.add(vPetroleo);
+                }
             }
 
         }
@@ -933,4 +985,67 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
         }
 
     }
+
+    public class MinutosHelper {
+
+        private String observacion;
+        private RegistroMinuto registro;
+
+        public MinutosHelper(String observacion, RegistroMinuto registro) {
+            this.observacion = observacion;
+            this.registro = registro;
+        }
+
+        public MinutosHelper() {
+        }
+
+        public String getObservacion() {
+            return observacion;
+        }
+
+        public void setObservacion(String observacion) {
+            this.observacion = observacion;
+        }
+
+        public RegistroMinuto getRegistro() {
+            return registro;
+        }
+
+        public void setRegistro(RegistroMinuto registro) {
+            this.registro = registro;
+        }
+
+    }
+
+    public class PetroleoHelper {
+
+        private String observacion;
+        private VentaCombustible ventaCombustible;
+
+        public PetroleoHelper() {
+        }
+
+        public PetroleoHelper(String observacion, VentaCombustible ventaCombustible) {
+            this.observacion = observacion;
+            this.ventaCombustible = ventaCombustible;
+        }
+
+        public VentaCombustible getVentaCombustible() {
+            return ventaCombustible;
+        }
+
+        public void setVentaCombustible(VentaCombustible ventaCombustible) {
+            this.ventaCombustible = ventaCombustible;
+        }
+
+        public String getObservacion() {
+            return observacion;
+        }
+
+        public void setObservacion(String observacion) {
+            this.observacion = observacion;
+        }
+
+    }
+
 }

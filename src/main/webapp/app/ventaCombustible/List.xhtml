@@ -16,33 +16,55 @@
             <p:menuitem value="#{bundle.Delete}" onclick="document.getElementById('VentaCombustibleListForm:datalist:deleteButton').click();" icon="ui-icon-trash"/>
             <p:separator/>
         </p:contextMenu>
+        <p:panel header="General" id="resumen" style="padding-bottom: 10px;">
+            <p:panelGrid columns="2" >
+                <p:outputLabel value="Total: "/>
+                <p:outputLabel value="#{ventaCombustibleController.formatTotal}"/>
+
+                <p:outputLabel value="N° de Ventas: "/>
+                <p:outputLabel value="#{ventaCombustibleController.ventasItems.size()}"/>
+
+                <p:outputLabel value="N° Última Boleta: "/>
+                <p:outputLabel value="#{ventaCombustibleController.ultimaBoleta}"/>
+                
+                <p:outputLabel />
+                
+                <h:commandLink value="Generar Archivo Excel" styleClass="btn btn-primary">                    
+                    <p:dataExporter type="xls" target="datalist" fileName="Ventas de Petroleo" pageOnly="true"/>
+                </h:commandLink>
+                
+                <p:outputLabel />
+                
+                <h:commandLink value="Generar Archivo PDF" styleClass="btn btn-primary" actionListener="#{recaudacionController.exportPdf(actionEvent)}" id="pdf">                    
+                                   
+                </h:commandLink>
+            </p:panelGrid>
+        </p:panel>
 
         <p:dataTable id="datalist"
-                     value="#{ventaCombustibleController.lazyList}"
-                     rowKey="#{item.ventaCombustibleId}"
+                     value="#{ventaCombustibleController.model}"                     
                      selection="#{ventaCombustibleController.selected}"
                      scrollHeight="500" 
-                     scrollable="false"
-                     widgetVar="datalist"
+                     scrollable="false" 
+                     widgetVar="datalistWidget"
                      var="item"
+                     rowKey="#{item.ventaCombustibleId}"
                      selectionMode="single"
                      rowIndexVar="rowIndex"
-                     emptyMessage="No se han encontrado registros" 
-                     >
+                     emptyMessage="No se han encontrado registros"                      
+                     style="padding-top: 10px;">
 
             <p:ajax event="colResize" listener="#{ventaCombustibleController.onResize}"/>
             <p:ajax event="rowSelect" update=":VentaCombustibleListForm:datalist:createButton,:VentaCombustibleListForm:datalist:viewButton,:VentaCombustibleListForm:datalist:editButton,:VentaCombustibleListForm:datalist:deleteButton,:VentaCombustibleListForm:VentaCombustibleDataTableContextMenu"/>
-            <p:ajax event="rowUnselect" update=":VentaCombustibleListForm:datalist:createButton,:VentaCombustibleListForm:datalist:viewButton,:VentaCombustibleListForm:datalist:editButton,:VentaCombustibleListForm:datalist:deleteButton,:VentaCombustibleListForm:VentaCombustibleDataTableContextMenu" listener="#{egresoBusController.resetParents}" global="false"/>
-            
+            <p:ajax event="rowUnselect" update=":VentaCombustibleListForm:datalist:createButton,:VentaCombustibleListForm:datalist:viewButton,:VentaCombustibleListForm:datalist:editButton,:VentaCombustibleListForm:datalist:deleteButton,:VentaCombustibleListForm:VentaCombustibleDataTableContextMenu" global="false"/>
+
             <f:facet name="header">
                 <div class="row row-nomargin">
                     <div class="col-lg-3">
                         <p:inputText id="globalFilter" onkeyup="PF('datalistWidget').filter()" class="pull-left" style="width: 100%" placeholder="#{bundle.enterKeyword}"/>
                     </div>
                     <div class="col-lg-6">
-                        <h:outputText value="Ventas a la Fecha :"/><p:outputLabel value="#{ventaCombustibleController.fecha}">
-                            <f:convertDateTime pattern="dd/MM/yy"/>
-                        </p:outputLabel>
+                        <h:outputText value="Ventas a la Fecha : #{ventaCombustibleController.formatFechaVentaBoleto}"/>
                     </div>
                     <div class="col-lg-3">
                         <div class="pull-right">
@@ -63,36 +85,42 @@
                 <h:outputLabel value="#{rowIndex+1}"/>
             </p:column>
 
-            <p:column sortBy="#{item.ventaCombustibleIdSurtidor.surtidorId}" filterBy="#{item.ventaCombustibleIdSurtidor.surtidorId}">
+            <p:column sortBy="#{item.ventaCombustibleIdSurtidor.surtidorIdentificador}" filterBy="#{item.ventaCombustibleIdSurtidor.surtidorIdentificador}">
                 <f:facet name="header">
                     <h:outputText value="Surtidor"/>
                 </f:facet>
-                <h:outputLabel value="#{item.ventaCombustibleIdSurtidor.surtidorId}"/>
+                <h:outputLabel value="#{item.ventaCombustibleIdSurtidor.surtidorIdentificador}"/>
             </p:column>
 
-            <p:column sortBy="#{item.ventaCombustibleFecha}" filterBy="#{item.ventaCombustibleFecha}">
+            <p:column sortBy="#{item.ventaCombustibleHora}" filterBy="#{item.ventaCombustibleHora}">
                 <f:facet name="header">
                     <h:outputText value="Hora"/>
                 </f:facet>
-                <h:outputLabel value="#{item.ventaCombustibleFecha}">
+                <h:outputLabel value="#{item.ventaCombustibleHora}">
                     <f:convertDateTime pattern="HH:mm:ss" />
                 </h:outputLabel>
             </p:column>
 
-            <p:column sortBy="#{item.ventaCombustibleIdGuia.guiaIdBus.busNumero}" filterBy="#{item.ventaCombustibleIdGuia.guiaIdBus.busNumero}">
+            <p:column sortBy="#{item.ventaCombustibleNumeroBoleta}" filterBy="#{item.ventaCombustibleNumeroBoleta}">
+                <f:facet name="header">
+                    <h:outputText value="N°Boleta"/>
+                </f:facet>
+                <h:outputLabel value="#{item.ventaCombustibleNumeroBoleta}"/>
+            </p:column>
+
+            <p:column sortBy="#{item.ventaCombustibleIdBus.busNumero}" filterBy="#{item.ventaCombustibleIdBus.busNumero}">
                 <f:facet name="header">
                     <h:outputText value="N°Bus"/>
                 </f:facet>
-                <h:outputLabel value="#{item.item.ventaCombustibleIdGuia.guiaIdBus.busNumero}"/>
-            </p:column>
-            
-            <p:column sortBy="#{item.ventaCombustibleValor}" filterBy="#{item.ventaCombustibleValor}">
-                <f:facet name="header">
-                    <h:outputText value="Total Venta"/>
-                </f:facet>
-                <h:outputLabel value="#{item.ventaCombustibleValor}"/>
+                <h:outputLabel value="#{item.ventaCombustibleIdBus.busNumero}"/>
             </p:column>
 
+            <p:column sortBy="#{item.ventaCombustibleIdBus.busIdUnidadNegocio.unidadNegocioIdOperadorTransporte.operadorTransporteNombre}" filterBy="#{item.ventaCombustibleIdBus.busIdUnidadNegocio.unidadNegocioIdOperadorTransporte.operadorTransporteNombre}">
+                <f:facet name="header">
+                    <h:outputText value="Operador"/>
+                </f:facet>
+                <h:outputLabel value="#{item.ventaCombustibleIdBus.busIdUnidadNegocio.unidadNegocioIdOperadorTransporte.operadorTransporteNombre}"/>
+            </p:column>
 
             <p:column sortBy="#{item.ventaCombustibleCantidad}" filterBy="#{item.ventaCombustibleCantidad}">
                 <f:facet name="header">
@@ -101,14 +129,16 @@
                 <h:outputLabel value="#{item.ventaCombustibleCantidad}"/>
             </p:column>
 
-            <!--                           
-            <p:column sortBy="#{item.ventaCombustibleIdGuia.guiaId}" filterBy="#{item.ventaCombustibleIdGuia.guiaId}">
+            <p:column sortBy="#{item.ventaCombustibleTotal}" filterBy="#{item.ventaCombustibleTotal}" style="text-align: center;" styleClass="clase2">
                 <f:facet name="header">
-                    <h:outputText value="#{bundle.ListVentaCombustibleTitle_ventaCombustibleIdGuia}"/>
+                    <h:outputText value="Total Venta"/>
                 </f:facet>
-                <h:outputText value="#{item.ventaCombustibleIdGuia.guiaId}"/>
-            </p:column>     
-            -->
+                <h:outputLabel value="#{item.ventaCombustibleTotal}" >
+                    <f:convertNumber currencySymbol="$" />
+                </h:outputLabel>                
+            </p:column>
+
+
 
             <f:facet name="footer">
                 <p:commandButton id="createButton" styleClass="btn btn-primary" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{ventaCombustibleController.prepareCreate}" update=":VentaCombustibleCreateForm" oncomplete="PF('VentaCombustibleCreateDialog').show()" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()"/>

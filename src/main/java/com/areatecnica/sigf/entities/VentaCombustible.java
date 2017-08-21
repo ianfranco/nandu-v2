@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "VentaCombustible.findAll", query = "SELECT v FROM VentaCombustible v")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleId", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleId = :ventaCombustibleId")
+    , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleTerminalFecha", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleIdSurtidor.surtidorIdTerminal = :surtidorIdTerminal AND v.ventaCombustibleFecha=:ventaCombustibleFecha")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleBusRecaudado", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleIdBus = :ventaCombustibleIdBus AND v.ventaCombustibleRecaudado = :ventaCombustibleRecaudado")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustibleFecha", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustibleFecha = :ventaCombustibleFecha")
     , @NamedQuery(name = "VentaCombustible.findByVentaCombustiblePrecio", query = "SELECT v FROM VentaCombustible v WHERE v.ventaCombustiblePrecio = :ventaCombustiblePrecio")
@@ -50,8 +51,13 @@ public class VentaCombustible implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "venta_combustible_fecha")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date ventaCombustibleFecha;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "venta_combustible_hora")
+    @Temporal(TemporalType.TIME)
+    private Date ventaCombustibleHora;
     @Basic(optional = false)
     @NotNull
     @Column(name = "venta_combustible_precio")
@@ -86,9 +92,10 @@ public class VentaCombustible implements Serializable {
         this.ventaCombustibleId = ventaCombustibleId;
     }
 
-    public VentaCombustible(Integer ventaCombustibleId, Date ventaCombustibleFecha, float ventaCombustiblePrecio, float ventaCombustibleCantidad, int ventaCombustibleTotal, int ventaCombustibleNumeroBoleta, boolean ventaCombustibleRecaudado) {
+    public VentaCombustible(Integer ventaCombustibleId, Date ventaCombustibleFecha, Date ventaCombustibleHora, float ventaCombustiblePrecio, float ventaCombustibleCantidad, int ventaCombustibleTotal, int ventaCombustibleNumeroBoleta, boolean ventaCombustibleRecaudado) {
         this.ventaCombustibleId = ventaCombustibleId;
         this.ventaCombustibleFecha = ventaCombustibleFecha;
+        this.ventaCombustibleHora = ventaCombustibleHora;
         this.ventaCombustiblePrecio = ventaCombustiblePrecio;
         this.ventaCombustibleCantidad = ventaCombustibleCantidad;
         this.ventaCombustibleTotal = ventaCombustibleTotal;
@@ -112,6 +119,14 @@ public class VentaCombustible implements Serializable {
         this.ventaCombustibleFecha = ventaCombustibleFecha;
     }
 
+    public Date getVentaCombustibleHora() {
+        return ventaCombustibleHora;
+    }
+
+    public void setVentaCombustibleHora(Date ventaCombustibleHora) {
+        this.ventaCombustibleHora = ventaCombustibleHora;
+    }
+    
     public float getVentaCombustiblePrecio() {
         return ventaCombustiblePrecio;
     }

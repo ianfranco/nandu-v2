@@ -57,8 +57,8 @@
                 <p:graphicImage name="excel.png" library="images" />
                 <p:dataExporter type="xls" target="datalist" fileName="Recaudacion" pageOnly="true"/>
             </h:commandLink>
-            <h:commandLink actionListener="#{recaudacionController.exportPdf(actionEvent)}" id="pdf">
-                <p:printer target="pdf" />
+            <h:commandLink actionListener="#{recaudacionController.exportPdf(actionEvent)}" id="pdf" target="blank">
+                
                 <p:graphicImage name="pdf.png" library="images" />                
             </h:commandLink>
 

@@ -12,13 +12,12 @@
 
             <h:form id="VentaCombustibleCreateForm">
                 <h:panelGroup id="display" rendered="#{ventaCombustibleController.selected != null}">
+                    <p:focus context="ventaCombustibleIdSurtidor"/>
                     <h:panelGroup>
                         <h:panelGrid columns="2" columnClasses="column">
 
                         </h:panelGrid>
                     </h:panelGroup>
-
-
 
                     <p:panelGrid columns="2" columnClasses="column" style="width: 500px;">
 
@@ -49,7 +48,7 @@
                         <p:outputLabel value="N° Bus" for="ventaCombustibleIdGuia" />
                         <h:panelGroup>
 
-                            <p:selectOneMenu id="ventaCombustibleIdGuia" value="#{ventaCombustibleController.busSelected}" required="true" requiredMessage="#{bundle.CreateVentaCombustibleRequiredMessage_ventaCombustibleIdGuia}" converter="omnifaces.SelectItemsConverter">
+                            <p:selectOneMenu id="ventaCombustibleIdGuia" value="#{ventaCombustibleController.selected.ventaCombustibleIdBus}" required="true" requiredMessage="Debe seleccionar el Bus" converter="omnifaces.SelectItemsConverter">
                                 <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
                                 <f:selectItems value="#{ventaCombustibleController.busItems}"
                                                var="ventaCombustibleBus"
@@ -59,22 +58,20 @@
                                 <p:ajax event="valueChange" listener="#{ventaCombustibleController.handleBusChange}" update="growl"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
-                        
+
                         <p:outputLabel value="Total" for="ventaCombustibleValorCombustible" />
                         <p:inputNumber decimalPlaces="0" id="ventaCombustibleValorCombustible" value="#{ventaCombustibleController.selected.ventaCombustibleTotal}" required="true" requiredMessage="Debe ingresar el total de la venta" onfocus="this.setSelectionRange(0, this.value.length)" >
                             <p:ajax event="valueChange" listener="#{ventaCombustibleController.handleTotalChange}" update="ventaCombustibleCantidad"/>
                         </p:inputNumber>
 
                         <p:outputLabel value="N° de Litros" for="ventaCombustibleCantidad" />
-                        <p:inputNumber id="ventaCombustibleCantidad" value="#{ventaCombustibleController.selected.ventaCombustibleCantidad}" title="#{bundle.CreateVentaCombustibleTitle_ventaCombustibleCantidad}" required="true" requiredMessage="#{bundle.CreateVentaCombustibleRequiredMessage_ventaCombustibleCantidad}" onfocus="this.setSelectionRange(0, this.value.length)">
-                            <p:ajax event="valueChange" listener="#{ventaCombustibleController.handleNumeroLitrosChange}" update="ventaCombustibleValorCombustible"/>
-                        </p:inputNumber>
-
+                        <p:outputLabel id="ventaCombustibleCantidad" value="#{ventaCombustibleController.selected.ventaCombustibleCantidad}"/>
+                            
                         <p:outputLabel value="N° Boleta" for="ventaCombustibleNumeroBoleta" />
-                        <p:inputNumber decimalPlaces="0" id="ventaCombustibleNumeroBoleta" value="#{ventaCombustibleController.selected.ventaCombustibleNumeroBoleta}" required="true" requiredMessage="Debe ingresar el N° de Boleta" onfocus="this.setSelectionRange(0, this.value.length)"/>
+                        <p:inputNumber decimalPlaces="0"  id="ventaCombustibleNumeroBoleta" value="#{ventaCombustibleController.selected.ventaCombustibleNumeroBoleta}" required="true" requiredMessage="Debe ingresar el N° de Boleta" onfocus="this.setSelectionRange(0, this.value.length)"/>
 
                         <h:panelGroup>
-                            <p:commandButton actionListener="#{ventaCombustibleController.saveNew}" value="#{bundle.Save}" update="display,:VentaCombustibleListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,PF('VentaCombustibleCreateDialog'));">
+                            <p:commandButton actionListener="#{ventaCombustibleController.saveNew}" value="#{bundle.Save}" update="display,:VentaCombustibleListForm:datalist,:growl, @(.clase2), :VentaCombustibleListForm:resumen" oncomplete="handleSubmit(xhr,status,args,PF('VentaCombustibleCreateDialog'));">
                                 <p:confirm header="#{bundle.ConfirmationHeader}" message="#{bundle.ConfirmCreateMessage}" icon="ui-icon-alert"/>
                             </p:commandButton>
 
