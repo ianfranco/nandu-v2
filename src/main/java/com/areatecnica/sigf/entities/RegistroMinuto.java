@@ -8,6 +8,7 @@ package com.areatecnica.sigf.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "registro_minuto", catalog = "sigf_v3", schema = "")
+@Cacheable(false)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "RegistroMinuto.findAll", query = "SELECT r FROM RegistroMinuto r")

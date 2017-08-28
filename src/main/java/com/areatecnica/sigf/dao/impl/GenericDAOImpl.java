@@ -50,12 +50,15 @@ public class GenericDAOImpl<T> implements IGenericDAO<T> {
     }
 
     @Override
-    public T update(T t) {
-        return this.entityManager.merge(t);
+    public T update(T t){
+        System.err.println("DAO:UPDATE");
+        T merge = this.entityManager.merge(t);
+        return merge;
     }
 
     @Override
     public void delete(T t) {
+        System.err.println("DAO:DELETE");
         t = this.entityManager.merge(t);
         this.entityManager.remove(t);
     }

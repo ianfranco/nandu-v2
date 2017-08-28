@@ -71,6 +71,13 @@
                 background: #FF0000;
             }
 
+            @media print
+            {    
+                .no-print, .no-print *
+                {
+                    display: none !important;
+                }
+            }
         </style>
 
         <h:outputScript library="scripts" name="pfcrud.js"/>
@@ -93,7 +100,7 @@
                     PF('growl').show([facesmessage]);
                 }
             </script>
-            
+
             <p:dialog appendTo="@(body)" modal="true" resizable="false" closable="false" header="#{bundle.pleaseWait}" widgetVar="Loading" width="300">
                 <center>#{bundle.loading}
                     <p:graphicImage value="/resources/images/ajaxloadingbar.gif"/></center>

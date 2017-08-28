@@ -65,7 +65,7 @@
                         </p:inputNumber>
 
                         <p:outputLabel value="N° de Litros" for="ventaCombustibleCantidad" />
-                        <p:outputLabel id="ventaCombustibleCantidad" value="#{ventaCombustibleController.selected.ventaCombustibleCantidad}"/>
+                        <p:inputNumber id="ventaCombustibleCantidad" value="#{ventaCombustibleController.selected.ventaCombustibleCantidad}"/>
                             
                         <p:outputLabel value="N° Boleta" for="ventaCombustibleNumeroBoleta" />
                         <p:inputNumber decimalPlaces="0"  id="ventaCombustibleNumeroBoleta" value="#{ventaCombustibleController.selected.ventaCombustibleNumeroBoleta}" required="true" requiredMessage="Debe ingresar el N° de Boleta" onfocus="this.setSelectionRange(0, this.value.length)"/>

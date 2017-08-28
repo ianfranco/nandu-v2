@@ -17,27 +17,16 @@
             <p:separator/>
         </p:contextMenu>
         <p:panel header="General" id="resumen" style="padding-bottom: 10px;">
-            <p:panelGrid columns="2" >
+            <p:panelGrid columns="8" >
                 <p:outputLabel value="Total: "/>
-                <p:outputLabel value="#{ventaCombustibleController.formatTotal}"/>
+                <p:outputLabel value="#{ventaCombustibleController.formatTotal}" />
 
                 <p:outputLabel value="N° de Ventas: "/>
                 <p:outputLabel value="#{ventaCombustibleController.ventasItems.size()}"/>
 
                 <p:outputLabel value="N° Última Boleta: "/>
                 <p:outputLabel value="#{ventaCombustibleController.ultimaBoleta}"/>
-                
-                <p:outputLabel />
-                
-                <h:commandLink value="Generar Archivo Excel" styleClass="btn btn-primary">                    
-                    <p:dataExporter type="xls" target="datalist" fileName="Ventas de Petroleo" pageOnly="true"/>
-                </h:commandLink>
-                
-                <p:outputLabel />
-                
-                <h:commandLink value="Generar Archivo PDF" styleClass="btn btn-primary" actionListener="#{recaudacionController.exportPdf(actionEvent)}" id="pdf">                    
-                                   
-                </h:commandLink>
+
             </p:panelGrid>
         </p:panel>
 
@@ -68,11 +57,13 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="pull-right">
-                            <p:columnToggler datasource="datalist" trigger="toggler">
-                                <p:ajax event="toggle" listener="#{ventaCombustibleController.onToggle}" />
-                            </p:columnToggler>
-                            <p:commandButton id="toggler" type="button" value="#{bundle.Columns}" class="btn-primary" icon="fa fa-list"/>
-                            <p:commandButton value="#{bundle.Save}" styleClass="btn-success" icon="fa fa-edit" update=":growl,@this"/>     
+                            <h:commandLink value="Excel" styleClass="btn btn-primary" style="height: 28px;display: inline-block;vertical-align: middle;line-height: normal;margin-right: 5px" disabled="#{empty ventaCombustibleController.model}">
+                                <p:dataExporter type="xls" target="VentaCombustibleListForm:datalist" fileName="Registro de Minutos" pageOnly="true"/>
+                            </h:commandLink>
+                            <h:commandLink value="PDF" styleClass="btn btn-primary" actionListener="#{ventaCombustibleController.exportPdf2(actionEvent)}" id="pdf" target="blank" style="height: 28px;display: inline-block;vertical-align: middle;line-height: normal;margin-right: 5px" disabled="#{empty ventaCombustibleController.model}"/>
+                            <h:commandLink value="Impresión" styleClass="btn btn-primary" actionListener="#{ventaCombustibleController.exportPdf2(actionEvent)}"  target="blank" style="height: 28px;display: inline-block;vertical-align: middle;line-height: normal;margin-right: 5px" disabled="#{empty ventaCombustibleController.model}">
+                                <p:printer target="VentaCombustibleListForm:datalist" />
+                            </h:commandLink>
                         </div>
                     </div>
                 </div>

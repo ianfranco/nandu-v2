@@ -17,9 +17,11 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -28,11 +30,15 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.builder.DynamicReports;
+import static net.sf.dynamicreports.report.builder.DynamicReports.col;
+import static net.sf.dynamicreports.report.builder.DynamicReports.report;
+import static net.sf.dynamicreports.report.builder.DynamicReports.type;
 import net.sf.dynamicreports.report.builder.column.Columns;
 import net.sf.dynamicreports.report.builder.component.Components;
 import net.sf.dynamicreports.report.builder.datatype.DataTypes;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -52,10 +58,11 @@ public class ReportController implements Serializable {
 
     private JRMapCollectionDataSource data;
     private Collection<Map<String, ?>> map;
+    
     private Map parameters;
     private JasperPrint jasperPrint;
-    private Date recaudacion;
-    private ProcesoRecaudacion procesoRecaudacion;
+    private String fileName;
+    private String path;
     private ServletOutputStream servletOutputStream;
 
     /**
@@ -86,6 +93,51 @@ public class ReportController implements Serializable {
         this.data = data;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Map getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map parameters) {
+        this.parameters = parameters;
+    }
+
+    private void build() {
+        try {
+            report()
+                    .setTemplate(Templates.reportTemplate)
+                    .columns(
+                            col.column("Item", "item", type.stringType()),
+                            col.column("Quantity", "quantity", type.integerType()),
+                            col.column("Unit price", "unitPrice", type.bigDecimalType()))
+                    .title(Templates.createTitleComponent("CollectionDatasource"))
+                    .pageFooter(Templates.footerComponent)
+                    .setDataSource(createDataSource())
+                    .show();
+        } catch (DRException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private JRDataSource createDataSource() {
+        return new JRBeanCollectionDataSource(map);
+    }
+
     public void init() throws JRException {
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(map);
         String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/resources/reports/INF-Recaudacion.jasper");
@@ -103,10 +155,6 @@ public class ReportController implements Serializable {
             return;
         }
 
-        this.parameters = new HashMap();
-        this.parameters.put("fecha_recaudacion", recaudacion);
-        this.parameters.put("proceso_id", this.procesoRecaudacion.getProcesoRecaudacionId());
-
         jasperPrint = JasperFillManager.fillReport(reportPath, this.parameters, connection);
     }
 
@@ -117,7 +165,6 @@ public class ReportController implements Serializable {
         servletOutputStream = httpServletResponse.getOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);
         FacesContext.getCurrentInstance().responseComplete();
-
     }
 
     public void DOCX(ActionEvent actionEvent) throws JRException, IOException {
@@ -140,8 +187,6 @@ public class ReportController implements Serializable {
     public void setServletOutputStream(ServletOutputStream servletOutputStream) {
         this.servletOutputStream = servletOutputStream;
     }
-    
-    
 
     public void init2() {
         //JasperReportBuilder report = new JasperReportBuilder();
@@ -195,7 +240,7 @@ public class ReportController implements Serializable {
 
     }
 
-    public OutputStream getOS(ServletContext context, OutputStream outputStream) {
+    /*public OutputStream getOS(ServletContext context, OutputStream outputStream) {
 
         //InputStream is = context.getResourceAsStream("/jasper/invoices/" + invoiceName);
         Connection connection = null;
@@ -237,22 +282,6 @@ public class ReportController implements Serializable {
 
         return outputStream;
 
-    }
-
-    public Date getRecaudacion() {
-        return recaudacion;
-    }
-
-    public void setRecaudacion(Date recaudacion) {
-        this.recaudacion = recaudacion;
-    }
-
-    public ProcesoRecaudacion getProcesoRecaudacion() {
-        return procesoRecaudacion;
-    }
-
-    public void setProcesoRecaudacion(ProcesoRecaudacion procesoRecaudacion) {
-        this.procesoRecaudacion = procesoRecaudacion;
-    }
+    }*/
 
 }

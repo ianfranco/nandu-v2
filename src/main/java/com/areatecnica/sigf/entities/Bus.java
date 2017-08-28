@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "bus", catalog = "sigf_v3", schema = "")
+@Cacheable(false)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Bus.findAll", query = "SELECT b FROM Bus b")

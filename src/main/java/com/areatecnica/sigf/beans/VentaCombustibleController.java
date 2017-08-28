@@ -15,6 +15,7 @@ import com.areatecnica.sigf.entities.PrecioCombustible;
 import com.areatecnica.sigf.entities.UnidadNegocio;
 import com.areatecnica.sigf.models.VentaCombustibleModel;
 import com.areatecnica.sigf.reports.PdfReportController;
+import com.areatecnica.sigf.reports.Templates;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -29,8 +30,25 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import net.sf.jasperreports.engine.JRException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.dynamicreports.adhoc.AdhocManager;
+import net.sf.dynamicreports.adhoc.configuration.AdhocCalculation;
+import net.sf.dynamicreports.adhoc.configuration.AdhocColumn;
+import net.sf.dynamicreports.adhoc.configuration.AdhocConfiguration;
+import net.sf.dynamicreports.adhoc.configuration.AdhocHorizontalAlignment;
+import net.sf.dynamicreports.adhoc.configuration.AdhocReport;
+import net.sf.dynamicreports.adhoc.configuration.AdhocStyle;
+import net.sf.dynamicreports.adhoc.configuration.AdhocSubtotal;
+import net.sf.dynamicreports.adhoc.report.DefaultAdhocReportCustomizer;
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
+import static net.sf.dynamicreports.report.builder.DynamicReports.type;
+import net.sf.dynamicreports.report.builder.ReportBuilder;
+import net.sf.dynamicreports.report.datasource.DRDataSource;
+import net.sf.dynamicreports.report.definition.datatype.DRIDataType;
+import net.sf.dynamicreports.report.exception.DRException;
 
 @Named(value = "ventaCombustibleController")
 @ViewScoped
@@ -67,7 +85,8 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     private static DecimalFormat decimalFormat = new DecimalFormat(pattern);
     private Date fecha;
     private String formatFechaVentaBoleto;
-    private final static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
+    private final static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+    private ServletOutputStream servletOutputStream;
 
     /**
      * Initialize the concrete VentaCombustible controller bean. The
@@ -78,7 +97,7 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
     public void init() {
         super.setFacade(ejbFacade);
         this.fecha = new Date();
-        this.formatFechaVentaBoleto = this.format.format(fecha);
+        this.formatFechaVentaBoleto = this.sdf.format(fecha);
         this.busDao = new IBusDaoImpl();
         this.busItems = this.busDao.findAllByTerminal(this.getCurrentUser().getUsuarioIdTerminal());
 
@@ -293,18 +312,192 @@ public class VentaCombustibleController extends AbstractController<VentaCombusti
         this.getSelected().setVentaCombustiblePrecio((int) (precioCombustible.getPrecioCombustibleValor() * this.getSelected().getVentaCombustibleCantidad()));
     }
 
-    public void exportPdf(ActionEvent event) {
-        /*this.pdfReportController.setProcesoRecaudacion(this.procesoRecaudacion);
-        this.pdfReportController.setRecaudacion(this.fechaRecaudacion);*/
+    public void exportPdf2(ActionEvent event) {
+
+        HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        httpServletResponse.addHeader("Content-disposition", "inline; filename=VentasCombustible.pdf");
 
         try {
-            this.pdfReportController.PDF(event);
-        } catch (JRException ex) {
-            Logger.getLogger(RecaudacionController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(RecaudacionController.class.getName()).log(Level.SEVERE, null, ex);
+            servletOutputStream = httpServletResponse.getOutputStream();
+            AdhocStyle style = new AdhocStyle();
+
+            style.setHorizontalAlignment(AdhocHorizontalAlignment.RIGHT);
+
+            AdhocConfiguration configuration = new AdhocConfiguration();
+            AdhocReport report = new AdhocReport();
+            report.setColumnTitleStyle(style);
+            configuration.setReport(report);
+
+            //DRDataSource dataSource = new DRDataSource("numero", "identificador", "hora", "boleta", "bus", "ppu", "operador", "cantidad", "total");
+            AdhocColumn column = new AdhocColumn();
+            column.setName("numero");
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("identificador");
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("hora");
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("boleta");
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("bus");
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("ppu");
+            column.setWidth(80);
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("operador");
+            column.setWidth(100);
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("cantidad");
+            report.addColumn(column);
+            
+            column = new AdhocColumn();
+            column.setName("total");
+            report.addColumn(column);
+
+            AdhocSubtotal subtotal = new AdhocSubtotal();
+            subtotal.setCalculation(AdhocCalculation.SUM);
+            subtotal.setName("cantidad");
+            subtotal.setStyle(style);
+            report.addSubtotal(subtotal);
+
+            subtotal = new AdhocSubtotal();
+            subtotal.setCalculation(AdhocCalculation.SUM);
+            subtotal.setName("total");
+            subtotal.setStyle(style);
+            report.addSubtotal(subtotal);
+
+            JasperReportBuilder reportBuilder = AdhocManager.createReport(configuration.getReport(), new ReportCustomizer());
+            reportBuilder.setDataSource(createDataSource());
+            reportBuilder.toPdf(servletOutputStream);
+
+        } catch (IOException | DRException ex) {
+            Logger.getLogger(RegistroMinutoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        FacesContext.getCurrentInstance().responseComplete();
+
+        servletOutputStream = null;
+    }
+
+    private DRDataSource createDataSource() {
+        DRDataSource dataSource = new DRDataSource("numero", "identificador", "hora", "boleta", "bus", "ppu", "operador", "cantidad", "total");
+        int i = 1;
+
+        for (VentaCombustible v : this.ventasItems) {
+            dataSource.add(i,
+                    v.getVentaCombustibleIdSurtidor().getSurtidorIdentificador(),
+                    v.getVentaCombustibleHora(),
+                    v.getVentaCombustibleNumeroBoleta(),
+                    v.getVentaCombustibleIdBus().getBusNumero(),
+                    v.getVentaCombustibleIdBus().getBusPatente(),
+                    v.getVentaCombustibleIdBus().getBusIdUnidadNegocio().getUnidadNegocioIdOperadorTransporte().getOperadorTransporteNombre(),
+                    v.getVentaCombustibleCantidad(),
+                    v.getVentaCombustibleTotal());
+            i++;
+        }
+        return dataSource;
+    }
+
+    private class ReportCustomizer extends DefaultAdhocReportCustomizer {
+
+        /**
+         *
+         * If you want to add some fixed content to a report that is not needed
+         * to store in the xml file.
+         *
+         * For example you can add default page header, footer, default
+         * fonts,...
+         *
+         */
+        @Override
+
+        public void customize(ReportBuilder<?> report, AdhocReport adhocReport) throws DRException {
+            super.customize(report, adhocReport);
+            //default report values
+            report.setTemplate(Templates.reportTemplate);
+            report.title(Templates.createTitleComponent("Registro de Ventas de Combustible al :" + sdf.format(fecha)));
+            //a fixed page footer that user cannot change, this customization is not stored in the xml file
+            //report.pageFooter(Templates.footerComponent);
+            report.pageFooter(Templates.footerComponent);
+        }
+
+        /**
+         *
+         * This method returns a field type from a given field name.
+         *
+         */
+        @Override
+        protected DRIDataType<?, ?> getFieldType(String name) {
+            if (name.equals("numero") || name.equals("boleta") || name.equals("bus") || name.equals("total")) {
+                return type.integerType();
+            }
+
+            if (name.equals("cantidad")) {
+                return type.floatType();
+            }
+
+            if (name.equals("identificador") || name.equals("ppu") || name.equals("operador")) {
+                return type.stringType();
+            }
+
+            if (name.equals("hora")) {
+                return type.timeHourToMinuteType();
+            }
+
+            return super.getFieldType(name);
+        }
+
+        /**
+         *
+         * If a user doesn’t specify a column title, getColumnTitle is evaluated
+         * and the return value is used as a column title.
+         *
+         */
+        @Override
+////DRDataSource("numero", "identificador", "hora", "boleta", "bus", "ppu", "operador", "cantidad", "total");
+        protected String getFieldLabel(String name) {
+            if (name.equals("numero")) {
+                return "#";
+            }
+            if (name.equals("identificador")) {
+                return "Surtidor";
+            }
+            if (name.equals("hora")) {
+                return "Hora";
+            }
+            if (name.equals("boleta")) {
+                return "N° Boleta";
+            }
+            if (name.equals("bus")) {
+                return "N° Bus";
+            }
+            if (name.equals("ppu")) {
+                return "PPU";
+            }
+            if (name.equals("operador")) {
+                return "Operador";
+            }
+            if (name.equals("cantidad")) {
+                return "N° Litros";
+            }
+            if (name.equals("total")) {
+                return "Total";
+            }
+            return name;
         }
 
     }
-    
+
 }

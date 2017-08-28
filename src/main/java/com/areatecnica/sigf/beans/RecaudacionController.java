@@ -2,7 +2,9 @@ package com.areatecnica.sigf.beans;
 
 import com.areatecnica.sigf.beans.util.JsfUtil;
 import com.areatecnica.sigf.controllers.RecaudacionFacade;
+import com.areatecnica.sigf.controllers.RegistroMinutoFacade;
 import com.areatecnica.sigf.controllers.ResumenRecaudacionFacade;
+import com.areatecnica.sigf.controllers.VentaCombustibleFacade;
 import com.areatecnica.sigf.dao.IBusDao;
 import com.areatecnica.sigf.dao.ICajaRecaudacionDao;
 import com.areatecnica.sigf.dao.IProcesoRecaudacionDao;
@@ -31,6 +33,7 @@ import com.areatecnica.sigf.entities.ResumenRecaudacion;
 import com.areatecnica.sigf.entities.VentaCombustible;
 import com.areatecnica.sigf.models.RecaudacionDataModel;
 import com.areatecnica.sigf.reports.PdfReportController;
+import com.areatecnica.sigf.reports.Templates;
 import com.areatecnica.sigf.sockets.NotificationController;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -46,9 +49,27 @@ import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-import net.sf.jasperreports.engine.JRException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.dynamicreports.adhoc.AdhocManager;
+import net.sf.dynamicreports.adhoc.configuration.AdhocCalculation;
+import net.sf.dynamicreports.adhoc.configuration.AdhocColumn;
+import net.sf.dynamicreports.adhoc.configuration.AdhocConfiguration;
+import net.sf.dynamicreports.adhoc.configuration.AdhocFont;
+import net.sf.dynamicreports.adhoc.configuration.AdhocHorizontalAlignment;
+import net.sf.dynamicreports.adhoc.configuration.AdhocReport;
+import net.sf.dynamicreports.adhoc.configuration.AdhocStyle;
+import net.sf.dynamicreports.adhoc.configuration.AdhocSubtotal;
+import net.sf.dynamicreports.adhoc.report.DefaultAdhocReportCustomizer;
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
+import static net.sf.dynamicreports.report.builder.DynamicReports.type;
+import net.sf.dynamicreports.report.builder.ReportBuilder;
+import net.sf.dynamicreports.report.datasource.DRDataSource;
+import net.sf.dynamicreports.report.definition.datatype.DRIDataType;
+import net.sf.dynamicreports.report.exception.DRException;
 
 @Named(value = "recaudacionController")
 @ViewScoped
@@ -69,6 +90,10 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     private NotificationController notificationController;
     @Inject
     private PdfReportController pdfReportController;
+    @Inject
+    private VentaCombustibleFacade ventaCombustibleFacade;
+    @Inject
+    private RegistroMinutoFacade registroMinutoFacade;
 
     private List<Recaudacion> recaudacionItems;
     private List<RecaudacionEgreso> recaudacionEgresoList;
@@ -77,7 +102,6 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     private List<CajaRecaudacion> cajaRecaudacionList;
     private List<EgresoResumenRecaudacion> egresosResumenList;
     private List<Bus> busesList;
-
     private List<PetroleoHelper> ventaCombustibleList;
     private List<MinutosHelper> registroMinutoList;
     private ArrayList<LinkedHashMap> listOfMaps;
@@ -86,6 +110,7 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     private List<String> resultsHeader;
     private List<String> resultsTotals;
     private Map folios;
+    private Recaudacion recaudacionPrinter;
     private ProcesoRecaudacion procesoRecaudacion;
     private ResumenRecaudacion resumenRecaudacion;
     private CajaRecaudacion cajaRecaudacion;
@@ -110,7 +135,9 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
     private IVentaCombustibleDao ventaCombustibleDao;
     private static String pattern = "###,###.###";
     private static DecimalFormat decimalFormat = new DecimalFormat(pattern);
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+    private ServletOutputStream servletOutputStream;
 
     /**
      * Initialize the concrete Region controller bean. The AbstractController
@@ -581,6 +608,14 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
         return minutos;
     }
 
+    public void setRecaudacionPrinter(Recaudacion recaudacionPrinter) {
+        this.recaudacionPrinter = recaudacionPrinter;
+    }
+
+    public Recaudacion getRecaudacionPrinter() {
+        return recaudacionPrinter;
+    }
+
     @Override
     public Recaudacion prepareCreate(ActionEvent event) {
         super.prepareCreate(event); //To change body of generated methods, choose Tools | Templates.
@@ -628,6 +663,41 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
         if (this.resumenRecaudacion.getResumenRecaudacionCerrado()) {
             this.resumenRecaudacion.setResumenRecaudacionCerrado(Boolean.FALSE);
             this.resumenRecaudacionFacade.edit(resumenRecaudacion);
+
+        }
+
+        if (this.ventaCombustible != null) {
+            this.ventaCombustible.getVentaCombustible().setVentaCombustibleRecaudado(true);
+            this.ventaCombustibleDao.update(this.ventaCombustible.getVentaCombustible());
+
+            this.ventaCombustible = null;
+            this.ventaCombustibleList = null;
+        } else {
+            System.err.println("Si es nula la venta de combustible");
+        }
+
+        if (this.registroMinuto != null) {
+            if (this.registroMinuto.todos) {
+                System.err.println("estan seleccionados todos los REGISTROs DE MINUTOs");
+                this.registroMinutoList.stream().map((m) -> m.getRegistro()).map((registro) -> {
+                    registro.setRegistroMinutoRecaudado(Boolean.TRUE);
+                    return registro;
+                }).forEachOrdered((registro) -> {
+                    this.registroMinutoDao.update(registro);
+                });
+
+            } else {
+                System.err.println("esta seleccionado sólo 1 REGISTRO DE MINUTO");
+
+                RegistroMinuto registro = this.registroMinuto.getRegistro();
+                registro.setRegistroMinutoRecaudado(Boolean.TRUE);
+                this.registroMinutoDao.update(registro);
+
+            }
+            this.registroMinuto = null;
+            this.registroMinutoList = null;
+        } else {
+            System.err.println("SI ES NULO EL REGISTRO DE MINUTO");
         }
 
         /*
@@ -666,21 +736,15 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
             }
         });
 
-        /*
-        this.resumenRecaudacion.setResumenRecaudacionTotal(this.resumenTotal);
-        this.resumenRecaudacion.setResumenRecaudacionFechaActualizacion(new Date());
-
-        this.resumenRecaudacionFacade.edit(resumenRecaudacion);*/
         this.recaudacionItems.add(this.getSelected());
 
-        notificationController.pushNotify("/notify", "Se ha ingresado la Guia N°" + this.getSelected().getRecaudacionIdentificador());
+        //notificationController.pushNotify("/notify", "Se ha ingresado la Guia N°" + this.getSelected().getRecaudacionIdentificador());
+        JsfUtil.addSuccessMessage("Se ha ingresado la Guia N°" + this.getSelected().getRecaudacionIdentificador());
 
+        this.recaudacionPrinter = this.getSelected();
         this.setSelected(prepareCreate(event));
         this.setResumenTotalFormat(decimalFormat.format(getResumenTotal()));
 
-        /*this.resumenRecaudacion.setEgresoRecaudacionList(egresosResumenList);
-        this.resumenRecaudacionFacade.edit(this.resumenRecaudacion);*/
- /**/
     }
 
     public void load() {
@@ -913,12 +977,11 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
             List<RegistroMinuto> minutosList = this.registroMinutoDao.findByBusSinRecaudar(this.getSelected().getRecaudacionIdBus());
 
             if (minutosList.isEmpty()) {
+                //deshabilito el combobox
                 this.registroMinuto = null;
-                /*RegistroMinuto minuto = new RegistroMinuto();
-                minuto.setRegistroMinutoMonto(0);
-                this.registroMinutoList.add(minuto);*/
             } else {
                 this.registroMinutoList = new ArrayList<>();
+                //Si tiene más de una deuda de minutos, busco el total 
                 if (minutosList.size() > 1) {
 
                     int total = 0;
@@ -929,12 +992,15 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
                         minuto.setObservacion("$ " + decimalFormat.format(m.getRegistroMinutoMonto()) + "   N° Bus: " + m.getRegistroMinutoHastaIdBus().getBusNumero() + " - " + sdf.format(m.getRegistroMinutoFechaMinuto()));
                         this.registroMinutoList.add(minuto);
                     }
+                    //Creo un nuevo minutohelper con la suma de todos los minutos 
                     RegistroMinuto r = new RegistroMinuto();
                     r.setRegistroMinutoMonto(total);
                     MinutosHelper totalMinutos = new MinutosHelper();
                     totalMinutos.setObservacion("$ " + decimalFormat.format(total) + " Todos");
                     totalMinutos.setRegistro(r);
+                    totalMinutos.setTodos(Boolean.TRUE);
                     this.registroMinutoList.add(0, totalMinutos);
+                    this.registroMinuto = totalMinutos;
                     calculaTotal();
 
                 } else {
@@ -942,7 +1008,10 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
                     MinutosHelper minuto = new MinutosHelper();
                     minuto.setRegistro(r);
                     minuto.setObservacion("$ " + decimalFormat.format(r.getRegistroMinutoMonto()) + "   N° Bus: " + r.getRegistroMinutoHastaIdBus().getBusNumero() + " - " + sdf.format(r.getRegistroMinutoFechaMinuto()));
+                    minuto.setTodos(Boolean.FALSE);
                     this.registroMinutoList.add(minuto);
+                    this.registroMinuto = minuto;
+                    calculaTotal();
                 }
 
             }
@@ -951,9 +1020,6 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
 
             if (combustibleList.isEmpty()) {
                 this.ventaCombustible = null;
-                /*VentaCombustible venta = new VentaCombustible();
-                venta.setVentaCombustibleTotal(0);
-                this.ventaCombustibleList.add(venta);*/
             } else {
                 this.ventaCombustibleList = new ArrayList<>();
 
@@ -963,25 +1029,203 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
                     vPetroleo.setVentaCombustible(v);
                     this.ventaCombustibleList.add(vPetroleo);
                 }
+
+                this.ventaCombustible = this.ventaCombustibleList.get(0);
+                calculaTotal();
             }
 
         }
     }
 
-    public void handleFechaChange(ActionEvent event) {
+    public void exportPdf2(ActionEvent event) {
 
-    }
-
-    public void exportPdf(ActionEvent event) {
-        this.pdfReportController.setProcesoRecaudacion(this.procesoRecaudacion);
-        this.pdfReportController.setRecaudacion(this.fechaRecaudacion);
+        HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        httpServletResponse.addHeader("Content-disposition", "inline; filename=VentasCombustible.pdf");
 
         try {
-            this.pdfReportController.PDF(event);
-        } catch (JRException ex) {
-            Logger.getLogger(RecaudacionController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(RecaudacionController.class.getName()).log(Level.SEVERE, null, ex);
+            servletOutputStream = httpServletResponse.getOutputStream();
+            AdhocStyle style = new AdhocStyle();
+
+            style.setHorizontalAlignment(AdhocHorizontalAlignment.RIGHT);
+
+            AdhocConfiguration configuration = new AdhocConfiguration();
+            AdhocReport report = new AdhocReport();
+            report.setColumnTitleStyle(style);
+            configuration.setReport(report);
+
+            //DRDataSource dataSource = new DRDataSource("numero", "identificador", "hora", "boleta", "bus", "ppu", "operador", "cantidad", "total");
+            AdhocSubtotal subtotal = new AdhocSubtotal();
+
+            AdhocColumn column = new AdhocColumn();
+            column.setName("numero");
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("folio");
+            column.setWidth(70);
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("bus");
+            report.addColumn(column);
+
+            column = new AdhocColumn();
+            column.setName("conductor");
+            column.setWidth(110);
+            report.addColumn(column);
+
+            AdhocFont font = new AdhocFont();
+
+            font.setBold(Boolean.TRUE);
+            style.setFont(font);
+            for (Egreso r : this.egresosList) {
+                column = new AdhocColumn();
+                column.setName(r.getEgresoNombre());
+                report.addColumn(column);
+
+                subtotal = new AdhocSubtotal();
+                subtotal.setCalculation(AdhocCalculation.SUM);
+                subtotal.setName(r.getEgresoNombre());
+                subtotal.setStyle(style);
+                report.addSubtotal(subtotal);
+            }
+
+            column = new AdhocColumn();
+            column.setName("liquido");
+            report.addColumn(column);
+
+            subtotal = new AdhocSubtotal();
+            subtotal.setCalculation(AdhocCalculation.SUM);
+            subtotal.setName("liquido");
+            subtotal.setStyle(style);
+            report.addSubtotal(subtotal);
+
+            JasperReportBuilder reportBuilder = AdhocManager.createReport(configuration.getReport(), new ReportCustomizer());
+            reportBuilder.setDataSource(createDataSource());
+            reportBuilder.toPdf(servletOutputStream);
+
+        } catch (IOException | DRException ex) {
+            Logger.getLogger(RegistroMinutoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        FacesContext.getCurrentInstance().responseComplete();
+
+        servletOutputStream = null;
+    }
+
+    private DRDataSource createDataSource() {
+
+        ArrayList<String> list = new ArrayList<>(resultsHeader);
+        list.add(0, "liquido");
+        list.add(0, "conductor");
+        list.add(0, "bus");
+        list.add(0, "folio");
+        list.add(0, "numero");
+
+        String[] array = new String[list.size()];
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = (String) list.get(i);
+        }
+
+        DRDataSource dataSource = new DRDataSource(array);
+
+        int i = 0;
+        for (Recaudacion r : this.recaudacionItems) {
+
+            List a = new ArrayList();
+
+            a.add(i + 1);
+            a.add(r.getRecaudacionIdentificador());
+            a.add(r.getRecaudacionIdBus().getBusNumero());
+            a.add(r.getRecaudacionIdTrabajador().getTrabajadorApellidoPaterno());
+            a.add(r.getRecaudacionTotal());
+            a.addAll(this.listOfMaps.get(i).values());
+
+            dataSource.add(a.toArray());
+            i++;
+        }
+        return dataSource;
+    }
+
+    private class ReportCustomizer extends DefaultAdhocReportCustomizer {
+
+        /**
+         *
+         * If you want to add some fixed content to a report that is not needed
+         * to store in the xml file.
+         *
+         * For example you can add default page header, footer, default
+         * fonts,...
+         *
+         */
+        @Override
+
+        public void customize(ReportBuilder<?> report, AdhocReport adhocReport) throws DRException {
+            super.customize(report, adhocReport);
+            //default report values
+            report.setTemplate(Templates.reportTemplate);
+            report.title(Templates.createTitleComponent(cajaRecaudacion.getCajaRecaudacionNombre() + " Recaudación al :" + sdf.format(fechaRecaudacion)));
+            //a fixed page footer that user cannot change, this customization is not stored in the xml file
+            //report.pageFooter(Templates.footerComponent);
+            report.pageFooter(Templates.footerComponent);
+        }
+
+        /**
+         *
+         * This method returns a field type from a given field name.
+         *
+         */
+        @Override
+        protected DRIDataType<?, ?> getFieldType(String name) {
+            if (name.equals("numero") || name.equals("boleta") || name.equals("bus") || name.equals("total")) {
+                return type.integerType();
+            }
+
+            if (name.equals("conductor") || name.equals("ppu") || name.equals("operador")) {
+                return type.stringType();
+            }
+
+            if (name.equals("hora")) {
+                return type.timeHourToMinuteType();
+            }
+
+            return type.integerType();
+        }
+
+        /**
+         *
+         * If a user doesn’t specify a column title, getColumnTitle is evaluated
+         * and the return value is used as a column title.
+         *
+         */
+        @Override
+////DRDataSource("numero", "identificador", "hora", "boleta", "bus", "ppu", "operador", "cantidad", "total");
+        protected String getFieldLabel(String name) {
+            if (name.equals("numero")) {
+                return "#";
+            }
+            if (name.equals("liquido")) {
+                return "Líquido";
+            }
+            if (name.equals("folio")) {
+                return "Folio";
+            }
+            if (name.equals("bus")) {
+                return "N° Bus";
+            }
+            if (name.equals("conductor")) {
+                return "Conductor";
+            }
+            if (name.equals("operador")) {
+                return "Operador";
+            }
+            if (name.equals("cantidad")) {
+                return "N° Litros";
+            }
+            if (name.equals("total")) {
+                return "Total";
+            }
+            return name;
         }
 
     }
@@ -990,10 +1234,12 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
 
         private String observacion;
         private RegistroMinuto registro;
+        private Boolean todos;
 
-        public MinutosHelper(String observacion, RegistroMinuto registro) {
+        public MinutosHelper(String observacion, RegistroMinuto registro, Boolean todos) {
             this.observacion = observacion;
             this.registro = registro;
+            this.todos = todos;
         }
 
         public MinutosHelper() {
@@ -1013,6 +1259,14 @@ public class RecaudacionController extends AbstractController<Recaudacion> {
 
         public void setRegistro(RegistroMinuto registro) {
             this.registro = registro;
+        }
+
+        public void setTodos(Boolean todos) {
+            this.todos = todos;
+        }
+
+        public Boolean getTodos() {
+            return todos;
         }
 
     }

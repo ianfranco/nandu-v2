@@ -38,7 +38,7 @@
                                                    itemValue="#{guiaIdBusItem}"
                                                    itemLabel="#{guiaIdBusItem.busNumero}"
                                                    />
-                                    <p:ajax event="valueChange" update="guiaIdBusPatente, guiaIdBusEmpresario, growl, guiaIdPetroleo, guiaIdMinutos" listener="#{recaudacionController.handleBusChange(event)}" global="false"/>
+                                    <p:ajax event="valueChange" update="guiaIdBusPatente, guiaIdBusEmpresario, growl, guiaIdPetroleo, guiaIdMinutos, guiaSaldo" listener="#{recaudacionController.handleBusChange(event)}" global="false"/>
                                 </p:selectOneMenu>
                             </p:column>
                             <p:column rowspan="1" style="font-weight: bold;">PPU:</p:column>
@@ -60,15 +60,14 @@
                             </p:column>
 
                             <p:column style="font-weight: bold;" rowspan="1">Conductor:</p:column>
-                            <p:column rowspan="1"><p:outputLabel value="#{recaudacionController.selected.recaudacionIdTrabajador.trabajadorNombres} #{recaudacionController.selected.recaudacionIdTrabajador.trabajadorApellidoPaterno} #{recaudacionController.selected.recaudacionIdTrabajador.trabajadorApellidoMaterno}" id="guiaIdTrabajadorNombre" /></p:column>
+                            <p:column rowspan="1"><p:outputLabel value="#{recaudacionController.selected.recaudacionIdTrabajador.trabajadorApellidoPaterno} #{recaudacionController.selected.recaudacionIdTrabajador.trabajadorApellidoMaterno} #{recaudacionController.selected.recaudacionIdTrabajador.trabajadorNombres.charAt(0)}." id="guiaIdTrabajadorNombre" /></p:column>
                         </p:row>
 
                         <!-- PRIMERA FILA -->
                         <p:row>
                             <p:column style="font-weight: bold;">Deuda Petroleo:</p:column>
                             <p:column style="font-weight: bold;">
-                                <p:selectOneMenu id="guiaIdPetroleo" value="#{recaudacionController.ventaCombustible}" required="true" requiredMessage="Debe pagar el Combustible" converter="omnifaces.SelectItemsConverter" disabled="#{empty recaudacionController.ventaCombustibleList}">
-                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                <p:selectOneMenu id="guiaIdPetroleo" value="#{recaudacionController.ventaCombustible}" required="true" requiredMessage="Debe pagar el Combustible" converter="omnifaces.SelectItemsConverter" disabled="#{empty recaudacionController.ventaCombustibleList}">                                    
                                     <f:selectItems value="#{recaudacionController.ventaCombustibleList}"
                                                    var="ventaCombustibleL"
                                                    itemValue="#{ventaCombustibleL}"
@@ -85,7 +84,6 @@
                             <p:column style="font-weight: bold;">Deuda Minutos</p:column>
                             <p:column style="font-weight: bold;">
                                 <p:selectOneMenu id="guiaIdMinutos" value="#{recaudacionController.registroMinuto}" required="true" requiredMessage="Debe pagar los Minutos" converter="omnifaces.SelectItemsConverter" disabled="#{empty recaudacionController.registroMinutoList}">
-                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
                                     <f:selectItems value="#{recaudacionController.registroMinutoList}"
                                                    var="registroMinutoL"
                                                    itemValue="#{registroMinutoL}"
@@ -122,7 +120,7 @@
                                 </p:column>
                             </p:row>
                         </ui:repeat>
-                        
+
                         <p:row>
                             <p:column  colspan="3" style="text-align: right;font-weight: bold;background: #e5e5e5;">
                                 Líquido
@@ -137,17 +135,16 @@
 
                             </p:column>
                             <p:column  style="background: #e5e5e5;">
-                                <p:commandButton actionListener="#{recaudacionController.saveNew}" value="#{bundle.Save}" update="display,:GuiaListForm:datalist,:growl" styleClass="btn btn-primary">
-                                    <p:confirm header="#{bundle.ConfirmationHeader}" message="¿Ingresar nueva Guía?" icon="ui-icon-alert"/>
-                                </p:commandButton>
-                                <p:commandButton value="Cerrar" oncomplete="PF('GuiaCreateDialog').hide()" update="display" process="@this" immediate="true" resetValues="true" styleClass="btn btn-primary"/>
+                                <p:commandButton actionListener="#{recaudacionController.saveNew}" value="#{bundle.Save}" update="display,:GuiaListForm:datalist,:growl" styleClass="btn btn-primary" oncomplete="PF('GuiaCreateDialog').hide()" onsuccess="document.getElementById('GuiaListForm:datalist:printer').click();">
+                                </p:commandButton>                                
+                                <p:commandButton value="Cerrar" oncomplete="PF('GuiaCreateDialog').hide()" update="display" process="@this" immediate="true" resetValues="true" styleClass="btn btn-primary"/>                                
                             </p:column>
                         </p:row>
-
                     </p:panelGrid>
                 </h:panelGroup>
             </h:form>
-        </p:dialog>
+        </p:dialog>        
+
     </ui:composition>
 
 </html>
